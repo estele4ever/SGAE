@@ -11,6 +11,9 @@
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
+        <!-- Font Awesome -->
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
@@ -19,21 +22,26 @@
             <!-- Sidebar -->
             <aside class="w-64 bg-gray-800 text-white min-h-screen">
                 <div class="p-6">
-                    <h2 class="text-lg font-semibold">{{ config('app.name', 'Storage') }}</h2>
+                    <!-- Title dynamically set to application name -->
+                    <h2 class="text-lg font-semibold">{{ config('app.name', 'SGAE') }}</h2>
                 </div>
                 <nav class="mt-4">
                     <ul>
-                        <li class="px-4 py-2 hover:bg-gray-700">
+                        <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
+                            <i class="fas fa-tachometer-alt"></i>
                             <a href="{{ route('dashboard') }}">Dashboard</a>
                         </li>
-                        <li class="px-4 py-2 hover:bg-gray-700">
+                        <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
+                            <i class="fas fa-archive"></i>
                             <a href="{{ route('archives.index') }}">Archives</a>
                         </li>
-                        <li class="px-4 py-2 hover:bg-gray-700">
+                        <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
+                            <i class="fas fa-user"></i>
                             <a href="{{ route('profile.edit') }}">Profil</a>
                         </li>
-                        <li class="px-4 py-2 hover:bg-gray-700">
-                            <form method="POST" action="{{ route('logout') }}">
+                        <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <form method="POST" action="{{ route('logout') }}" class="inline">
                                 @csrf
                                 <button type="submit" class="w-full text-left">Déconnexion</button>
                             </form>
@@ -55,7 +63,7 @@
 
                 <!-- Page Content -->
                 <main class="p-6">
-                @yield('content')
+                    @yield('content')
                 </main>
             </div>
         </div>

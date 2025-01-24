@@ -11,17 +11,7 @@
                 <div class="p-6 text-gray-900">
                     {{ __("You're logged in!") }}
                 </div>
-                @extends('layouts.app')
-
-  <!-- @section('content')
-<div class="container">
-    <h1>Bienvenue sur le Dashboard</h1>
-    <p>Gérez vos archives électroniques ici.</p>
-
-    <!-- Bouton pour rediriger vers l'interface d'ajout d'archives --
-    <a href="{{ route('archives.create') }}" class="btn btn-primary">Ajouter une archive</a>
-</div>
-@endsection -->
+               
 
             </div>
             

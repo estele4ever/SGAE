@@ -1,11 +1,23 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1>{{ $archive->titre }}</h1>
-    <p><strong>Catégorie :</strong> {{ $archive->categorie }}</p>
-    <p><strong>Description :</strong> {{ $archive->description }}</p>
-    <p><strong>Date de création :</strong> {{ $archive->created_at->format('d/m/Y') }}</p>
-    <a href="{{ Storage::url($archive->fichier) }}" class="btn btn-primary" target="_blank">Télécharger le fichier</a>
+<div class="container mx-auto p-6 max-w-4xl">
+    <div class="bg-white shadow-md rounded-lg p-6">
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ $archive->titre }}</h1>
+        
+        <div class="mb-4">
+            <p class="text-gray-600"><strong class="text-gray-800">Catégorie :</strong> {{ $archive->categorie }}</p>
+            <p class="text-gray-600 mt-2"><strong class="text-gray-800">Description :</strong> {{ $archive->description }}</p>
+            <p class="text-gray-600 mt-2"><strong class="text-gray-800">Date de création :</strong> {{ $archive->created_at->format('d/m/Y') }}</p>
+        </div>
+        
+        <div class="mt-6">
+            <a href="{{ Storage::url($archive->fichier) }}" 
+               class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded"
+               target="_blank">
+                Télécharger le fichier
+            </a>
+        </div>
+    </div>
 </div>
 @endsection
