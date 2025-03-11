@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'SGAE Dashboard') }}</title>
+        <title>{{ config('app.name', 'SGAE') }}</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -35,6 +35,34 @@
                             <i class="fas fa-archive"></i>
                             <a href="{{ route('archives.index') }}">Archives</a>
                         </li>
+
+                        <!-- Paramètres avec menu déroulant -->
+                        <li class="relative group">
+                            <div class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2 cursor-pointer">
+                                <i class="fas fa-cogs"></i>
+                                <span>Paramètres</span>
+                            </div>
+                            
+                            <!-- Sous-menu qui s'affiche au survol -->
+                            <ul class="absolute left-0 w-56 bg-gray-800 shadow-lg hidden group-hover:block mt-1 z-10">
+                                <li class="px-4 py-2 hover:bg-gray-700">
+                                    <a href="\" class="block">Sécurité sur les utilisateurs</a>
+                                </li>
+                                <li class="px-4 py-2 hover:bg-gray-700">
+                                    <a href="{{ route('settings.services') }}" class="block">Organisation des services</a>
+                                </li>
+                                <li class="px-4 py-2 hover:bg-gray-700">
+                                    <a href="{{ route('settings.archives') }}" class="block">Gestion de l'archive</a>
+                                </li>
+                                <li class="px-4 py-2 hover:bg-gray-700">
+                                    <a href="{{ route('settings.storage') }}" class="block">Gestion du stockage</a>
+                                </li>
+                                <li class="px-4 py-2 hover:bg-gray-700">
+                                    <a href="{{ route('settings.statistics') }}" class="block">Statistiques</a>
+                                </li>
+                            </ul>
+                        </li>
+
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-user"></i>
                             <a href="{{ route('profile.edit') }}">Profil</a>

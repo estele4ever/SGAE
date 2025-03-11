@@ -8,6 +8,7 @@
         <div class="mb-4">
             <p class="text-gray-600"><strong class="text-gray-800">Catégorie :</strong> {{ $archive->categorie }}</p>
             <p class="text-gray-600 mt-2"><strong class="text-gray-800">Description :</strong> {{ $archive->description }}</p>
+            <p class="text-gray-600 mt-2"><strong class="text-gray-800">Fichier :</strong> {{ $archive->fichier }}</p><a href="{{ asset($archive->fichier) }}" target="_blank">Voir le fichier</a>
             <p class="text-gray-600 mt-2"><strong class="text-gray-800">Date de création :</strong> {{ $archive->created_at->format('d/m/Y') }}</p>
         </div>
         

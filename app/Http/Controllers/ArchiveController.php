@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Archive;
+use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,10 +20,12 @@ class ArchiveController extends Controller
         return view('archives.index', compact('archives'));
     }
 
-    public function create()
-    {
-        return view('archives.create');
-    }
+        public function create()
+        {
+            $services = Service::all(); // Récupère tous les services existants
+            return view('archives.create', compact('services'));
+
+        }
 
     public function store(Request $request)
     {
@@ -30,18 +33,25 @@ class ArchiveController extends Controller
             'titre' => 'required|string|max:255',
             'description' => 'nullable|string',
             'categorie' => 'required|string|max:255',
+            'type_id' => 'required|string|max:255',
+            'service_id' => 'required|string|max:255',
+            'metadata' => 'required|string|max:255',
             'fichier' => 'required|file|max:2048', // Limite de 2 Mo
         ]);
-
-        // Enregistrement du fichier
-        $fichierPath = $request->file('fichier')->store('archives');
+ // Enregistrement du fichier dans public/archives/
+ $fichier = $request->file('fichier');
+ $fichierNom = time() . '_' . $fichier->getClientOriginalName(); // Ajout d'un timestamp pour éviter les doublons
+ $fichier->move(public_path('archives'), $fichierNom); // Déplacement du fichier dans public/archives
 
         // Création de l'archive
         Archive::create([
             'titre' => $request->titre,
             'description' => $request->description,
             'categorie' => $request->categorie,
-            'fichier' => $fichierPath,
+            'type_id' => $request->categorie,
+            'service_id' => $request->categorie,
+            'metadata' => $request->categorie,
+            'fichier' => 'archives/' . $fichierNom, // Stocke le chemin relatif
         ]);
 
         return redirect()->route('archives.index')->with('success', 'Archive ajoutée avec succès.');

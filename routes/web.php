@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArchiveController;
+use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -35,5 +36,41 @@ Route::post('/archives', [ArchiveController::class, 'store'])->name('archives.st
 Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
 Route::delete('/archives/{id}', [ArchiveController::class, 'destroy'])->name('archives.destroy');
 
+Route::get('/archive/{id}', [ArchiveController::class, 'show'])->middleware('service.check');
+
+/*Route::middleware('auth')->group(function () {
+    Route::get('/settings/security', [SettingsController::class, 'security'])->name('settings.security');
+    Route::get('/settings/services', [SettingsController::class, 'services'])->name('settings.services');
+    Route::get('/settings/archives', [SettingsController::class, 'archives'])->name('settings.archives');
+    Route::get('/settings/storage', [SettingsController::class, 'storage'])->name('settings.storage');
+    Route::get('/settings/statistics', [SettingsController::class, 'statistics'])->name('settings.statistics');
+});
+*/
+
+
+Route::prefix('settings')->middleware('auth')->group(function () {
+    Route::get('/security', [SettingsController::class, 'security'])->name('settings.security');
+   // Route::get('/services', [SettingsController::class, 'services'])->name('settings.services');
+    Route::get('/archives', [SettingsController::class, 'archives'])->name('settings.archives');
+    Route::get('/storage', [SettingsController::class, 'storage'])->name('settings.storage');
+    Route::get('/statistics', [SettingsController::class, 'statistics'])->name('settings.statistics');
+
+    // Routes pour gere les securites
+    Route::get('/security', [SettingsController::class, 'editUsers'])->name('settings.editUsers');
+
+
+    // Routes pour gérer les services
+    Route::post('/services/add', [SettingsController::class, 'addService'])->name('settings.addService');
+    Route::delete('/services/{id}/delete', [SettingsController::class, 'deleteService'])->name('settings.deleteService');
+    Route::get('/settings/services', [SettingsController::class, 'services'])->name('settings.services');
+    Route::post('/settings/services', [SettingsController::class, 'storeService'])->name('settings.storeService');
+
+    // Routes pour gérer les types d'archives
+    Route::post('/archives/add', [SettingsController::class, 'addArchiveType'])->name('settings.addArchiveType');
+    Route::delete('/archives/{id}/delete', [SettingsController::class, 'deleteArchiveType'])->name('settings.deleteArchiveType');
+
+    // Routes pour la gestion du stockage
+    Route::post('/storage/clear', [SettingsController::class, 'clearStorage'])->name('settings.clearStorage');
+});
 
 require __DIR__.'/auth.php';

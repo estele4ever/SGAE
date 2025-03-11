@@ -11,22 +11,20 @@ return new class extends Migration
      */
     public function up()
 {
-    Schema::create('archives', function (Blueprint $table) {
+    Schema::create('services', function (Blueprint $table) {
         $table->id();
-        $table->string('titre');
+        $table->string('nom');
         $table->text('description')->nullable();
-        $table->string('categorie');
-        $table->string('fichier'); // Stockera le chemin du fichier
-        $table->timestamps(); // Pour enregistrer la date de création
+        $table->timestamps();
     });
 }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('archives');
+        Schema::dropIfExists('services');
     }
-    
 };

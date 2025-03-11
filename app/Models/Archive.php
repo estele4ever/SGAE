@@ -9,6 +9,19 @@ class Archive extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'titre', 'description', 'categorie', 'fichier',
+        'titre','type_id', 'service_id', 'metadata', 'description', 'categorie', 'fichier',
     ];
+   
+
+    public function service()
+    {
+        return $this->belongsTo(Service::class);
+    }
+
+    public function type()
+    {
+        return $this->belongsTo(TypeArchive::class);
+    }
 }
+
+

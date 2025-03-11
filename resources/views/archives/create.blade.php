@@ -11,6 +11,19 @@
             <label for="titre" class="block text-sm font-medium text-gray-700">Titre</label>
             <input type="text" name="titre" id="titre" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
         </div>
+        
+        <div>
+        <label for="service_id" class="block text-sm font-medium text-gray-700">Service</label>
+        <select name="service_id" id="service_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
+            <option value="">-- Sélectionner un service --</option>
+            @foreach($services as $service)
+                <option value="{{ $service->id }}">{{ $service->nom }}</option>
+            @endforeach
+        </select>
+        @error('service_id')
+            <span class="text-red-500 text-sm">{{ $message }}</span>
+        @enderror
+    </div>
 
         <!-- Description -->
         <div>
