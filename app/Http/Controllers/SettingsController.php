@@ -45,19 +45,20 @@ class SettingsController extends Controller
     public function addArchiveType(Request $request) {
         $request->validate([
             'nom' => 'required|string|max:255',
-            'service_id' => 'required|exists:services,id',
+            'services_id' => 'required|exists:services,id',
             'description' => 'nullable|string',
         ]);
-
         TypeArchive::create([
             'nom' => $request->nom,
-            'service_id' => $request->service_id,
+            'services_id' => $request->services_id,
             'description' => $request->description
         ]);
+        //dd($request->all());
 
         return redirect()->route('settings.archives')->with('success', 'Type d\'archive ajouté avec succès.');
     }
     public function updateArchiveType($id){
+
 
     }
     public function deleteArchiveType($id) {
@@ -70,12 +71,15 @@ class SettingsController extends Controller
     // Ajouter un service
     public function addService(Request $request) {
         $request->validate([
-            'name' => 'required|string|unique:services,name',
+            'nom' => 'required|string|max:255',
+            'description' => 'required|string',
             'status' => 'required|boolean'
         ]);
+        
 
         Service::create([
-            'name' => $request->name,
+            'nom' => $request->nom,
+            'description' => $request->description,
             'status' => $request->status
         ]);
 
@@ -92,9 +96,22 @@ class SettingsController extends Controller
         return view('settings.edit_service', compact('service'));
     }
     public function updateService($id){
-        
+
 
     }
+
+    public function updateServiceStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|boolean',
+    ]);
+
+    $service = Service::findOrFail($id);
+    $service->status = $request->status;
+    $service->save();
+
+    return redirect()->route('settings.services')->with('success', 'Statut du service mis à jour avec succès.');
+}
 
     // Supprimer un service
     public function deleteService($id) {

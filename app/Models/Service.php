@@ -10,7 +10,7 @@ class Service extends Model
     use HasFactory;
  
     
-    protected $fillable = ['nom', 'description'];
+    protected $fillable = ['nom', 'description','statut'];
 
     public function users()
     {
@@ -21,5 +21,11 @@ class Service extends Model
     {
         return $this->belongsToMany(TypeArchive::class, 'service_type_archive');
     }
+ 
+    public function typeArchives()
+    {
+        return $this->hasMany(TypeArchive::class, 'services_id');
+    }
+
 
 }

@@ -9,7 +9,7 @@ class TypeArchive extends Model
 {
     use HasFactory;
  
-    protected $fillable = ['nom', 'description' ,'service_id'];
+    protected $fillable = ['nom', 'description' ,'services_id'];
 
     public function services()
     {

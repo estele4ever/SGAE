@@ -2,30 +2,36 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-xl font-bold mb-4">Gestion des types d'archives</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center">Gestion des types d'archives</h2>
 
-    <form method="POST" action="{{ route('settings.addArchiveType') }}" class="mb-6">
+    <form method="POST" action="{{ route('settings.addArchiveType') }}" class="mb-8">
         @csrf
-        <div class="flex">
-            <input type="text" name="name" placeholder="Nom du type d'archive" class="border p-2 flex-1">
-            <select name="service_id" class="border p-2">
+        <div class="flex flex-col md:flex-row md:space-x-4">
+            <input type="text" name="nom" placeholder="Nom du type d'archive" class="border p-2 flex-1 mb-2 md:mb-0" required>
+            <input type="text" name="description" placeholder="Description du type d'archive" class="border p-2 flex-1 mb-2 md:mb-0" required>
+            <select name="services_id" class="border p-2 flex-1 mb-2 md:mb-0" required>
+                <option value="">Sélectionnez un service</option>
                 @foreach($services as $service)
                 <option value="{{ $service->id }}">{{ $service->nom }}</option>
                 @endforeach
             </select>
-            <button type="submit" class="ml-2 bg-blue-500 text-white px-4 py-2 rounded">Ajouter</button>
+            <button type="submit" class="ml-0 md:ml-2 bg-blue-500 text-white px-4 py-2 rounded">Ajouter</button>
         </div>
     </form>
 
     <ul class="list-disc pl-6">
         @foreach($archiveTypes as $type)
-        <li class="flex justify-between items-center">
-            <span>{{ $type->nom }} ({{ $type->service->nom }})</span>
-            <form method="POST" action="{{ route('settings.deleteArchiveType', $type->id) }}">
-                @csrf
-                @method('DELETE')
-                <button type="submit" class="text-red-500">Supprimer</button>
-            </form>
+        <li class="flex justify-between items-center mb-4 p-2 border-b">
+            <div class="flex-1">
+                <strong>{{ $type->nom }}</strong> ({{ $type->service->nom }}) - {{ $type->description }}
+            </div>
+            <div>
+                <form method="POST" action="{{ route('settings.deleteArchiveType', $type->id) }}" class="inline">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="text-red-500 hover:text-red-700">Supprimer</button>
+                </form>
+            </div>
         </li>
         @endforeach
     </ul>

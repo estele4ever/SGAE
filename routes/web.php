@@ -64,7 +64,8 @@ Route::prefix('settings')->middleware('auth')->group(function () {
     Route::delete('/services/{id}/delete', [SettingsController::class, 'deleteService'])->name('settings.deleteService');
     Route::get('/settings/services', [SettingsController::class, 'services'])->name('settings.services');
     Route::post('/settings/services', [SettingsController::class, 'storeService'])->name('settings.storeService');
-
+    
+    Route::patch('/settings/services/{id}/status', [SettingsController::class, 'updateServiceStatus'])->name('settings.updateServiceStatus');
     // Routes pour gérer les types d'archives
     Route::post('/archives/add', [SettingsController::class, 'addArchiveType'])->name('settings.addArchiveType');
     Route::delete('/archives/{id}/delete', [SettingsController::class, 'deleteArchiveType'])->name('settings.deleteArchiveType');
