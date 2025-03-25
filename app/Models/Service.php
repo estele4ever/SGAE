@@ -9,23 +9,16 @@ class Service extends Model
 {
     use HasFactory;
  
-    
-    protected $fillable = ['nom', 'description','statut'];
+    protected $fillable = ['nom', 'description', 'statut'];
 
     public function users()
     {
         return $this->hasMany(User::class);
     }
 
-    public function types()
+    // Relation many-to-many avec TypeArchive via la table pivot
+    public function typeArchives()
     {
         return $this->belongsToMany(TypeArchive::class, 'service_type_archive');
     }
- 
-    public function typeArchives()
-    {
-        return $this->hasMany(TypeArchive::class, 'services_id');
-    }
-
-
 }

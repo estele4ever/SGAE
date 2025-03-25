@@ -8,6 +8,9 @@ use App\Models\Service;
 use App\Models\User;
 use App\Models\TypeArchive;
 
+
+//dd($request->all());
+
 class SettingsController extends Controller
 {
     public function security() {
@@ -38,33 +41,73 @@ class SettingsController extends Controller
 
     public function archives() {
         $services = Service::all();
-        $archiveTypes = TypeArchive::with('service')->get();
+        $archiveTypes = TypeArchive::with('services')->get();
         return view('settings.archives', compact('services', 'archiveTypes'));
     }
-
+    
     public function addArchiveType(Request $request) {
+
         $request->validate([
             'nom' => 'required|string|max:255',
-            'services_id' => 'required|exists:services,id',
+            //'services_ids' => 'required|array', // Correction : tableau de services
+            'services_id' => 'exists:services,id', // Vérifier que chaque service existe
             'description' => 'nullable|string',
         ]);
-        TypeArchive::create([
+
+        $typeArchive = TypeArchive::create([
             'nom' => $request->nom,
             'services_id' => $request->services_id,
             'description' => $request->description
         ]);
-        //dd($request->all());
-
+    
+        // Associer les services sélectionnés
+        $typeArchive->services()->attach($request->services_id);
+    
         return redirect()->route('settings.archives')->with('success', 'Type d\'archive ajouté avec succès.');
     }
-    public function updateArchiveType($id){
+   
+public function updateArchiveType(Request $request, $id) {
 
+    $request->validate([
+        'nom' => 'required|string|max:255',
+       // 'services_id' => 'required|array', // Tableau de services
+        'services_id' => 'exists:services,id',
+        'description' => 'nullable|string',
+    ]);
 
-    }
+    $typeArchive = TypeArchive::findOrFail($id);
+    $typeArchive->update([
+        'nom' => $request->nom,
+        'services_id' => $request->services_id,
+        'description' => $request->description
+    ]);
+
+    // Synchroniser les services sélectionnés
+    $typeArchive->services()->sync($request->services_id);
+
+    return redirect()->route('settings.archives')->with('success', 'Type d\'archive mis à jour avec succès.');
+}
+   
     public function deleteArchiveType($id) {
-        TypeArchive::findOrFail($id)->delete();
+        $typeArchive = TypeArchive::findOrFail($id);
+    
+        // Détacher tous les services avant suppression
+        $typeArchive->services()->detach();
+    
+        $typeArchive->delete();
+    
         return redirect()->route('settings.archives')->with('success', 'Type d\'archive supprimé.');
     }
+
+
+    ////////////////////////////////GESTION DES TYPES D'ARCHIVES/////////////////////////////////////////
+
+
+
+
+
+
+
     
     //////////////////////////////GESTION DES SERVICES/////////////////////////////////
     
@@ -125,6 +168,7 @@ class SettingsController extends Controller
 
     // Nettoyer le stockage
     public function clearStorage() {
+        
         Storage::deleteDirectory('archives');
         Storage::makeDirectory('archives');
 

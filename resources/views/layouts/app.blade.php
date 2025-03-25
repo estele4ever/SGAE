@@ -6,6 +6,7 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'SGAE') }}</title>
+        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/logo-transparent.png') }}">
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">

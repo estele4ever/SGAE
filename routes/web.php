@@ -4,6 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\SettingsController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+
+
 
 /*
 |--------------------------------------------------------------------------
@@ -16,9 +19,12 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', function () {return view('welcome');});
+
+
+
+Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+
 
 Route::get('/dashboard', function () {
     return view('dashboard');
@@ -68,6 +74,7 @@ Route::prefix('settings')->middleware('auth')->group(function () {
     Route::patch('/settings/services/{id}/status', [SettingsController::class, 'updateServiceStatus'])->name('settings.updateServiceStatus');
     // Routes pour gérer les types d'archives
     Route::post('/archives/add', [SettingsController::class, 'addArchiveType'])->name('settings.addArchiveType');
+    Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
     Route::delete('/archives/{id}/delete', [SettingsController::class, 'deleteArchiveType'])->name('settings.deleteArchiveType');
 
     // Routes pour la gestion du stockage

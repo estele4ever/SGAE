@@ -9,11 +9,12 @@ class TypeArchive extends Model
 {
     use HasFactory;
  
-    protected $fillable = ['nom', 'description' ,'services_id'];
+    protected $fillable = ['nom', 'services_id','description'];
 
+    // Relation many-to-many avec Service via la table pivot
     public function services()
     {
         return $this->belongsToMany(Service::class, 'service_type_archive');
     }
-
 }
+

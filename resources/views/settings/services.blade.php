@@ -30,10 +30,11 @@
                 <form method="POST" action="{{ route('settings.updateServiceStatus', $service->id) }}" class="inline">
                     @csrf
                     @method('PATCH')
-                    <select name="status" class="border p-1" onchange="this.form.submit()">
-                        <option value="1" {{ $service->status == 1 ? 'selected' : '' }}>Actif</option>
-                        <option value="0" {{ $service->status == 0 ? 'selected' : '' }}>Inactif</option>
-                    </select>
+                    <select name="status" class="border p-1 pr-8" onchange="this.form.submit()">
+    <option value="1" {{ $service->status == 1 ? 'selected' : '' }}>✅ Actif</option>
+    <option value="0" {{ $service->status == 0 ? 'selected' : '' }}>❌ Inactif</option>
+</select>
+
                 </form>
             </div>
             <div>
