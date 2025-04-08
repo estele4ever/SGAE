@@ -30,4 +30,8 @@ class DashboardController extends Controller
             'archiveTypeCount' => $archiveTypeCount,
         ]);
     }
+    public function Accueil(): View
+    {
+        return view('Accueil');
+    }
 }

@@ -3,7 +3,7 @@
 @section('content')
 <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-2xl font-bold mb-6 text-center">Gestion des types d'archives</h2>
-
+     
     <form method="POST" action="{{ route('settings.addArchiveType') }}" class="mb-8">
         @csrf
         <div class="flex flex-col md:flex-row md:space-x-4">
