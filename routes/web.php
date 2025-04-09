@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ArchiveController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
@@ -26,9 +27,9 @@ Route::get('/', function () {return view('welcome');});
 Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::get('/Accueil', [DashboardController::class, 'accueil'])->middleware(['auth', 'verified'])->name('Accueil');
+
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -36,22 +37,15 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/archives', [ArchiveController::class, 'index'])->name('archives.index');
-Route::get('/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
-Route::post('/archives', [ArchiveController::class, 'store'])->name('archives.store');
-Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
-Route::delete('/archives/{id}', [ArchiveController::class, 'destroy'])->name('archives.destroy');
+    Route::get('/archives', [ArchiveController::class, 'index'])->name('archives.index');
+    Route::get('/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
+    Route::post('/archives/store', [ArchiveController::class, 'store'])->name('archives.store');
+    Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
+    Route::delete('/archives/{id}', [ArchiveController::class, 'destroy'])->name('archives.destroy');
 
-Route::get('/archive/{id}', [ArchiveController::class, 'show'])->middleware('service.check');
+    Route::get('/archive/{id}', [ArchiveController::class, 'show'])->middleware('service.check');
 
-/*Route::middleware('auth')->group(function () {
-    Route::get('/settings/security', [SettingsController::class, 'security'])->name('settings.security');
-    Route::get('/settings/services', [SettingsController::class, 'services'])->name('settings.services');
-    Route::get('/settings/archives', [SettingsController::class, 'archives'])->name('settings.archives');
-    Route::get('/settings/storage', [SettingsController::class, 'storage'])->name('settings.storage');
-    Route::get('/settings/statistics', [SettingsController::class, 'statistics'])->name('settings.statistics');
-});
-*/
+
 
 
 Route::prefix('settings')->middleware('auth')->group(function () {

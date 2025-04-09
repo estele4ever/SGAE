@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('type_archives', function (Blueprint $table) {
             $table->id();
-        $table->string('nom');
-        $table->string('services_id');
-        $table->string('description');
-            
+            $table->string('nom');
+            $table->string('services_id');
+            $table->string('description');
+                
             $table->timestamps();
         });
     }

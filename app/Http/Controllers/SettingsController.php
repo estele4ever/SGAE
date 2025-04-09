@@ -116,14 +116,14 @@ public function updateArchiveType(Request $request, $id) {
         $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'required|string',
-            'status' => 'required|boolean'
+            'statut' => 'required|boolean'
         ]);
         
 
         Service::create([
             'nom' => $request->nom,
             'description' => $request->description,
-            'status' => $request->status
+            'statut' => $request->statut
         ]);
 
         return redirect()->route('settings.services')->with('success', 'Service ajouté avec succès.');
@@ -146,11 +146,11 @@ public function updateArchiveType(Request $request, $id) {
     public function updateServiceStatus(Request $request, $id)
 {
     $request->validate([
-        'status' => 'required|boolean',
+        'statut' => 'required|boolean',
     ]);
 
     $service = Service::findOrFail($id);
-    $service->status = $request->status;
+    $service->statut = $request->statut;
     $service->save();
 
     return redirect()->route('settings.services')->with('success', 'Statut du service mis à jour avec succès.');

@@ -28,6 +28,10 @@
                 </div>
                 <nav class="mt-4">
                     <ul>
+                    <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
+                            <i class="fas fa-home"></i>
+                            <a href="{{ route('Accueil') }}">Acceuil</a>
+                        </li>
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-tachometer-alt"></i>
                             <a href="{{ route('dashboard') }}">Dashboard</a>
@@ -46,9 +50,7 @@
                             
                             <!-- Sous-menu qui s'affiche au survol -->
                             <ul class="absolute right-0 w-56 bg-gray-900 shadow-lg hidden group-hover:block mt-1 z-10">
-                                <li class="px-4 py-2 hover:bg-gray-700">
-                                    <a href="\" class="block">Sécurité sur les utilisateurs</a>
-                                </li>
+                                
                                 <li class="px-4 py-2 hover:bg-gray-700">
                                     <a href="{{ route('settings.services') }}" class="block">Organisation des services</a>
                                 </li>
@@ -58,10 +60,14 @@
                                 <li class="px-4 py-2 hover:bg-gray-700">
                                     <a href="{{ route('settings.storage') }}" class="block">Gestion du stockage</a>
                                 </li>
-                                <li class="px-4 py-2 hover:bg-gray-700">
-                                    <a href="{{ route('settings.statistics') }}" class="block">Statistiques</a>
-                                </li>
+                                
                             </ul>
+                        </li>
+
+                       
+                        <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
+                            <i class="fas fa-users"></i>
+                            <a href="{{ route('profile.edit') }}">Gestion des utilisateurs</a>
                         </li>
 
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">

@@ -10,7 +10,7 @@
         <div class="flex flex-col md:flex-row md:space-x-4">
             <input type="text" name="nom" placeholder="Nom du service" class="border p-2 flex-1 mb-2 md:mb-0" required>
             <input type="text" name="description" placeholder="Description" class="border p-2 flex-1 mb-2 md:mb-0" required>
-            <select name="status" class="border p-2 flex-1 mb-2 md:mb-0" required>
+            <select name="statut" class="border p-2 flex-1 mb-2 md:mb-0" required>
                 <option value="">Sélectionnez le statut</option>
                 <option value="1">Actif</option>
                 <option value="0">Inactif</option>
@@ -30,9 +30,15 @@
                 <form method="POST" action="{{ route('settings.updateServiceStatus', $service->id) }}" class="inline">
                     @csrf
                     @method('PATCH')
+<<<<<<< HEAD
                     <select name="status" class="border p-1 pr-8" onchange="this.form.submit()">
     <option value="1" {{ $service->status == 1 ? 'selected' : '' }}>✅ Actif</option>
     <option value="0" {{ $service->status == 0 ? 'selected' : '' }}>❌ Inactif</option>
+=======
+                    <select name="statut" class="border p-1 pr-8" onchange="this.form.submit()">
+    <option value="1" {{ $service->statut == 1 ? 'selected' : '' }}>✅ Actif</option>
+    <option value="0" {{ $service->statut == 0 ? 'selected' : '' }}>❌ Inactif</option>
+>>>>>>> 9aa2d2b1dbad134c4b14c54e1ca7aa83a5ffb131
 </select>
 
                 </form>

@@ -3,14 +3,14 @@
 @section('content')
 <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-2xl font-bold mb-6 text-center">Gestion des types d'archives</h2>
-
+     
     <form method="POST" action="{{ route('settings.addArchiveType') }}" class="mb-8">
         @csrf
         <div class="flex flex-col md:flex-row md:space-x-4">
             <input type="text" name="nom" placeholder="Nom du type d'archive" class="border p-2 flex-1 mb-2 md:mb-0" required>
             <input type="text" name="description" placeholder="Description du type d'archive" class="border p-2 flex-1 mb-2 md:mb-0">
-             <select name="services_id" class="border p-1 flex-1 mb-1 md:mb-0"  required>
-                <option value="">Sélectionnez un ou plusieurs services</option>
+            <select name="services_id" class="border p-1 flex-1 mb-1 md:mb-0"  required>
+                <option value="">Sélectionnez un services</option>
                 @foreach($services as $service)
                 <option value="{{ $service->id }}">{{ $service->nom }}</option>
                 @endforeach
