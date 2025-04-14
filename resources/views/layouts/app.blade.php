@@ -67,7 +67,7 @@
                        
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-users"></i>
-                            <a href="{{ route('profile.edit') }}">Gestion des utilisateurs</a>
+                            <a href="{{ route('users.index') }}">Gestion des utilisateurs</a>
                         </li>
 
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">

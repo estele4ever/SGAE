@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('registregel', function (Blueprint $table) {
+        Schema::create('roles', function (Blueprint $table) {
             $table->id();
-            $table->string('archive_id');
-            $table->string('motif');
-            $table->string('date_gel');
-            $table->string('duree');
-            $table->string('statut');
+            $table->string('archive_id')->unique();
+            $table->string('motif')->nullable();
+            $table->string('permissions')->nullable(); // JSON or comma-separated values
+            $table->boolean('statut')->default(true);
+            $table->string('duree')->nullable();
             $table->timestamps();
         });
     }
@@ -27,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('registregel');
+        Schema::dropIfExists('roles');
     }
 };
