@@ -8,19 +8,25 @@ use App\Models\TypeArchive;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
-
+    
 class ArchiveController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
-
-    public function index()
-    {
-        $archives = Archive::all();
-        return view('archives.index', compact('archives'));
-    }
+    
+    
+    
+        public function index()
+        {
+            // Récupérer les archives depuis la base de données
+            $archives = Archive::all(); // Vous pouvez personnaliser la requête selon vos besoins
+    
+            // Retourner la vue avec les données
+            return view('archives.index',compact('archives'));
+        }
+    
 
     public function create()
     {

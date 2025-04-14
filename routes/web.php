@@ -20,24 +20,24 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 |
 */
 
-Route::get('/', function () {return view('welcome');});
+    Route::get('/', function () {return view('welcome');});
 
 
 
-Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 
 
-Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
-Route::get('/Accueil', [DashboardController::class, 'accueil'])->middleware(['auth', 'verified'])->name('Accueil');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->middleware(['auth', 'verified'])->name('dashboard');
+    Route::get('/Accueil', [DashboardController::class, 'accueil'])->middleware(['auth', 'verified'])->name('Accueil');
 
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+    Route::middleware('auth')->group(function () {
+        Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+        });
 
-    Route::get('/archives', [ArchiveController::class, 'index'])->name('archives.index');
+    Route::get('/archives/index', [ArchiveController::class, 'index'])->name('archives.index');
     Route::get('/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
     Route::post('/archives/store', [ArchiveController::class, 'store'])->name('archives.store');
     Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
@@ -48,31 +48,31 @@ Route::middleware('auth')->group(function () {
 
 
 
-Route::prefix('settings')->middleware('auth')->group(function () {
-    Route::get('/security', [SettingsController::class, 'security'])->name('settings.security');
-   // Route::get('/services', [SettingsController::class, 'services'])->name('settings.services');
-    Route::get('/archives', [SettingsController::class, 'archives'])->name('settings.archives');
-    Route::get('/storage', [SettingsController::class, 'storage'])->name('settings.storage');
-    Route::get('/statistics', [SettingsController::class, 'statistics'])->name('settings.statistics');
+    Route::prefix('settings')->middleware('auth')->group(function () {
+        Route::get('/security', [SettingsController::class, 'security'])->name('settings.security');
+    // Route::get('/services', [SettingsController::class, 'services'])->name('settings.services');
+        Route::get('/archives', [SettingsController::class, 'archives'])->name('settings.archives');
+        Route::get('/storage', [SettingsController::class, 'storage'])->name('settings.storage');
+        Route::get('/statistics', [SettingsController::class, 'statistics'])->name('settings.statistics');
 
-    // Routes pour gere les securites
-    Route::get('/security', [SettingsController::class, 'editUsers'])->name('settings.editUsers');
+        // Routes pour gere les securites
+        Route::get('/security', [SettingsController::class, 'editUsers'])->name('settings.editUsers');
 
 
-    // Routes pour gérer les services
-    Route::post('/services/add', [SettingsController::class, 'addService'])->name('settings.addService');
-    Route::delete('/services/{id}/delete', [SettingsController::class, 'deleteService'])->name('settings.deleteService');
-    Route::get('/settings/services', [SettingsController::class, 'services'])->name('settings.services');
-    Route::post('/settings/services', [SettingsController::class, 'storeService'])->name('settings.storeService');
-    
-    Route::patch('/settings/services/{id}/status', [SettingsController::class, 'updateServiceStatus'])->name('settings.updateServiceStatus');
-    // Routes pour gérer les types d'archives
-    Route::post('/archives/add', [SettingsController::class, 'addArchiveType'])->name('settings.addArchiveType');
-    Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
-    Route::delete('/archives/{id}/delete', [SettingsController::class, 'deleteArchiveType'])->name('settings.deleteArchiveType');
+        // Routes pour gérer les services
+        Route::post('/services/add', [SettingsController::class, 'addService'])->name('settings.addService');
+        Route::delete('/services/{id}/delete', [SettingsController::class, 'deleteService'])->name('settings.deleteService');
+        Route::get('/settings/services', [SettingsController::class, 'services'])->name('settings.services');
+        Route::post('/settings/services', [SettingsController::class, 'storeService'])->name('settings.storeService');
+        
+        Route::patch('/settings/services/{id}/status', [SettingsController::class, 'updateServiceStatus'])->name('settings.updateServiceStatus');
+        // Routes pour gérer les types d'archives
+        Route::post('/archives/add', [SettingsController::class, 'addArchiveType'])->name('settings.addArchiveType');
+        Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
+        Route::delete('/archives/{id}/delete', [SettingsController::class, 'deleteArchiveType'])->name('settings.deleteArchiveType');
 
-    // Routes pour la gestion du stockage
-    Route::post('/storage/clear', [SettingsController::class, 'clearStorage'])->name('settings.clearStorage');
-});
+        // Routes pour la gestion du stockage
+        Route::post('/storage/clear', [SettingsController::class, 'clearStorage'])->name('settings.clearStorage');
+    });
 
 require __DIR__.'/auth.php';
