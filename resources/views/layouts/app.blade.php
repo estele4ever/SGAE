@@ -28,18 +28,22 @@
                 </div>
                 <nav class="mt-4">
                     <ul>
+                    <a href="{{ route('Accueil') }}">
                     <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-home"></i>
-                            <a href="{{ route('Accueil') }}">Acceuil</a>
+                            Acceuil
                         </li>
+                        </a>
+                        <a href="{{ route('dashboard') }}">
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-tachometer-alt"></i>
-                            <a href="{{ route('dashboard') }}">Dashboard</a>
-                        </li>
+                            Dashboard
+                        </li></a>
+                        <a href="{{ route('archives.index') }}">
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-archive"></i>
-                            <a href="{{ route('archives.index') }}">Archives</a>
-                        </li>
+                            Archives
+                        </li></a>
 
                         <!-- Paramètres avec menu déroulant -->
                         <li class="relative group">
@@ -51,29 +55,36 @@
                             <!-- Sous-menu qui s'affiche au survol -->
                             <ul class="absolute right-0 w-56 bg-gray-900 shadow-lg hidden group-hover:block mt-1 z-10">
                                 
+                            <a href="{{ route('settings.services') }}" class="block">
                                 <li class="px-4 py-2 hover:bg-gray-700">
-                                    <a href="{{ route('settings.services') }}" class="block">Organisation des services</a>
-                                </li>
+                                    Organisation des services
+                                </li></a>
+                                <a href="{{ route('settings.archives') }}" class="block">
                                 <li class="px-4 py-2 hover:bg-gray-700">
-                                    <a href="{{ route('settings.archives') }}" class="block">Gestion des types d'archives</a>
-                                </li>
+                                    Gestion des types d'archives
+                                </li></a>
+                                <a href="{{ route('settings.storage') }}" class="block">
                                 <li class="px-4 py-2 hover:bg-gray-700">
-                                    <a href="{{ route('settings.storage') }}" class="block">Gestion du stockage</a>
-                                </li>
+                                    Gestion du stockage
+                                </li></a>
+                                <a href="{{ route('settings.roles') }}" class="block">
+                                <li class="px-4 py-2 hover:bg-gray-700">
+                                    Gestion des roles
+                                </li></a>
                                 
                             </ul>
                         </li>
 
-                       
+                        <a href="{{ route('users.index') }}">
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-users"></i>
-                            <a href="{{ route('users.index') }}">Gestion des utilisateurs</a>
-                        </li>
-
+                            Gestion des utilisateurs
+                        </li></a>
+                        <a href="{{ route('profile.edit') }}">
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-user"></i>
-                            <a href="{{ route('profile.edit') }}">Profil</a>
-                        </li>
+                            Profil
+                        </li></a>
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-sign-out-alt"></i>
                             <form method="POST" action="{{ route('logout') }}" class="inline">

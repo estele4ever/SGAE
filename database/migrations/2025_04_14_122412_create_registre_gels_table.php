@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('registre_gels', function (Blueprint $table) {
             $table->id();
+            $table->string('archive_id')->unique();
+            $table->string('motif')->nullable();
+            $table->string('permissions')->nullable(); // JSON or comma-separated values
+            $table->boolean('statut')->default(true);
+            $table->string('duree')->nullable();
             $table->timestamps();
         });
     }

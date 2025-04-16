@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Service;
+use App\Models\Role;
 use App\Models\User;
 use App\Models\TypeArchive;
 
@@ -18,12 +19,7 @@ class SettingsController extends Controller
         return view('settings.security', compact('users'));
     }
 
-    public function editUsers() {
-
-
-        // Implémentez cette méthode si nécessaire
-    }
-
+   
     public function services() {
         $services = Service::all(); // Récupère tous les services existants
         return view('settings.services', compact('services'));
@@ -173,5 +169,50 @@ public function updateArchiveType(Request $request, $id) {
         Storage::makeDirectory('archives');
 
         return redirect()->route('settings.storage')->with('success', 'Stockage nettoyé avec succès.');
+    }
+
+
+
+    ///////////////////////////////////GESTION DES ROLES/////////////////////////////////////////
+    // Méthode pour afficher la liste des rôles
+    public function index()
+    {
+        $roles = Role::all();
+        return view('settings.roles', compact('roles'));
+    }
+
+    // Méthode pour ajouter un nouveau rôle
+    public function store(Request $request)
+    {
+        $request->validate([
+            'privilege' => 'required|string|max:255',
+        ]);
+
+        Role::create([
+            'privilege' => $request->privilege,
+        ]);
+
+        return redirect()->route('settings.roles')->with('success', 'Rôle ajouté avec succès.');
+    }
+
+    // Méthode pour mettre à jour un rôle existant
+    public function update(Request $request, Role $role)
+    {
+        $request->validate([
+            'privilege' => 'required|string|max:255',
+        ]);
+
+        $role->update([
+            'privilege' => $request->privilege,
+        ]);
+
+        return redirect()->route('settings.roles')->with('success', 'Rôle mis à jour avec succès.');
+    }
+
+    // Méthode pour supprimer un rôle
+    public function destroy(Role $role)
+    {
+        $role->delete();
+        return redirect()->route('settings.roles')->with('success', 'Rôle supprimé avec succès.');
     }
 }

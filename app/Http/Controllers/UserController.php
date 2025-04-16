@@ -39,48 +39,59 @@ class UserController extends Controller
         return view('usermanage.createuser', compact('roles', 'services'));
     }
 
+    public function edit($id)
+    {
+        $users = User::findOrFail($id);
+        $roles = Role::all();
+        $services = Service::all(); 
+    
+        return view('usermanage.edituser', compact('users', 'roles', 'services'));
+    }
 
     public function store(Request $request)
     {
-        $validated = $request->validate([
+       $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8|confirmed',
             'role' => 'required',
+            'service' => 'required',
             'permission' => 'nullable',
         ]);
-
+//dd($request->all());
         User::create([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'password' => Hash::make($validated['password']),
-            'role' => $validated['role'],
-            'permission' => $validated['permission'] ?? '',
+            'name' => $request->name,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'role' => $request->role,
+            'service' => $request->service,
+            'permission' => $request->service ?? '',
         ]);
 
         return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
     }
 
-    public function edit($id)
-{
-    $users = User::findOrFail($id);
-    $roles = Role::all();
-    $services = Service::all(); 
-
-    return view('usermanage.edituser', compact('users', 'roles', 'services'));
-}
+    
 
     public function update(Request $request, User $user)
     {
-        $validated = $request->validate([
-            'name' => 'required',
+        $request->validate([
+            'name' => 'required|string|max:255',
             'email' => "required|email|unique:users,email,{$user->id}",
             'role' => 'required',
-            'permission' => 'nullable',
+            'service' => 'required',
+            'permission' => 'nullable|string',
         ]);
-
-        $user->update($validated);
-        return redirect()->route('users.index')->with('success', 'Utilisateur mis à jour.');
+    
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'role' => $request->role,
+            'service' => $request->service ?? '',
+            'permission' => $request->permission,
+        ]);
+    
+        return redirect()->route('users.index')->with('success', 'Utilisateur mis à jour avec succès.');
     }
 
     public function destroy(User $user)

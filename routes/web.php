@@ -74,6 +74,12 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
         // Routes pour la gestion du stockage
         Route::post('/storage/clear', [SettingsController::class, 'clearStorage'])->name('settings.clearStorage');
+
+        // Routes pour la gestion des rôles
+        Route::get('/roles', [SettingsController::class, 'index'])->name('settings.roles');
+        Route::post('/roles/add', [SettingsController::class, 'store'])->name('settings.addRole');
+        Route::put('/roles/update/{id}', [SettingsController::class, 'update'])->name('settings.updateRole');
+        Route::delete('/roles/{id}/delete', [SettingsController::class, 'destroy'])->name('settings.deleteRole');
     });
 
 
