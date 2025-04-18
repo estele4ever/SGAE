@@ -61,7 +61,7 @@
                                 </li></a>
                                 <a href="{{ route('settings.archives') }}" class="block">
                                 <li class="px-4 py-2 hover:bg-gray-700">
-                                    Gestion des types d'archives
+                                    Gestion des profils d'archives
                                 </li></a>
                                 <a href="{{ route('settings.storage') }}" class="block">
                                 <li class="px-4 py-2 hover:bg-gray-700">

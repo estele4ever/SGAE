@@ -43,7 +43,7 @@
                         <p class="text-gray-700">{{ __('Nombre total d\'archives :') }} <span class="font-semibold">{{ $archiveCount ?? 0 }}</span></p>
                         <p class="text-gray-700">{{ __('Nombre total d\'utilisateurs :') }} <span class="font-semibold">{{ $userCount ?? 0 }}</span></p>
                         <p class="text-gray-700">{{ __('Nombre total de services :') }} <span class="font-semibold">{{ $serviceCount ?? 0 }}</span></p>
-                        <p class="text-gray-700">{{ __('Nombre total de types d\'archives :') }} <span class="font-semibold">{{ $archiveTypeCount ?? 0 }}</span></p>
+                        <p class="text-gray-700">{{ __('Nombre total de profil d\'archives :') }} <span class="font-semibold">{{ $archiveTypeCount ?? 0 }}</span></p>
                     </div>
                 </div>
             </div>

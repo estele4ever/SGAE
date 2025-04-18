@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Gestion des types d'archives</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center">Gestion des profils d'archives</h2>
      
     <form method="POST" action="{{ route('settings.addArchiveType') }}" class="mb-8">
         @csrf
@@ -46,7 +46,7 @@
 <!-- MODAL MODIFICATION -->
 <div id="editModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden">
     <div class="bg-white p-6 rounded-lg shadow-md w-96">
-        <h2 class="text-xl font-bold mb-4">Modifier le type d’archive</h2>
+        <h2 class="text-xl font-bold mb-4">Modifier le profil d’archive</h2>
         <form method="POST" action="" id="editForm">
     @csrf
     @method('PUT')

@@ -38,8 +38,8 @@
 
                     <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div class="p-6 text-gray-900">
-                            <h3 class="text-lg font-bold">{{ __("Types d'Archives") }}</h3>
-                            <p>{{ __("Nombre total de types d'archives :") }} <span class="font-semibold">{{ $archiveTypeCount ?? 0 }}</span></p>
+                            <h3 class="text-lg font-bold">{{ __("Profil d'Archives") }}</h3>
+                            <p>{{ __("Nombre total de profil d'archives :") }} <span class="font-semibold">{{ $archiveTypeCount ?? 0 }}</span></p>
                         </div>
                     </div>
                 </div>

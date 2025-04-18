@@ -38,7 +38,7 @@
             <div>
                 <label for="type_id" class="block text-sm font-medium text-gray-700">Type d'Archive</label>
                 <select name="type_id" id="type_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                    <option value="">-- Sélectionner un type d'archive --</option>
+                    <option value="">-- Sélectionner un profil d'archive --</option>
                     @foreach($types as $type)
                         <option value="{{ $type->id }}">{{ $type->nom }}</option>
                     @endforeach

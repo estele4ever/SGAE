@@ -32,6 +32,17 @@ class DashboardController extends Controller
     }
     public function Accueil(): View
     {
-        return view('Accueil');
+        $archiveCount = Archive::count();
+        $serviceCount = Service::count();
+        $userCount = User::count();
+        $archiveTypeCount = TypeArchive::count();
+//dd($archiveCount, $serviceCount, $userCount, $archiveTypeCount);
+        return view('Accueil', [
+            'archiveCount' => $archiveCount,
+            'serviceCount' => $serviceCount,
+            'userCount' => $userCount,
+            'archiveTypeCount' => $archiveTypeCount,
+        ]);
+        
     }
 }
