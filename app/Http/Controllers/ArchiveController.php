@@ -17,7 +17,7 @@ class ArchiveController extends Controller
     }
     
     
-    
+    /*
         public function index()
         {
             // Récupérer les archives depuis la base de données
@@ -25,8 +25,20 @@ class ArchiveController extends Controller
     
             // Retourner la vue avec les données
             return view('archives.index',compact('archives'));
+        }*/
+        public function index(Request $request)
+        {
+            $query = Archive::query();
+        
+            if ($request->has('search') && !empty($request->search)) {
+                $query->where('titre', 'like', '%' . $request->search . '%');
+            }
+        
+            $archives = $query->latest()->get(); // trié par date si tu veux
+        
+            return view('archives.index', compact('archives'));
         }
-    
+        
 
     public function create()
     {
@@ -95,5 +107,17 @@ class ArchiveController extends Controller
         $archive->delete();
 
         return redirect()->route('archives.index')->with('success', 'Archive supprimée avec succès.');
+    }
+
+    public function telecharger($id)
+    {
+        $archive = Archive::findOrFail($id);
+    
+        $chemin = public_path($archive->fichier); 
+    
+        if (file_exists($chemin)) {
+            return response()->download($chemin);
+        }
+        return redirect()->back()->with('error', 'Fichier introuvable.');
     }
 }

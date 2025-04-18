@@ -43,7 +43,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
     Route::post('/archives/store', [ArchiveController::class, 'store'])->name('archives.store');
     Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
     Route::delete('/archives/{id}', [ArchiveController::class, 'destroy'])->name('archives.destroy');
-
+    Route::get('/archives/{id}/telecharger', [ArchiveController::class, 'telecharger'])->name('archives.telecharger');
+    
     Route::get('/archive/{id}', [ArchiveController::class, 'show'])->middleware('service.check');
 
 

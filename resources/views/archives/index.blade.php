@@ -17,6 +17,16 @@
         Ajouter une archive
     </a>
 
+    <form method="GET" action="{{ route('archives.index') }}" class="mb-4 flex items-center space-x-2">
+    <input type="text" name="search" value="{{ request('search') }}" 
+           placeholder="Rechercher une archive..." 
+           class="border rounded px-3 py-2 w-1/3 shadow-sm focus:outline-none focus:ring focus:border-indigo-300">
+    <button type="submit" 
+            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
+        Rechercher
+    </button>
+</form>
+
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
