@@ -44,7 +44,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
     Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
     Route::delete('/archives/{id}', [ArchiveController::class, 'destroy'])->name('archives.destroy');
     Route::get('/archives/{id}/telecharger', [ArchiveController::class, 'telecharger'])->name('archives.telecharger');
-    
+    Route::post('/archives/{id}/geler', [ArchiveController::class, 'geler'])->name('archives.geler');
+
     Route::get('/archive/{id}', [ArchiveController::class, 'show'])->middleware('service.check');
 
 
@@ -66,13 +67,20 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
         Route::delete('/services/{id}/delete', [SettingsController::class, 'deleteService'])->name('settings.deleteService');
         Route::get('/settings/services', [SettingsController::class, 'services'])->name('settings.services');
         Route::post('/settings/services', [SettingsController::class, 'storeService'])->name('settings.storeService');
-        
+        Route::put('/archives/updateservice/{id}', [SettingsController::class, 'updateservice'])->name('settings.updateservice');
         Route::patch('/settings/services/{id}/status', [SettingsController::class, 'updateServiceStatus'])->name('settings.updateServiceStatus');
+        
+        
+        
         // Routes pour gérer les types d'archives
         Route::post('/archives/add', [SettingsController::class, 'addArchiveType'])->name('settings.addArchiveType');
         Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
         Route::delete('/archives/{id}/delete', [SettingsController::class, 'deleteArchiveType'])->name('settings.deleteArchiveType');
+        Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
+        Route::patch('/settings/types/{id}/status', [SettingsController::class, 'updateTypeStatus'])->name('settings.updateTypeStatus');
 
+
+        
         // Routes pour la gestion du stockage
         Route::post('/storage/clear', [SettingsController::class, 'clearStorage'])->name('settings.clearStorage');
 

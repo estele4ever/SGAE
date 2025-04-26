@@ -40,7 +40,7 @@
 
                     @if (session('status') === 'verification-link-sent')
                         <p class="mt-2 font-medium text-sm text-green-600">
-                            {{ __('Un nouveau lien de veification a ete envoyer a votre coA new verification link has been sent to your email address.') }}
+                            {{ __('Un nouveau lien de veification a ete envoyer a votre adresse email.') }}
                         </p>
                     @endif
                 </div>
@@ -48,7 +48,7 @@
         </div>
 
         <div class="flex items-center gap-4">
-            <x-primary-button>{{ __('Save') }}</x-primary-button>
+            <x-primary-button>{{ __('Enregistrer') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
                 <p
@@ -57,7 +57,7 @@
                     x-transition
                     x-init="setTimeout(() => show = false, 2000)"
                     class="text-sm text-gray-600"
-                >{{ __('Saved.') }}</p>
+                >{{ __('Enregistrer.') }}</p>
             @endif
         </div>
     </form>

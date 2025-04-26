@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Archive;
+use App\Models\RegistreGel;
 use App\Models\Service;
 use App\Models\TypeArchive;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\File;
+use Illuminate\Support\Carbon;
+
     
 class ArchiveController extends Controller
 {
@@ -120,4 +123,27 @@ class ArchiveController extends Controller
         }
         return redirect()->back()->with('error', 'Fichier introuvable.');
     }
+
+
+public function geler(Request $request, $id)
+{
+    
+    $request->validate([
+        'motif' => 'required|string',
+        'duree' => 'required|integer|min:1',
+        'statut' => 'required|boolean'
+    ]);
+    RegistreGel::create([
+        'archive_id' => $id,
+        'duree' => $request->duree,
+        'motif' => $request->motif,
+        'statut' => $request->statut,
+        'date_gele' => now(),
+    ]);
+    
+    
+
+    return redirect()->route('archives.show', $id)->with('success', 'L’archive a été gelée avec succès.');
+}
+
 }

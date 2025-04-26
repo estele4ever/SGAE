@@ -19,10 +19,15 @@
         </div>
     </form>
 
+    <!-- Champ de recherche -->
+    <div class="mb-4">
+        <input type="text" id="searchServiceInput" placeholder="Rechercher un service..." class="w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
+    </div>
+
     <!-- Liste des services -->
-    <ul class="list-disc pl-6">
+    <ul class="list-disc pl-6" id="serviceList">
         @foreach($services as $service)
-        <li class="flex justify-between items-center mb-4 p-2 border-b">
+        <li class="flex justify-between items-center mb-4 p-2 border-b service-item">
             <div class="flex-1">
                 <strong>{{ $service->nom }}</strong> - {{ $service->description }}
             </div>
@@ -31,12 +36,13 @@
                     @csrf
                     @method('PATCH')
                     <select name="statut" class="border p-1 pr-8" onchange="this.form.submit()">
-    <option value="1" {{ $service->statut == 1 ? 'selected' : '' }}>✅ Actif</option>
-    <option value="0" {{ $service->statut == 0 ? 'selected' : '' }}>❌ Inactif</option>
-</select>
-
+                        <option value="1" {{ $service->statut == 1 ? 'selected' : '' }}>✅ Actif</option>
+                        <option value="0" {{ $service->statut == 0 ? 'selected' : '' }}>❌ Inactif</option>
+                    </select>
                 </form>
             </div>
+            <button onclick="openEditModal('{{ $service->id }}', '{{ $service->nom }}', '{{ $service->description }}', '{{ $service->statut }}')" class="text-blue-500 hover:text-blue-700">Modifier</button>
+
             <div>
                 <form method="POST" action="{{ route('settings.deleteService', $service->id) }}" class="inline">
                     @csrf
@@ -46,6 +52,58 @@
             </div>
         </li>
         @endforeach
-    </ul> 
+    </ul>
 </div>
+
+<!-- 🛠️ MODAL MODIFICATION -->
+<div id="editModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden">
+    <div class="bg-white p-6 rounded-lg shadow-md w-96">
+        <h2 class="text-xl font-bold mb-4">Modifier le service</h2>
+        <form method="POST" action="" id="editForm">
+            @csrf
+            @method('PUT')
+            <input type="hidden" name="id" id="edit_id">
+            <input type="text" name="nom" id="edit_nom" placeholder="Nom" class="border p-2 w-full mb-2" required>
+            <input type="text" name="description" id="edit_description" placeholder="Description" class="border p-2 w-full mb-2">
+            
+            <select name="statut" class="border p-1 pr-8" id="edit_statut" required>
+                <option value="1">✅ Actif</option>
+                <option value="0">❌ Inactif</option>
+            </select>
+
+            <div class="flex justify-end space-x-2 mt-4">
+                <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-400 text-white rounded">Annuler</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Enregistrer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- Script JavaScript pour la recherche instantanée --}}
+<script>
+    document.getElementById("searchServiceInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let items = document.querySelectorAll("#serviceList .service-item");
+
+        items.forEach(function(item) {
+            let text = item.textContent.toLowerCase();
+            item.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+
+    function openEditModal(id, nom, description, statut) {
+        document.getElementById('edit_id').value = id;
+        document.getElementById('edit_nom').value = nom;
+        document.getElementById('edit_description').value = description;
+        document.getElementById('edit_statut').value = statut;
+
+        document.getElementById('editForm').action = "{{ route('settings.updateservice', ':id') }}".replace(':id', id);
+        document.getElementById('editModal').classList.remove('hidden');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.add('hidden');
+    }
+</script>
+
 @endsection

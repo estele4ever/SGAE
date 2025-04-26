@@ -24,7 +24,7 @@
             </h2>
 
             <p class="mt-1 text-sm text-gray-600">
-                {{ __('Once your account is deleted, all of its resources and data will be permanently deleted. Please enter your password to confirm you would like to permanently delete your account.') }}
+                {{ __("une fois le compte supprimer, toutes ses ressources et donnees serons definitivement supprimer. s'il vous plait entrer votre mot de passe pour confirmer la suppression definitivement du compte.") }}
             </p>
 
             <div class="mt-6">

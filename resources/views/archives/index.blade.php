@@ -8,7 +8,12 @@
         </svg>
         Liste des Archives
     </h1>
-    
+
+    {{-- Champ de recherche --}}
+    <div class="mb-4">
+        <input type="text" id="searchInput" placeholder="Rechercher une archive..." class="w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500">
+    </div>
+
     <a href="{{ route('archives.create') }}" 
        class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded mb-4 inline-flex items-center">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
@@ -16,16 +21,6 @@
         </svg>
         Ajouter une archive
     </a>
-
-    <form method="GET" action="{{ route('archives.index') }}" class="mb-4 flex items-center space-x-2">
-    <input type="text" name="search" value="{{ request('search') }}" 
-           placeholder="Rechercher une archive..." 
-           class="border rounded px-3 py-2 w-1/3 shadow-sm focus:outline-none focus:ring focus:border-indigo-300">
-    <button type="submit" 
-            class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded">
-        Rechercher
-    </button>
-</form>
 
     <div class="overflow-x-auto bg-white shadow-md rounded-lg">
         <table class="min-w-full divide-y divide-gray-200">
@@ -37,9 +32,26 @@
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white divide-y divide-gray-200" id="archiveTable">
                 @foreach ($archives as $archive)
-                    <tr>
+                    @php
+                        $extension = strtolower(pathinfo($archive->fichier, PATHINFO_EXTENSION));
+                        $icon = match($extension) {
+                            'jpg', 'jpeg', 'png', 'gif' => '🖼️',
+                            'pdf' => '📄',
+                            'doc', 'docx' => '📃',
+                            'xls', 'xlsx' => '📊',
+                            'ppt', 'pptx' => '📽️',
+                            'zip', 'rar' => '🗜️',
+                            'exe' => '💾',
+                            default => '📁',
+                        };
+                        $gel = DB::table('registre_gels')
+                            ->where('archive_id', $archive->id)
+                            ->where('statut', 1)
+                            ->first();
+                    @endphp
+                    <tr class="archive-row">
                         <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                             {{ $archive->titre }}
                         </td>
@@ -50,24 +62,28 @@
                             {{ $archive->created_at->format('d/m/Y') }}
                         </td>
                         <td class="px-6 py-4 whitespace-nowrap text-sm flex items-center space-x-2">
-                            <a href="{{ route('archives.show', $archive->id) }}" 
-                               class="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded inline-flex items-center">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m4 0a1 1 0 100-2m0 4a1 1 0 100 2m3-2H9m12 0h-3m-9 0H3m18 0a9 9 0 11-6.636-8.881" />
-                                </svg>
-                                Voir
+                            <a href="{{ route('archives.show', $archive->id) }}" class="text-xl hover:text-indigo-700" title="Voir l'archive">
+                                {{ $icon }}
                             </a>
-                            <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" 
-                                        class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded inline-flex items-center">
+                            @if (!$gel)
+                                <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded inline-flex items-center">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                        Supprimer
+                                    </button>
+                                </form>
+                            @else
+                                <button disabled class="bg-gray-300 text-gray-500 py-1 px-3 rounded inline-flex items-center cursor-not-allowed" title="Archive gelée">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6 18l12-12M3 12a9 9 0 0115.75-6.5" />
                                     </svg>
-                                    Supprimer
+                                    Gelée
                                 </button>
-                            </form>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -75,4 +91,17 @@
         </table>
     </div>
 </div>
+
+{{-- SCRIPT DE RECHERCHE EN TEMPS RÉEL --}}
+<script>
+    document.getElementById("searchInput").addEventListener("keyup", function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll("#archiveTable .archive-row");
+
+        rows.forEach(function(row) {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? "" : "none";
+        });
+    });
+</script>
 @endsection
