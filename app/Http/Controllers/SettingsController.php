@@ -8,6 +8,7 @@ use App\Models\Service;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\TypeArchive;
+use App\Models\ArchiveProfileField;
 
 
 //dd($request->all());
@@ -35,7 +36,7 @@ class SettingsController extends Controller
         return view('settings.archives', compact('services', 'archiveTypes'));
     }
     
-    public function addArchiveType(Request $request) {
+    /*public function addArchiveType(Request $request) {
 
         $request->validate([
             'nom' => 'required|string|max:255',
@@ -56,7 +57,7 @@ class SettingsController extends Controller
         $typeArchive->services()->attach($request->services_id);
     
         return redirect()->route('settings.archives')->with('success', 'Type d\'archive ajouté avec succès.');
-    }
+    }*/
    
 public function updateArchiveType(Request $request, $id) {
 
@@ -85,14 +86,16 @@ public function updateArchiveType(Request $request, $id) {
 }
 
 public function updateTypeStatus(Request $request, $id)
-    {
+    { 
         $request->validate([
             'statut' => 'required|boolean',
         ]);
 
-        $service = Service::findOrFail($id);
-        $service->statut = $request->statut;
-        $service->save();
+        $types = TypeArchive::findOrFail($id);
+        
+
+        $types->statut = $request->statut;
+        $types->save();
 
         return redirect()->route('settings.archives')->with('success', 'Statut du type d\'archive mis à jour avec succès.');
     }
@@ -108,6 +111,52 @@ public function updateTypeStatus(Request $request, $id)
         return redirect()->route('settings.archives')->with('success', 'Type d\'archive supprimé.');
     }
 
+
+
+    public function addArchiveProfile(Request $request)
+    {
+        // 1. Valider les données principales
+        $validated = $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'services_id' => 'required|exists:services,id',
+            'statut' => 'required|boolean',
+            'champs.nom_champ' => 'required|array',
+            'champs.type_champ' => 'required|array',
+        ]);
+
+        // 2. Créer le profil
+        $profile = TypeArchive::create([
+            'nom' => $validated['nom'],
+            'description' => $validated['description'],
+            'services_id' => $validated['services_id'],
+            'statut' => $validated['statut'],
+        ]);
+
+        // 3. Ajouter les champs
+        foreach ($request->champs['nom_champ'] as $index => $nom_champ) {
+            ArchiveProfileField::create([
+                'archive_profile_id' => $profile->id,
+                'nom_champ' => $nom_champ,
+                'type_champ' => $request->champs['type_champ'][$index],
+                'obligatoire' => isset($request->champs['obligatoire'][$index]) ? 1 : 0,
+                'ordre' => $index,
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Profil d\'archive créé avec ses champs.');
+    }
+
+    public function getProfileFields($id)
+    {
+        
+        $fields = ArchiveProfileField::where('archive_profile_id', $id)
+            ->orderBy('ordre')
+            ->get(['id', 'nom_champ', 'type_champ', 'obligatoire']);
+    
+        return response()->json($fields);
+    }
+    
 
     ////////////////////////////////GESTION DES TYPES D'ARCHIVES/////////////////////////////////////////
 

@@ -50,6 +50,8 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
+        dd($request->all());
+
        $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users',
@@ -58,7 +60,7 @@ class UserController extends Controller
             'service' => 'required',
             'permission' => 'nullable',
         ]);
-//dd($request->all());
+
         User::create([
             'name' => $request->name,
             'email' => $request->email,

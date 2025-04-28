@@ -20,15 +20,7 @@ class ArchiveController extends Controller
     }
     
     
-    /*
-        public function index()
-        {
-            // Récupérer les archives depuis la base de données
-            $archives = Archive::all(); // Vous pouvez personnaliser la requête selon vos besoins
-    
-            // Retourner la vue avec les données
-            return view('archives.index',compact('archives'));
-        }*/
+   
         public function index(Request $request)
         {
             $query = Archive::query();
@@ -42,55 +34,58 @@ class ArchiveController extends Controller
             return view('archives.index', compact('archives'));
         }
         
-
+       
+        
     public function create()
     {
-        $types = TypeArchive::all();
-        $services = Service::all();
+        $services = Service::where('statut', 1)->get();
+
+        $types = TypeArchive::where('statut', 1)->get();
         return view('archives.create', compact('types', 'services'));
     }
+
+
     public function store(Request $request)
     {
+        dd($request->all()); 
         $request->validate([
             'titre' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'categorie' => 'required|string|max:255',
-            'type_id' => 'required|exists:type_archives,id',
-            'service_id' => 'required|exists:services,id',     
-            'metadata' => 'nullable|string|max:255', 
+            'description' => 'nullable|string',//
+            'categorie' => 'required|string|max:255',//
+            'archive_profile_id' => 'required|exists:type_archives,id',
+            'service_id' => 'required|exists:services,id',
+            'champs' => 'nullable|array', // <- ici on valide que champs est bien un tableau
             'fichier' => 'required|file|max:2048',
         ]);
-       
+    
         $destinationPath = public_path('archives');
-
-        // Vérifier si le dossier existe, et le créer s'il n'existe pas
+    
         if (!File::exists($destinationPath)) {
             File::makeDirectory($destinationPath, 0755, true, true);
-            // Les paramètres de makeDirectory sont :
-            // 1. Le chemin du dossier à créer
-            // 2. Les permissions (0755 est courant pour les dossiers web)
-            // 3. recursive (true pour créer les dossiers parents si nécessaire)
-            // 4. force (true pour créer le dossier même s'il existe déjà)
         }
-
-        // Enregistrement du fichier dans public/archives/
+    
         $fichier = $request->file('fichier');
         $fichierNom = time() . '_' . $fichier->getClientOriginalName();
-        $fichier->move($destinationPath, $fichierNom); // Utiliser $destinationPath
-
+        $fichier->move($destinationPath, $fichierNom);
+    
+        // Préparer les champs dynamiques en JSON
+        $metadata = null;
+        if ($request->has('champs')) {
+            $metadata = json_encode($request->input('champs'));
+        }
+    
         Archive::create([
             'titre' => $request->titre,
             'description' => $request->description,
             'categorie' => $request->categorie,
-            'type_id' => $request->type_id, // Utilisation de la valeur sélectionnée
-            'service_id' => $request->service_id, // Utilisation de la valeur sélectionnée
-            'metadata' => $request->metadata, // Enregistrement des métadonnées telles quelles
+            'type_id' => $request->type_id,
+            'service_id' => $request->service_id,
+            'metadata' => $metadata, // ici on stocke tous les champs dynamiques au format JSON
             'fichier' => 'archives/' . $fichierNom,
         ]);
-//dd($request->all());
+    
         return redirect()->route('archives.index')->with('success', 'Archive ajoutée avec succès.');
-    }
-        
+    }     
 
 
     public function show($id)

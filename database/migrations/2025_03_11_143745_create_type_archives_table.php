@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('nom');
             $table->string('services_id');
             $table->string('description');
+            $table->boolean('statut')->default(false);
                 
             $table->timestamps();
         });

@@ -1,89 +1,68 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-lg">
-        <div class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl font-bold text-gray-800">Ajouter une Archive</h1>
-            <a href="{{ route('archives.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Retour
-            </a>
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Créer une Archive</h2>
+
+    <form method="POST" action="{{ route('archives.store') }}">
+        @csrf
+
+        <!-- Choix du profil d'archive -->
+        <div class="mb-4">
+            <label class="block mb-2 font-semibold">Profil d'archive</label>
+            <select id="archiveProfileSelect" name="archive_profile_id" class="w-full border p-2" required>
+                <option value="">-- Sélectionnez un type d'archive --</option>
+                @foreach($types as $profile)
+                    <option value="{{ $profile->id }}">{{ $profile->nom }}</option>
+                @endforeach
+            </select>
         </div>
-        <form action="{{ route('archives.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
-            @csrf
 
-            <div>
-                <label for="titre" class="block text-sm font-medium text-gray-700">Titre</label>
-                <input type="text" name="titre" id="titre" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                @error('titre')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+        <!-- Zone pour générer les champs -->
+        <div id="dynamicFields" class="mb-4"></div>
 
-            <div>
-                <label for="service_id" class="block text-sm font-medium text-gray-700">Service</label>
-                <select name="service_id" id="service_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                    <option value="">-- Sélectionner un service --</option>
-                    @foreach($services as $service)
-                        <option value="{{ $service->id }}">{{ $service->nom }}</option>
-                    @endforeach
-                </select>
-                @error('service_id')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+        <!-- Bouton -->
+        <div class="text-right">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Créer l'Archive</button>
+        </div>
+    </form>
+</div>
 
-            <div>
-                <label for="type_id" class="block text-sm font-medium text-gray-700">Type d'Archive</label>
-                <select name="type_id" id="type_id" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                    <option value="">-- Sélectionner un profil d'archive --</option>
-                    @foreach($types as $type)
-                        <option value="{{ $type->id }}">{{ $type->nom }}</option>
-                    @endforeach
-                </select>
-                @error('type_id')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+<script>
+    document.getElementById('archiveProfileSelect').addEventListener('change', function() {
+    const profileId = this.value;
+    const dynamicFields = document.getElementById('dynamicFields');
 
-            <div>
-                <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
-                <textarea name="description" id="description" rows="4" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500"></textarea>
-                @error('description')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+    dynamicFields.innerHTML = ''; // Effacer les anciens champs
 
-            <div>
-                <label for="categorie" class="block text-sm font-medium text-gray-700">Catégorie</label>
-                <input type="text" name="categorie" id="categorie" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                @error('categorie')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+    if (profileId) {
 
-            <div>
-                <label for="metadata" class="block text-sm font-medium text-gray-700">Métadonnées (séparées par des virgules)</label>
-                <textarea name="metadata" id="metadata" rows="3" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" placeholder="Taille: 1.2MB, Créateur: John Doe, Date de création: 2023-10-26"></textarea>
-                @error('metadata')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-                <p class="text-gray-500 text-xs italic">Veuillez entrer les métadonnées sous forme de paires clé: valeur, séparées par des virgules.</p>
-            </div>
+        fetch(`/settings/archive-profile/${profileId}/fields  `)
+            .then(response => response.json())
+            .then(fields => {
+                fields.forEach(field => {
+                    const div = document.createElement('div');
+                    div.classList.add('mb-2');
 
-            <div>
-                <label for="fichier" class="block text-sm font-medium text-gray-700">Fichier</label>
-                <input type="file" name="fichier" id="fichier" class="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500" required>
-                @error('fichier')
-                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                @enderror
-            </div>
+                    let inputHTML = `
+                        <label class="block mb-1 font-semibold">${field.nom_champ}${field.obligatoire ? ' *' : ''}</label>
+                        <input 
+                            type="${field.type_champ}" 
+                            name="champs[${field.nom_champ}]" 
+                            class="w-full border p-2" 
+                            ${field.obligatoire ? 'required' : ''}
+                        >
+                    `;
+                    div.innerHTML = inputHTML;
+                    dynamicFields.appendChild(div);
+                });
+            })
+            .catch(error => {
+                alert("hello");
 
-            <div class="flex justify-end">
-                <button type="submit" class="bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Enregistrer</button>
-            </div>
-        </form>
-    </div>
+                console.error('Erreur chargement champs:', error);
+            });
+        }
+    });
+</script>
 @endsection

@@ -1,125 +1,57 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Gestion des profils d'archives</h2>
-     
-    <form method="POST" action="{{ route('settings.addArchiveType') }}" class="mb-8">
+<div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Créer un Profil d'Archive</h2>
+
+    <form method="POST" action="{{ route('settings.addArchiveProfile') }}">
         @csrf
-        <div class="flex flex-col md:flex-row md:space-x-4">
-            <input type="text" name="nom" placeholder="Nom du type d'archive" class="border p-2 flex-1 mb-2 md:mb-0" required>
-            <input type="text" name="description" placeholder="Description du type d'archive" class="border p-2 flex-1 mb-2 md:mb-0">
-            <select name="services_id" class="border p-1 flex-1 mb-1 md:mb-0" required>
-                <option value="">Sélectionnez un service</option>
+        <!-- Infos principales -->
+        <div class="mb-4">
+            <input type="text" name="nom" placeholder="Nom du Profil" class="w-full border p-2 mb-2" required>
+            <textarea name="description" placeholder="Description" class="w-full border p-2 mb-2"></textarea>
+            <select name="services_id" class="w-full border p-2 mb-2" required>
+                <option value="">-- Sélectionnez un service --</option>
                 @foreach($services as $service)
                     <option value="{{ $service->id }}">{{ $service->nom }}</option>
                 @endforeach
             </select>
-            <select name="statut" class="border p-2 flex-1 mb-2 md:mb-0" required>
-                <option value="">Sélectionnez le statut</option>
+            <select name="statut" class="w-full border p-2 mb-2" required>
                 <option value="1">Actif</option>
                 <option value="0">Inactif</option>
             </select>
-            <button type="submit" class="ml-0 md:ml-2 bg-blue-500 text-white px-4 py-2 rounded">Ajouter</button>
+        </div>
+
+        <!-- Ajout dynamique de champs -->
+        <h3 class="text-xl font-bold mb-2">Champs personnalisés</h3>
+        <div id="champs-container" class="mb-4"></div>
+
+        <button type="button" onclick="ajouterChamp()" class="bg-green-500 text-white px-3 py-1 rounded mb-4">➕ Ajouter un champ</button>
+
+        <div class="text-right">
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Créer Profil</button>
         </div>
     </form>
-
-    <!-- 🔍 Champ de recherche -->
-    <div class="mb-4">
-        <input type="text" id="searchArchiveTypeInput" placeholder="Rechercher un type d'archive..." class="w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
-    </div>
-
-    <ul class="list-disc pl-6" id="archiveTypeList">
-        @foreach($archiveTypes as $type)
-        <li class="flex justify-between items-center mb-4 p-2 border-b archive-type-item">
-            <div class="flex-1">
-                <strong>{{ $type->nom }}</strong> 
-                (<span class="text-gray-600">{{ $type->services->pluck('nom')->join(', ') }}</span>)
-                <br>
-                <span class="text-sm text-gray-500">{{ $type->description }}</span>
-            </div>
-            <div>
-                <form method="POST" action="{{ route('settings.updateTypeStatus', $service->id) }}" class="inline">
-                    @csrf
-                    @method('PATCH')
-                    <select name="statut" class="border p-1 pr-8" onchange="this.form.submit()">
-                        <option value="1" {{ $service->statut == 1 ? 'selected' : '' }}>✅ Actif</option>
-                        <option value="0" {{ $service->statut == 0 ? 'selected' : '' }}>❌ Inactif</option>
-                    </select>
-                </form>
-            </div>
-            <div class="flex space-x-2">
-                <button onclick="openEditModal('{{ $type->id }}', '{{ $type->nom }}', '{{ $type->description }}', '{{ $type->services_id }}', '{{ $type->statut }}')" class="text-blue-500 hover:text-blue-700">Modifier</button>
-                <form method="POST" action="{{ route('settings.deleteArchiveType', $type->id) }}" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="text-red-500 hover:text-red-700">Supprimer</button>
-                </form>
-            </div>
-        </li>
-        @endforeach
-    </ul>
 </div>
 
-<!-- 🛠️ MODAL MODIFICATION -->
-<div id="editModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden">
-    <div class="bg-white p-6 rounded-lg shadow-md w-96">
-        <h2 class="text-xl font-bold mb-4">Modifier le profil d’archive</h2>
-        <form method="POST" action="" id="editForm">
-            @csrf
-            @method('PUT')
-            <input type="hidden" name="id" id="edit_id">
-            <input type="text" name="nom" id="edit_nom" placeholder="Nom" class="border p-2 w-full mb-2" required>
-            <input type="text" name="description" id="edit_description" placeholder="Description" class="border p-2 w-full mb-2">
-            <select name="statut" class="border p-1 pr-8" id="edit_statut" required>
-                <option value="1">✅ Actif</option>
-                <option value="0">❌ Inactif</option>
-            </select>
-            <select name="services_id" id="edit_services" class="border p-2 w-full mb-2" required>
-                <option value="">Sélectionnez un service</option>
-                @foreach($services as $service)
-                    <option value="{{ $service->id }}">{{ $service->nom }}</option>
-                @endforeach
-            </select>
-
-            <div class="flex justify-end space-x-2 mt-4">
-                <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-400 text-white rounded">Annuler</button>
-                <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded">Enregistrer</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-<!-- 🔍 JS recherche instantanée -->
 <script>
-    document.getElementById("searchArchiveTypeInput").addEventListener("keyup", function() {
-        let filter = this.value.toLowerCase();
-        let items = document.querySelectorAll("#archiveTypeList .archive-type-item");
-
-        items.forEach(function(item) {
-            let text = item.textContent.toLowerCase();
-            item.style.display = text.includes(filter) ? "" : "none";
-        });
-    });
-
-    function openEditModal(id, nom, description, services,statut) {
-        document.getElementById('edit_id').value = id;
-        document.getElementById('edit_nom').value = nom;
-        document.getElementById('edit_description').value = description;
-        document.getElementById('edit_statut').value = statut;
-        
-        let select = document.getElementById('edit_services');
-        for (let i = 0; i < select.options.length; i++) {
-            select.options[i].selected = select.options[i].value == services;
-        }
-
-        document.getElementById('editForm').action = "{{ route('settings.updateArchiveType', ':id') }}".replace(':id', id);
-        document.getElementById('editModal').classList.remove('hidden');
-    }
-
-    function closeEditModal() {
-        document.getElementById('editModal').classList.add('hidden');
-    }
+function ajouterChamp() {
+    const container = document.getElementById('champs-container');
+    const champHTML = `
+        <div class="flex items-center gap-2 mb-2">
+            <input type="text" name="champs[nom_champ][]" placeholder="Nom du champ" class="border p-2 flex-1" required>
+            <select name="champs[type_champ][]" class="border p-2 flex-1" required>
+                <option value="text">Texte</option>
+                <option value="number">Nombre</option>
+                <option value="date">Date</option>
+                <option value="file">Fichier</option>
+            </select>
+            <label class="flex items-center">
+                <input type="checkbox" name="champs[obligatoire][]" value="1" class="mr-1"> Obligatoire
+            </label>
+        </div>
+    `;
+    container.insertAdjacentHTML('beforeend', champHTML);
+}
 </script>
-
 @endsection
