@@ -3,7 +3,11 @@
 @section('content')
 <div class="container mx-auto">
     <h2 class="text-xl font-bold mb-4">Liste des rôles</h2>
-    
+    @if(session('success'))
+        <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
     <form method="POST" action="{{ route('settings.addRole') }}" class="mb-4 flex space-x-2">
         @csrf
         <input type="text" name="privilege" placeholder="Nom du privilege" class="border p-2 flex-1" required>

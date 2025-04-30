@@ -15,7 +15,6 @@ return new class extends Migration
         $table->id();
         $table->string('titre');
         $table->text('description')->nullable();
-        $table->string('categorie');
         $table->string('type_id');
         $table->string('service_id');
         $table->string('metadata');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\Service;
+use App\Models\Regle;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\TypeArchive;
@@ -15,25 +16,16 @@ use App\Models\ArchiveProfileField;
 
 class SettingsController extends Controller
 {
-    public function security() {
-        $users = User::all(); // Récupère tous les utilisateurs existants
-        return view('settings.security', compact('users'));
-    }
-
-    public function storage() {
-        return view('settings.storage');
-    }
-
-    public function statistics() {
-        return view('settings.statistics');
-    }
+ 
 
     ////////////////////////////////GESTION DES TYPES D'ARCHIVES/////////////////////////////////////////
 
     public function archives() {
         $services = Service::all();
+        $regles = Regle::all();
         $archiveTypes = TypeArchive::with('services')->get();
-        return view('settings.archives', compact('services', 'archiveTypes'));
+        $totalProfiles = $archiveTypes->count();
+        return view('settings.archives', compact('services', 'archiveTypes', 'totalProfiles','regles'));
     }
     
     /*public function addArchiveType(Request $request) {
@@ -58,46 +50,116 @@ class SettingsController extends Controller
     
         return redirect()->route('settings.archives')->with('success', 'Type d\'archive ajouté avec succès.');
     }*/
-   
-public function updateArchiveType(Request $request, $id) {
+    public function getProfile($id)
+    {
+        $profile = TypeArchive::findOrFail($id);
+        return response()->json($profile);
+    }
 
-    $request->validate([
-        'nom' => 'required|string|max:255',
-       // 'services_id' => 'required|array', // Tableau de services
-        'services_id' => 'exists:services,id',
-        'description' => 'nullable|string',
-        'statut' => 'required|boolean'
+    public function editArchiveProfile($id)
+    {
+        $profile = TypeArchive::findOrFail($id);
+        $fields = ArchiveProfileField::where('type_archive_id', $id)->get();
+    
+        return response()->json([
+            'profile' => $profile,
+            'fields' => $fields
+        ]);
+    }
+    
+    public function getProfileFields($id)
+    {
+        $fields = ArchiveProfileField::where('archive_profile_id', $id)
+            ->orderBy('ordre')
+            ->get(['id', 'nom_champ', 'type_champ', 'obligatoire']);
+    
+        return response()->json($fields);
+    }
+    
+    /*public function updateArchiveType(Request $request, $id) {
 
-    ]);
-
-    $typeArchive = TypeArchive::findOrFail($id);
-    $typeArchive->update([
-        'nom' => $request->nom,
-        'services_id' => $request->services_id,
-        'description' => $request->description,
-        'statut' => $request->statut
-
-    ]);
-
-    // Synchroniser les services sélectionnés
-    $typeArchive->services()->sync($request->services_id);
-
-    return redirect()->route('settings.archives')->with('success', 'Type d\'archive mis à jour avec succès.');
-}
-
-public function updateTypeStatus(Request $request, $id)
-    { 
         $request->validate([
-            'statut' => 'required|boolean',
+            'nom' => 'required|string|max:255',
+        // 'services_id' => 'required|array', // Tableau de services
+            'services_id' => 'exists:services,id',
+            'description' => 'nullable|string',
+            'statut' => 'required|boolean'
+
         ]);
 
-        $types = TypeArchive::findOrFail($id);
-        
+        $typeArchive = TypeArchive::findOrFail($id);
+        $typeArchive->update([
+            'nom' => $request->nom,
+            'services_id' => $request->services_id,
+            'description' => $request->description,
+            'statut' => $request->statut
 
-        $types->statut = $request->statut;
-        $types->save();
+        ]);
 
-        return redirect()->route('settings.archives')->with('success', 'Statut du type d\'archive mis à jour avec succès.');
+        // Synchroniser les services sélectionnés
+        $typeArchive->services()->sync($request->services_id);
+
+        return redirect()->route('settings.archives')->with('success', 'Type d\'archive mis à jour avec succès.');
+    }*/
+    public function updateArchiveType(Request $request, $id){
+        // Valider les données principales
+        $request->validate([
+            'nom' => 'required|string|max:255',
+        ]);
+
+        // Trouver le profil
+        $typeArchive = TypeArchive::findOrFail($id);
+
+        // Mettre à jour les informations du profil
+        $typeArchive->nom = $request->nom;
+        $typeArchive->statut = $request->has('statut') ? 'actif' : 'inactif';
+        $typeArchive->save();
+
+        // Mettre à jour les champs existants
+        if ($request->has('existing_fields')) {
+            foreach ($request->existing_fields as $fieldData) {
+                if (isset($fieldData['id'])) {
+                    $field = ArchiveProfileField::find($fieldData['id']);
+                    if ($field) {
+                        $field->nom_champ = $fieldData['nom_champ'] ?? $field->nom_champ;
+                        $field->type_champ = $fieldData['type_champ'] ?? $field->type_champ;
+                        $field->obligatoire = isset($fieldData['obligatoire']) ? 1 : 0;
+                        $field->save();
+                    }
+                }
+            }
+        }
+
+        // Ajouter les nouveaux champs
+        if ($request->has('new_fields')) {
+            foreach ($request->new_fields as $newFieldData) {
+                if (!empty($newFieldData['nom_champ']) && !empty($newFieldData['type_champ'])) {
+                    ArchiveProfileField::create([
+                        'type_archive_id' => $typeArchive->id,
+                        'nom_champ' => $newFieldData['nom_champ'],
+                        'type_champ' => $newFieldData['type_champ'],
+                        'obligatoire' => isset($newFieldData['obligatoire']) ? 1 : 0,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('settings.archives')->with('success', 'Profil d\'archives mis à jour avec succès.');
+    }
+
+    public function updateTypeStatus(Request $request, $id){
+            dd($request->all());
+            $request->validate([
+                'statut' => 'required|boolean',
+            ]);
+
+            $types = TypeArchive::findOrFail($id);
+            
+
+            $types->statut = $request->statut;
+            $types->save();
+
+            return redirect()->route('settings.archives')->with('success', 'Statut du type d\'archive mis à jour avec succès.');
     }
    
     public function deleteArchiveType($id) {
@@ -113,8 +175,7 @@ public function updateTypeStatus(Request $request, $id)
 
 
 
-    public function addArchiveProfile(Request $request)
-    {
+    public function addArchiveProfile(Request $request){
         // 1. Valider les données principales
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
@@ -147,15 +208,7 @@ public function updateTypeStatus(Request $request, $id)
         return redirect()->back()->with('success', 'Profil d\'archive créé avec ses champs.');
     }
 
-    public function getProfileFields($id)
-    {
-        
-        $fields = ArchiveProfileField::where('archive_profile_id', $id)
-            ->orderBy('ordre')
-            ->get(['id', 'nom_champ', 'type_champ', 'obligatoire']);
     
-        return response()->json($fields);
-    }
     
 
     ////////////////////////////////GESTION DES TYPES D'ARCHIVES/////////////////////////////////////////
@@ -219,8 +272,7 @@ public function updateTypeStatus(Request $request, $id)
         
     }
 
-    public function updateServiceStatus(Request $request, $id)
-    {
+    public function updateServiceStatus(Request $request, $id){
         $request->validate([
             'statut' => 'required|boolean',
         ]);
@@ -240,16 +292,7 @@ public function updateTypeStatus(Request $request, $id)
         return redirect()->route('settings.services')->with('success', 'Service supprimé avec succès.');
     }
 
-    //////////////////////////////////GESTION DES STOCKAGE/////////////////////////////////////////
-
-    // Nettoyer le stockage
-    public function clearStorage() {
-        
-        Storage::deleteDirectory('archives');
-        Storage::makeDirectory('archives');
-
-        return redirect()->route('settings.storage')->with('success', 'Stockage nettoyé avec succès.');
-    }
+    
 
 
 
@@ -295,4 +338,96 @@ public function updateTypeStatus(Request $request, $id)
         $role->delete();
         return redirect()->route('settings.roles')->with('success', 'Rôle supprimé avec succès.');
     }
+
+
+
+//////////////////////////////////GESTION DES STOCKAGE/////////////////////////////////////////
+
+    // Nettoyer le stockage
+    public function clearStorage() {
+        Storage::deleteDirectory('archives');
+        Storage::makeDirectory('archives');
+
+        return redirect()->route('settings.storage')->with('success', 'Stockage nettoyé avec succès.');
+    }
+    public function security() {
+        $users = User::all(); // Récupère tous les utilisateurs existants
+        return view('settings.security', compact('users'));
+    }
+
+   
+
+    public function statistics() {
+        return view('settings.statistics');
+    }
+
+    //////////////////////////////  REGLE DE CONSERVATION///////////////////////////////////////
+    public function regles() {
+        $regles = Regle::all();
+        return view('settings.storage', compact('regles'));
+
+    }
+    // Ajouter un service
+    public function addRegle(Request $request) {
+        $tempo = $request->temporalite;
+        $duree = $request->duree;
+        if($tempo == 2){
+            $duree *= 30; 
+        }
+        else if($tempo == 3){
+            $duree *=365;
+        }
+        
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'required|string'
+        ]);
+        
+
+        $regle = Regle::create([
+            'nom' => $request->nom,
+            'description' => $request->description,
+            'duree' => $duree
+        ]);
+        return redirect()->route('settings.regles')->with('success', 'Regle ajouté avec succès.');
+    }
+
+    public function storeRegle(Request $request) {
+        return $this->addRegle($request);
+    }
+
+    // Modifier un service
+    public function editRegle($id) {
+        $regle = Regle::findOrFail($id);
+        return view('settings.edit_regle', compact('regle'));
+    }
+    public function updateRegle(Request $request,$id){
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'duree' => 'required|integer',
+            'description' => 'nullable|string'
+        ]);
+    
+        $regle = Regle::findOrFail($id);
+        $regle->update([
+            'nom' => $request->nom,
+            'description' => $request->description,
+            'duree' => $request->duree
+        ]);
+    
+        return redirect()->route('settings.regles')->with('success', 'Regle mis à jour avec succès.');
+    
+        
+    }
+
+   
+
+    // Supprimer un service
+    public function deleteRegle($id) {
+        $regles = Regle::findOrFail($id);
+        $regles->delete();
+
+        return redirect()->route('settings.regles')->with('success', 'Regle supprimé avec succès.');
+    }
+
 }

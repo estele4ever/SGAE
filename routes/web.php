@@ -39,6 +39,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
         });
 
     Route::get('/archives/index', [ArchiveController::class, 'index'])->name('archives.index');
+    Route::get('/archives/edit/{id}', [ArchiveController::class, 'edit'])->name('archives.edit');
     Route::get('/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
     Route::post('/archives/store', [ArchiveController::class, 'store'])->name('archives.store');
     Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
@@ -55,7 +56,6 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
         Route::get('/security', [SettingsController::class, 'security'])->name('settings.security');
     // Route::get('/services', [SettingsController::class, 'services'])->name('settings.services');
         Route::get('/archives', [SettingsController::class, 'archives'])->name('settings.archives');
-        Route::get('/storage', [SettingsController::class, 'storage'])->name('settings.storage');
         Route::get('/statistics', [SettingsController::class, 'statistics'])->name('settings.statistics');
 
         // Routes pour gere les securites
@@ -79,11 +79,28 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
         Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
         Route::patch('/settings/types/{id}/status', [SettingsController::class, 'updateTypeStatus'])->name('settings.updateTypeStatus');
         Route::get('/archive-profile/{id}/fields', [SettingsController::class, 'getProfileFields'])->name('settings.getProfileFields');
+// Récupérer un profil d'archive par son ID
+        Route::get('/archive-profile/{id}', [SettingsController::class, 'getProfile'])->name('settings.getProfile');
+
+// Récupérer les champs d'un profil d'archive
+        Route::get('/archive-profile/{id}/fields', [SettingsController::class, 'getProfileFields'])->name('settings.getProfileFields');
+        Route::get('/archive-profile/{id}/edit', [SettingsController::class, 'editArchiveProfile'])->name('settings.editArchiveProfile');
 
 
         
         // Routes pour la gestion du stockage
         Route::post('/storage/clear', [SettingsController::class, 'clearStorage'])->name('settings.clearStorage');
+
+
+        //regles de conservation
+        Route::get('/regles', [SettingsController::class, 'regles'])->name('settings.regles');
+        Route::post('/regles/add', [SettingsController::class, 'addRegle'])->name('settings.addRegle');
+        Route::delete('/regles/{id}/delete', [SettingsController::class, 'deleteRegle'])->name('settings.deleteRegle');
+        Route::get('/settings/regles', [SettingsController::class, 'regles'])->name('settings.regles');
+        Route::post('/settings/regles', [SettingsController::class, 'storeRegle'])->name('settings.storeRegle');
+        Route::put('/archives/updateregle/{id}', [SettingsController::class, 'updateregle'])->name('settings.updateregle');
+        
+
 
         // Routes pour la gestion des rôles
         Route::get('/roles', [SettingsController::class, 'index'])->name('settings.roles');

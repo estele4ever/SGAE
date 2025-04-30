@@ -11,7 +11,7 @@ class UserController extends Controller
 {
    public function index(Request $request)
 {
-    $services = Service::all(); // On suppose que tu as un modèle Service pour récupérer les services
+    $services = Service::all(); //  pour récupérer les services
     $roles = Role::all(); // Idem pour les rôles
     
     $query = User::query();
@@ -50,7 +50,7 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        dd($request->all());
+       //dd($request->all());
 
        $request->validate([
             'name' => 'required|string|max:255',
@@ -60,16 +60,17 @@ class UserController extends Controller
             'service' => 'required',
             'permission' => 'nullable',
         ]);
+        $role = Role::findOrFail($request->role);
+        $service = Service::findOrFail($request->service);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $request->role,
-            'service' => $request->service,
+            'role' => $role->privilege,
+            'service' => $service->nom,
             'permission' => $request->service ?? '',
         ]);
-
         return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
     }
 
@@ -84,12 +85,14 @@ class UserController extends Controller
             'service' => 'required',
             'permission' => 'nullable|string',
         ]);
-    
+        $role = Role::findOrFail($request->role);
+        $service = Service::findOrFail($request->service);
+
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $request->role,
-            'service' => $request->service ?? '',
+            'role' => $role->privilege,
+            'service' => $service->nom,
             'permission' => $request->permission,
         ]);
     

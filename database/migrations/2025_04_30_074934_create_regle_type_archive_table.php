@@ -11,14 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('type_archives', function (Blueprint $table) {
+        Schema::create('regle_type_archive', function (Blueprint $table) {
             $table->id();
-            $table->string('nom');
-            $table->string('services_id');
-            $table->string('regles_id');
-            $table->string('description');
-            $table->boolean('statut')->default(false);
-                
+            $table->foreignId('regle_id')->constrained()->onDelete('cascade');
+            $table->foreignId('type_archive_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
     }
@@ -28,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('type_archives');
+        Schema::dropIfExists('regle_type_archive');
     }
 };

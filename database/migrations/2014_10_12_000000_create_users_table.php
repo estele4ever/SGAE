@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('role');
             $table->string('service');
             $table->string('permission');
+            $table->string('fichier')->nullable(); // Stockera le chemin du fichier
             $table->rememberToken();
             $table->timestamps();
         });

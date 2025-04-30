@@ -28,17 +28,20 @@
                 </div>
                 <nav class="mt-4">
                     <ul>
-                    <a href="{{ route('Accueil') }}">
-                    <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
+                        
+                        <a href="{{ route('Accueil') }}">
+                        <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-home"></i>
                             Acceuil
                         </li>
                         </a>
+                        
                         <a href="{{ route('dashboard') }}">
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-tachometer-alt"></i>
                             Dashboard
                         </li></a>
+                        
                         <a href="{{ route('archives.index') }}">
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">
                             <i class="fas fa-archive"></i>
@@ -63,7 +66,7 @@
                                 <li class="px-4 py-2 hover:bg-gray-700">
                                     Gestion des profils d'archives
                                 </li></a>
-                                <a href="{{ route('settings.storage') }}" class="block">
+                                <a href="{{ route('settings.regles') }}" class="block">
                                 <li class="px-4 py-2 hover:bg-gray-700">
                                     Gestion du stockage
                                 </li></a>
@@ -101,9 +104,10 @@
                 <!-- Top Navigation -->
                 <header class="bg-white shadow">
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        @if (isset($header))
-                            <h1 class="text-lg font-semibold">{{ $header }}</h1>
-                        @endif
+                        @php
+                            $user = Auth::user();
+                        @endphp
+                        <h1 > <strong> Bienvenue M. {{$user->name}}</strong></h1>
                     </div>
                 </header>
 

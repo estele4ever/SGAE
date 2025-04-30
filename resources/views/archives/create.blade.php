@@ -2,8 +2,15 @@
 
 @section('content')
 <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Créer une Archive</h2>
-
+    <div class="flex justify-between items-center mb-6">
+            <h1 class="text-2xl font-bold text-gray-800">Ajouter une Archive</h1>
+            <a href="{{ route('archives.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                Retour
+            </a>
+    </div>
     <form method="POST" action="{{ route('archives.store') }}">
         @csrf
 
@@ -43,7 +50,7 @@
                 fields.forEach(field => {
                     const div = document.createElement('div');
                     div.classList.add('mb-2');
-
+                    
                     let inputHTML = `
                         <label class="block mb-1 font-semibold">${field.nom_champ}${field.obligatoire ? ' *' : ''}</label>
                         <input 

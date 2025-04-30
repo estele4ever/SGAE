@@ -3,7 +3,11 @@
 @section('content')
 <div class="container mx-auto">
     <h2 class="text-xl font-bold mb-4"> Gestion des utilisateurs</h2>
-
+    @if(session('success'))
+        <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
+            {{ session('success') }}
+        </div>
+    @endif
     <!-- Formulaire d'ajout d'utilisateur -->
     <form method="POST" action="{{ route('users.store') }}" class="mb-4 flex flex-wrap space-x-2">
         @csrf
@@ -60,6 +64,7 @@
                 <th class="p-2">Nom</th>
                 <th class="p-2">Email</th>
                 <th class="p-2">Rôle</th>
+                <th class="p-2">Service</th>
                 <th class="p-2">Actions</th>
             </tr>
         </thead>
@@ -69,6 +74,7 @@
                 <td class="p-2">{{ $user->name }}</td>
                 <td class="p-2">{{ $user->email }}</td>
                 <td class="p-2">{{ $user->role }}</td>
+                <td class="p-2">{{ $user->service }}</td>
                 <td class="p-2 space-x-2">
                     <button onclick="openEditModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}', '{{ $user->role }}', '{{ $user->permission }}')" class="text-blue-500">Modifier</button>
                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">

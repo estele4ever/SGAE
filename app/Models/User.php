@@ -21,9 +21,10 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'role_id',
+        'role',
         'permission',
-        'service_id',
+        'service',
+        'fichier',
     ];
 
     /**
@@ -46,8 +47,8 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function service()
+    public function users()
     {
-        return $this->belongsTo(Service::class);
+        return $this->hasMany(User::class);
     }
 }

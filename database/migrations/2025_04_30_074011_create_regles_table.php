@@ -11,14 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('type_archives', function (Blueprint $table) {
+        Schema::create('regles', function (Blueprint $table) {
             $table->id();
             $table->string('nom');
-            $table->string('services_id');
-            $table->string('regles_id');
-            $table->string('description');
-            $table->boolean('statut')->default(false);
-                
+            $table->text('description')->nullable();
+            $table->integer('duree');
             $table->timestamps();
         });
     }
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('type_archives');
+        Schema::dropIfExists('regles');
     }
 };

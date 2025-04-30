@@ -1,35 +1,41 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6 max-w-4xl">
-    <a href="{{ route('archives.index') }}" class="bg-gray-300 hover:bg-gray-400 text-gray-500 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-        </svg>
-        Retour
-    </a>
-    <div class="bg-white shadow-md rounded-lg p-6">
-        <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ $archive->titre }}</h1>
+<div class="max-w-4xl mx-auto bg-white p-6 rounded shadow">
+    <a href="{{ route('archives.index') }}" class="text-sm text-blue-600 hover:underline mb-4 inline-block">← Retour à la liste</a>
 
-        <div class="mb-4">
-            <p class="text-gray-600"><strong class="text-gray-800">Catégorie :</strong> {{ $archive->categorie }}</p>
-            <p class="text-gray-600 mt-2"><strong class="text-gray-800">Description :</strong> {{ $archive->description }}</p>
-            <p class="text-gray-600 mt-2"><strong class="text-gray-800">Fichier :</strong> {{ $archive->fichier }}</p>
-            <strong><a href="{{ asset($archive->fichier) }}" target="_blank">Voir le fichier</a></strong>
-            <p class="text-gray-600 mt-2"><strong class="text-gray-800">Date de création :</strong> {{ $archive->created_at->format('d/m/Y') }}</p>
-        </div>
+    <h1 class="text-2xl font-bold mb-4">{{ $archive->titre }}</h1>
 
-        <a href="{{ route('archives.telecharger', $archive->id) }}" 
-               class="bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 px-4 rounded mt-4">
-               <i class="fas fa-download"></i> 
-               Télécharger le fichier
-            </a>
-            <!-- Bouton pour ouvrir la modale de gel -->
-<button onclick="document.getElementById('modalGel').classList.remove('hidden')" 
-        class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded mt-4 ml-2">
-    Geler l'archive
-</button>
-        <div class="mt-6">
+    <div class="mb-2"><strong>Description :</strong> {{ $archive->description }}</div>
+    <div class="mb-2"><strong>Service :</strong> {{ $archive->service_id ?? 'Non défini' }}</div>
+    <div class="mb-2"><strong>Date de création :</strong> {{ $archive->created_at->format('d/m/Y H:i') }}</div>
+
+    <hr class="my-4">
+
+    <h2 class="text-lg font-semibold">Champs du profil :</h2>
+    @php
+        $metadata = json_decode($archive->metadata, true);
+    @endphp
+    @if($metadata)
+        <ul class="list-disc pl-6 mt-2 text-gray-700">
+            @foreach($metadata as $key => $value)
+                <li><strong>{{ $key }}:</strong> {{ $value }}</li>
+            @endforeach
+        </ul>
+    @else
+        <p class="text-gray-500 italic">Aucune métadonnée enregistrée.</p>
+    @endif
+
+    <div class="mt-6">
+        <strong>Fichier :</strong> 
+        @if($archive->fichier)
+            <a href="{{ asset($archive->fichier) }}" class="text-blue-600 hover:underline" target="_blank">Télécharger le fichier</a>
+        @else
+            <span class="text-gray-500 italic">Aucun fichier disponible</span>
+        @endif
+    </div>
+</div>
+<div class="mt-6">
             @php
                 $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
             @endphp
@@ -51,44 +57,4 @@
             @endif
 
 
-<!-- Modal de gel -->
-<div id="modalGel" class="fixed z-10 inset-0 overflow-y-auto hidden">
-    <div class="flex items-center justify-center min-h-screen bg-gray-900 bg-opacity-50">
-        <div class="bg-white rounded-lg p-6 w-full max-w-lg shadow-lg">
-            <h2 class="text-xl font-bold mb-4">Geler l'archive</h2>
-            <form action="{{ route('archives.geler', $archive->id) }}" method="POST">
-                @csrf
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-bold mb-2">Motif de gel</label>
-                    <input type="text" name="motif" class="w-full border px-3 py-2 rounded shadow-sm" required>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-gray-700 font-bold mb-2">Durée du gel (en jours)</label>
-                    <input type="number" name="duree" class="w-full border px-3 py-2 rounded shadow-sm" required>
-                </div>
-                <div class="mb-4">
-                <select name="statut" class="border p-2 flex-1 mb-2 md:mb-0" required>
-                <option value="">Sélectionnez le statut</option>
-                <option value="1">Actif</option>
-                <option value="0">Inactif</option>
-            </select>
-                </div>
-                <div class="flex justify-end space-x-2">
-                    <button type="button" onclick="document.getElementById('modalGel').classList.add('hidden')" 
-                            class="bg-gray-300 hover:bg-gray-400 text-gray-700 px-4 py-2 rounded">
-                        Annuler
-                    </button>
-                    <button type="submit" 
-                            class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded">
-                        Confirmer
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-        </div>
-    </div>
-</div>
 @endsection
