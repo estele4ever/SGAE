@@ -14,6 +14,7 @@
 
         <!-- Font Awesome -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+        <script src="//unpkg.com/alpinejs" defer></script>
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -24,6 +25,8 @@
             <aside class="w-64 bg-gray-800 text-white min-h-screen">
                 <div class="p-6">
                     <!-- Title dynamically set to application name -->
+                    <x-application-logoblanc class="w-20 h-20 fill-current text-gray-500" />
+
                     <h2 class="text-lg font-semibold">{{ config('app.name', 'SGAE') }}</h2>
                 </div>
                 <nav class="mt-4">
@@ -49,34 +52,37 @@
                         </li></a>
 
                         <!-- Paramètres avec menu déroulant -->
-                        <li class="relative group">
-                            <div class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2 cursor-pointer">
-                                <i class="fas fa-cogs"></i>
-                                <span>Paramètres</span>
-                            </div>
-                            
-                            <!-- Sous-menu qui s'affiche au survol -->
-                            <ul class="absolute right-0 w-56 bg-gray-900 shadow-lg hidden group-hover:block mt-1 z-10">
-                                
-                            <a href="{{ route('settings.services') }}" class="block">
-                                <li class="px-4 py-2 hover:bg-gray-700">
-                                    Organisation des services
-                                </li></a>
-                                <a href="{{ route('settings.archives') }}" class="block">
-                                <li class="px-4 py-2 hover:bg-gray-700">
-                                    Gestion des profils d'archives
-                                </li></a>
-                                <a href="{{ route('settings.regles') }}" class="block">
-                                <li class="px-4 py-2 hover:bg-gray-700">
-                                    Gestion du stockage
-                                </li></a>
-                                <a href="{{ route('settings.roles') }}" class="block">
-                                <li class="px-4 py-2 hover:bg-gray-700">
-                                    Gestion des roles
-                                </li></a>
-                                
-                            </ul>
-                        </li>
+                        <div x-data="{ open: false }" class="relative inline-block text-left">
+    <!-- Bouton -->
+    <button @click="open = !open" class="flex items-center gap-2 px-4 py-2 bg-gray-800 text-white hover:bg-gray-700 rounded">
+        <i class="fas fa-cogs"></i>
+        <span>Paramètres</span>
+        <svg class="w-4 h-4 ml-1 transform" :class="open ? 'rotate-90' : ''" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+        </svg>
+    </button>
+
+    <!-- Menu déroulant -->
+    <div 
+        x-show="open" 
+        @click.away="open = false" 
+        x-transition 
+        class="absolute right-0 mt-2 w-64 bg-gray-900 text-white rounded-lg shadow-lg border border-gray-700 z-50"
+    >
+        <a href="{{ route('settings.services') }}" class="block px-4 py-2 hover:bg-gray-700">Organisation des services</a>
+        <a href="{{ route('settings.archives') }}" class="block px-4 py-2 hover:bg-gray-700">Gestion des profils d'archives</a>
+        <a href="{{ route('settings.regles') }}" class="block px-4 py-2 hover:bg-gray-700">Gestion du stockage</a>
+        <a href="{{ route('settings.roles') }}" class="block px-4 py-2 hover:bg-gray-700">Gestion des rôles</a>
+    </div>
+</div>
+
+
+<!-- Script ou style Tailwind complémentaire -->
+<style>
+    .hover-parent:hover .hover-child {
+        display: block;
+    }
+</style>
 
                         <a href="{{ route('users.index') }}">
                         <li class="px-4 py-2 hover:bg-gray-700 flex items-center gap-2">

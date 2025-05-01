@@ -9,6 +9,7 @@
         Liste des Archives
     </h1>
 
+
     {{-- Champ de recherche --}}
     <div class="mb-4">
         <input type="text" id="searchInput" placeholder="Rechercher une archive..." class="w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-indigo-500">
@@ -48,7 +49,7 @@
                         <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Confirmer la suppression ?')">
                             @csrf
                             @method('DELETE')
-                            <button class="text-red-500 hover:underline">Supprimer</button>
+                            <button onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:underline">Supprimer</button>
                         </form>
                     </td>
                 </tr>

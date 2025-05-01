@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="container mx-auto">
-    <h2 class="text-xl font-bold mb-4">Liste des rôles</h2>
+    <h2 class="text-xl font-bold mb-4 ml-40">Liste des rôles <strong>(Total : {{ $totalRole }})</strong></h2>
     @if(session('success'))
         <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
             {{ session('success') }}

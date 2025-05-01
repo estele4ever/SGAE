@@ -148,7 +148,7 @@ class SettingsController extends Controller
     }
 
     public function updateTypeStatus(Request $request, $id){
-            dd($request->all());
+            dd($request->all(),$id);
             $request->validate([
                 'statut' => 'required|boolean',
             ]);
@@ -224,7 +224,9 @@ class SettingsController extends Controller
     
     public function services() {
         $services = Service::all(); // Récupère tous les services existants
-        return view('settings.services', compact('services'));
+        $totalServices = $services->count();
+
+        return view('settings.services', compact('services','totalServices'));
     }
     // Ajouter un service
     public function addService(Request $request) {
@@ -301,7 +303,9 @@ class SettingsController extends Controller
     public function index()
     {
         $roles = Role::all();
-        return view('settings.roles', compact('roles'));
+        $totalRole = $roles->count();
+
+        return view('settings.roles', compact('roles','totalRole'));
     }
 
     // Méthode pour ajouter un nouveau rôle
@@ -367,6 +371,32 @@ class SettingsController extends Controller
         return view('settings.storage', compact('regles'));
 
     }
+    function convertDaysToPeriod($days) {
+        $years = floor($days / 365);
+        $days %= 365; // Reste après avoir calculé les années
+    
+        $months = floor($days / 30);
+        $days %= 30; // Reste après avoir calculé les mois
+    
+        // Construction de la chaîne
+        $period = [];
+        if ($years > 0) {
+            $period[] = $years . ' an' . ($years > 1 ? 's' : '');
+        }
+        if ($months > 0) {
+            $period[] = $months . ' mois';
+        }
+        if ($days > 0) {
+            $period[] = $days . ' jour' . ($days > 1 ? 's' : '');
+        }
+    
+        return implode(' ', $period);
+    }
+    
+    // Exemples d'utilisation
+    //echo convertDaysToPeriod(50);   // 1 mois 20 jours
+    //echo convertDaysToPeriod(105);  // 3 mois 15 jours
+    //echo convertDaysToPeriod(450);  // 1 an 2 mois 25 jours
     // Ajouter un service
     public function addRegle(Request $request) {
         $tempo = $request->temporalite;

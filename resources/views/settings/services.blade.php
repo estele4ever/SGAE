@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Organisation des Services</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center">Organisation des Services (Total : {{ $totalServices }} )</strong> </h2>
     @if(session('success'))
         <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
             {{ session('success') }}
@@ -27,15 +27,22 @@
     <div class="mb-4">
         <input type="text" id="searchServiceInput" placeholder="Rechercher un service..." class="w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
     </div>
-
-    <!-- Liste des services -->
-    <ul class="list-disc pl-6" id="serviceList">
+<!-- Liste des services -->
+<table class="min-w-full bg-white border border-gray-300" id="serviceList">
+    <thead>
+        <tr class="bg-gray-200">
+            <th class="px-4 py-2 text-left">Nom du service</th>
+            <th class="px-4 py-2 text-left">Description</th>
+            <th class="px-4 py-2 text-left">Statut</th>
+            <th class="px-4 py-2 text-left">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
         @foreach($services as $service)
-        <li class="flex justify-between items-center mb-4 p-2 border-b service-item">
-            <div class="flex-1">
-                <strong>{{ $service->nom }}</strong> - {{ $service->description }}
-            </div>
-            <div>
+        <tr class="border-b service-item">
+            <td class="px-4 py-2">{{ $service->nom }}</td>
+            <td class="px-4 py-2">{{ $service->description }}</td>
+            <td class="px-4 py-2">
                 <form method="POST" action="{{ route('settings.updateServiceStatus', $service->id) }}" class="inline">
                     @csrf
                     @method('PATCH')
@@ -44,19 +51,19 @@
                         <option value="0" {{ $service->statut == 0 ? 'selected' : '' }}>❌ Inactif</option>
                     </select>
                 </form>
-            </div>
-            <button onclick="openEditModal('{{ $service->id }}', '{{ $service->nom }}', '{{ $service->description }}', '{{ $service->statut }}')" class="text-blue-500 hover:text-blue-700">Modifier</button>
-
-            <div>
+            </td>
+            <td class="px-4 py-2">
+                <button onclick="openEditModal('{{ $service->id }}', '{{ $service->nom }}', '{{ $service->description }}', '{{ $service->statut }}')" class="text-blue-500 hover:text-blue-700">Modifier</button>
                 <form method="POST" action="{{ route('settings.deleteService', $service->id) }}" class="inline">
                     @csrf
                     @method('DELETE')
                     <button type="submit" class="text-red-500 hover:text-red-700">Supprimer</button>
                 </form>
-            </div>
-        </li>
+            </td>
+        </tr>
         @endforeach
-    </ul>
+    </tbody>
+</table>
 </div>
 
 <!-- 🛠️ MODAL MODIFICATION -->

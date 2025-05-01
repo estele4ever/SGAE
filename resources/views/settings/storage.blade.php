@@ -57,7 +57,7 @@
                 <form method="POST" action="{{ route('settings.deleteRegle', $regle->id) }}" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="text-red-500 hover:text-red-700">Supprimer</button>
+                    <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700">Supprimer</button>
                 </form>
             </div>
         </li>

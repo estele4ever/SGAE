@@ -8,6 +8,15 @@
             {{ session('success') }}
         </div>
     @endif
+    @if ($errors->any())
+    <div class="bg-green-100 text-red-800 p-4 rounded mb-4">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
     <!-- Formulaire d'ajout d'utilisateur -->
     <form method="POST" action="{{ route('users.store') }}" class="mb-4 flex flex-wrap space-x-2">
         @csrf
@@ -15,7 +24,7 @@
         <input type="email" name="email" placeholder="Email" class="border p-2 flex-1 mb-2" required>
         <input type="password" name="password" placeholder="Mot de passe" class="border p-2 flex-1 mb-2" required>
         <input type="password" name="password_confirmation" placeholder="Confirmer le mot de passe" class="border p-2 flex-1 mb-2" required>
-        
+    
         <select name="role" class="border p-2 flex-1 mb-2" required>
             <option value="" disabled selected>Sélectionnez un rôle</option>
             @foreach($roles as $role)
@@ -33,7 +42,9 @@
         <input type="text" name="permission" placeholder="Permissions (optionnel)" class="border p-2 flex-1 mb-2">
 
         <button type="submit" class="bg-blue-500 text-white px-4 py-2">Ajouter</button>
+        
     </form>
+    
 <hr class="my-4">
     <h2 class="text-lg font-bold mb-4">Filtrer les utilisateurs</h2>
     <!-- Formulaire de filtrage -->

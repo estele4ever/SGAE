@@ -22,9 +22,9 @@
             </select>
             <select name="regles_id" class="w-full border p-2 mb-2" required>
                 <option value="">-- Sélectionnez un regle de conservation --</option>
-                @foreach($regles as $service)
+                @foreach($regles as $regle)
                     <option value="{{ $regle->id }}">{{ $regle->nom }}
-                        ({{regle->duree}} jours)
+                        
                     </option>
                 @endforeach
             </select>
@@ -41,11 +41,11 @@
         <button type="button" onclick="ajouterChamp()" class="bg-green-500 text-white px-3 py-1 rounded mb-4">➕ Ajouter un champ</button>
 
         <div class="text-right">
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Créer Profil</button>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Créer Profil d'archive</button>
         </div>
     </form>
 </div>
-<h2 class="text-2xl font-bold mt-8 mb-4"><strong>({{ $totalProfiles }})</strong> Profils d'archives existants</h2>
+<h2 class="text-2xl font-bold mt-8 mb-4"><strong>({{ $totalProfiles }})</strong> Profils d'archives existants </h2>
 
 <table class="w-full table-auto border-collapse border border-gray-300">
     <thead class="bg-gray-100">
@@ -81,7 +81,7 @@
                 <form method="POST" action="{{ route('settings.deleteArchiveType', $profile->id) }}" onsubmit="return confirm('Confirmer la suppression ?')">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
+                    <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
                 </form>
             </td>
         </tr>
@@ -171,6 +171,8 @@ function openEditModal(id) {
                 <label class="block mb-1 font-semibold">Obligatoire :</label>
                 <input type="checkbox" name="existing_fields[${index}][obligatoire]" ${field.obligatoire ? 'checked' : ''}>
                 <hr class="my-3">
+                <bouton>annuler</bouton>
+
             `;
             fieldsContainer.appendChild(fieldDiv);
         });
@@ -208,6 +210,7 @@ function addNewEditField() {
         <label class="block mb-1 font-semibold">Obligatoire :</label>
         <input type="checkbox" name="new_fields[${index}][obligatoire]">
         <hr class="my-3">
+        <bouton>annuler</bouton>
     `;
     fieldsContainer.appendChild(fieldDiv);
 }
@@ -258,6 +261,8 @@ function ajouterChamp() {
             <label class="flex items-center">
                 <input type="checkbox" name="champs[obligatoire][]" value="1" class="mr-1"> Obligatoire
             </label>
+        <bouton type="submit" class="bg-red-500 text-white px-3 py-1 rounded">annuler</bouton>
+
         </div>
     `;
     container.insertAdjacentHTML('beforeend', champHTML);
