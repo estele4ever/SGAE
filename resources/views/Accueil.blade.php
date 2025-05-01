@@ -18,7 +18,7 @@
                 <ul class="flex space-x-4">
                     <li><a href="/" class="text-indigo-600 hover:text-indigo-800 font-semibold">{{ __('Accueil') }}</a></li>
                     <li><a href="{{ route('archives.index') }}" class="text-gray-700 hover:text-gray-900">{{ __('Archives') }}</a></li>
-                    <li><a href="/" class="text-gray-700 hover:text-gray-900">{{ __('Aide') }}</a></li>
+                    <li><a href="{{ route('aide') }}" class="text-gray-700 hover:text-gray-900">{{ __('Aide') }}</a></li>
                 </ul>
             </nav>
 
