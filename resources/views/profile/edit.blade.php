@@ -2,9 +2,10 @@
 
 @section('content')
     
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Profile') }}
-        </h2>
+<h2 class="font-semibold text-xl text-gray-800 leading-tight">
+    {{ __('Profile') }}
+    <img src="https://www.gravatar.com/avatar/{{ md5(strtolower(trim($user->email))) }}" alt="Image de profil" class="rounded-full h-12 w-12" />
+</h2>
    
 
     <div class="py-12">

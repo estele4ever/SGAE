@@ -2,51 +2,73 @@
 
 @section('content')
 <div class="container mx-auto">
-    <h2 class="text-xl font-bold mb-4"> Gestion des utilisateurs</h2>
+    <h2 class="text-xl font-bold mb-4">Gestion des utilisateurs</h2>
+    
     @if(session('success'))
         <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
             {{ session('success') }}
         </div>
     @endif
+
     @if ($errors->any())
-    <div class="bg-green-100 text-red-800 p-4 rounded mb-4">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
+        <div class="bg-red-100 text-red-800 p-4 rounded mb-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <!-- Formulaire d'ajout d'utilisateur -->
-    <form method="POST" action="{{ route('users.store') }}" class="mb-4 flex flex-wrap space-x-2">
+    <form method="POST" action="{{ route('users.store') }}" class="mb-4 space-y-4">
         @csrf
-        <input type="text" name="name" placeholder="Nom" class="border p-2 flex-1 mb-2" required>
-        <input type="email" name="email" placeholder="Email" class="border p-2 flex-1 mb-2" required>
-        <input type="password" name="password" placeholder="Mot de passe" class="border p-2 flex-1 mb-2" required>
-        <input type="password" name="password_confirmation" placeholder="Confirmer le mot de passe" class="border p-2 flex-1 mb-2" required>
-    
-        <select name="role" class="border p-2 flex-1 mb-2" required>
-            <option value="" disabled selected>Sélectionnez un rôle</option>
-            @foreach($roles as $role)
-                <option value="{{ $role->id }}">{{ $role->privilege }}</option>
-            @endforeach
-        </select>
-
-        <select name="service" class="border p-2 flex-1 mb-2" required>
-            <option value="" disabled selected>Sélectionnez un service</option>
-            @foreach($services as $service)
-                <option value="{{ $service->id }}">{{ $service->nom }}</option>
-            @endforeach
-        </select>
-
-        <input type="text" name="permission" placeholder="Permissions (optionnel)" class="border p-2 flex-1 mb-2">
-
-        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Ajouter</button>
-        
+        <div>
+            <input type="text" name="name" placeholder="Nom" class="border p-2 w-full" required>
+        </div>
+        <div>
+            <input type="email" name="email" placeholder="Email" class="border p-2 w-full" required>
+        </div>
+        <div>
+            <input type="password" name="password" placeholder="Mot de passe" class="border p-2 w-full" required>
+        </div>
+        <div>
+            <input type="password" name="password_confirmation" placeholder="Confirmer le mot de passe" class="border p-2 w-full" required>
+        </div>
+        <div>
+            <select name="role" class="border p-2 w-full" required>
+                <option value="" disabled selected>Sélectionnez un rôle</option>
+                @foreach($roles as $role)
+                    <option value="{{ $role->id }}">{{ $role->privilege }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <select name="service" class="border p-2 w-full" required>
+                <option value="" disabled selected>Sélectionnez un service</option>
+                @foreach($services as $service)
+                    <option value="{{ $service->id }}">{{ $service->nom }}</option>
+                @endforeach
+            </select>
+        </div>
+        <div>
+            <input type="text" name="permission" placeholder="Permissions (optionnel)" class="border p-2 w-full">
+        </div>
+        <button type="submit" class="bg-blue-500 text-white px-4 py-2">Créer</button>
     </form>
+
+    <!-- Flèche indiquant du contenu en bas -->
+    <div class="flex justify-center mb-4">
+        <a href="#usersList">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-gray-500 animate-bounce" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 3a1 1 0 00-1 1v12a1 1 0 002 0V4a1 1 0 00-1-1zm-7 7a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
+            </svg>
+        </a>
+    </div>
+
+    <hr class="my-4">
+    <h2 id="usersList" class="text-lg font-bold mb-4">Liste des utilisateurs</h2>
     
-<hr class="my-4">
-    <h2 class="text-lg font-bold mb-4">Filtrer les utilisateurs</h2>
     <!-- Formulaire de filtrage -->
     <form method="GET" action="{{ route('users.index') }}" class="mb-4 flex flex-wrap space-x-2">
         <select name="service_id" id="service_id" class="form-select border p-2 flex-1 mb-2">
@@ -57,7 +79,7 @@
                 </option>
             @endforeach
         </select>
-
+        
         <select name="role" class="border p-2 flex-1 mb-2">
             <option value="" disabled selected>Tous les rôles</option>
             @foreach($roles as $role)
@@ -99,6 +121,8 @@
     </table>
 </div>
 
+<!-- Modal de modification -->
+<!-- (Modal code remains unchanged) -->
 <!-- Modal de modification -->
 <div id="editModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden">
     <div class="bg-white p-6 rounded-lg shadow-md w-96">
@@ -162,5 +186,4 @@
         document.getElementById('editModal').classList.add('hidden');
     }
 </script>
-
 @endsection

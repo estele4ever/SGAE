@@ -9,6 +9,7 @@
                     <h1 class="font-semibold text-3xl text-indigo-700 leading-tight mb-4">
                         {{ __('Bienvenue sur le Système de Gestion des Archives') }}
                     </h1>
+
                     <p class="text-gray-600">{{ __('Votre plateforme centralisée pour organiser, rechercher et gérer efficacement vos précieuses archives.') }}</p>
                 </div>
             </div>
@@ -67,7 +68,7 @@
                     <div class="p-6 text-gray-900">
                         <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">{{ __('Ressources et Documentation') }}</h2>
                         <ul class="list-disc list-inside text-gray-700">
-                            <li><a href="/" class="text-indigo-600 hover:text-indigo-800">{{ __('Guide d\'utilisation') }}</a></li>
+                            <li><a href="{{ route('aide') }}" class="text-indigo-600 hover:text-indigo-800">{{ __('Guide d\'utilisation') }}</a></li>
                             <li><a href="/" class="text-indigo-600 hover:text-indigo-800">{{ __('FAQ (Foire Aux Questions)') }}</a></li>
                             <li><a href="/" class="text-indigo-600 hover:text-indigo-800">{{ __('Tutoriels Vidéo') }}</a> (Bientôt disponible)</li>
                         </ul>
@@ -92,8 +93,8 @@
                 <div class="p-6 text-gray-900">
                     <h2 class="font-semibold text-xl text-gray-800 leading-tight mb-4">{{ __('Contact et Support') }}</h2>
                     <p class="text-gray-700">{{ __('Pour toute question ou assistance, veuillez contacter :') }}</p>
-                    <p class="text-indigo-600">{{ __('Email :') }} <a href="mailto:support@example.com">support@example.com</a></p>
-                    <p class="text-indigo-600">{{ __('Téléphone :') }} +237 XXX XXX XXX</p>
+                    <p class="text-indigo-600">{{ __('Email :') }} <a href="mailto:estelengnemie@gmail.com">estelengnemie@gmail.com</a></p>
+                    <p class="text-indigo-600">{{ __('Téléphone :') }} +237 691 XXX 550</p>
                 </div>
             </div>
         </div>
@@ -102,7 +103,7 @@
 
 @section('footer')
     <footer class="bg-gray-200 text-center py-4 mt-8">
-        <p class="text-sm text-gray-500">{{ __('© :year Nom de votre système. Tous droits réservés.') }}</p>
+        <p class="text-sm text-gray-500">{{ __('© :year Système de gestion des archives. Tous droits réservés.') }}</p>
     </footer>
 @endsection
 

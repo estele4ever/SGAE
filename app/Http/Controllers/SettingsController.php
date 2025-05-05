@@ -148,7 +148,7 @@ class SettingsController extends Controller
     }
 
     public function updateTypeStatus(Request $request, $id){
-            dd($request->all(),$id);
+           // dd($request->all(),$id);
             $request->validate([
                 'statut' => 'required|boolean',
             ]);
@@ -184,7 +184,9 @@ class SettingsController extends Controller
             'statut' => 'required|boolean',
             'champs.nom_champ' => 'required|array',
             'champs.type_champ' => 'required|array',
+            'regles_id' => 'required|string'
         ]);
+        
 
         // 2. Créer le profil
         $profile = TypeArchive::create([
@@ -192,8 +194,8 @@ class SettingsController extends Controller
             'description' => $validated['description'],
             'services_id' => $validated['services_id'],
             'statut' => $validated['statut'],
+            'regles_id' => $validated['regles_id']
         ]);
-
         // 3. Ajouter les champs
         foreach ($request->champs['nom_champ'] as $index => $nom_champ) {
             ArchiveProfileField::create([
@@ -208,7 +210,12 @@ class SettingsController extends Controller
         return redirect()->back()->with('success', 'Profil d\'archive créé avec ses champs.');
     }
 
-    
+    // ArchiveProfile.php
+public function regle()
+{
+    return $this->belongsTo(Regle::class);
+}
+
     
 
     ////////////////////////////////GESTION DES TYPES D'ARCHIVES/////////////////////////////////////////

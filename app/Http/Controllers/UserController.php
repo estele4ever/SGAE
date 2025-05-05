@@ -71,6 +71,8 @@ class UserController extends Controller
             'service' => $service->nom,
             'permission' => $request->service ?? '',
         ]);
+       // $user = User::find(1);
+        //$user->assignRole('admin');// Ou 'creator', 'admin', etc.
         return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
     }
 
@@ -104,4 +106,10 @@ class UserController extends Controller
         $user->delete();
         return back()->with('success', 'Utilisateur supprimé.');
     }
+
+    public function __construct()
+{
+    $this->middleware('permission:voir archives')->only('index');
+    $this->middleware('permission:creer archives')->only('create');
+}
 }

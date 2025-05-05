@@ -9,7 +9,7 @@ class Archive extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'titre','type_id', 'service_id', 'metadata', 'description',  'fichier',
+        'titre','type_id', 'service_id', 'metadata', 'description',  'fichier','deleted_at'
     ];
    
 

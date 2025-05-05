@@ -9,7 +9,7 @@ class TypeArchive extends Model
 {
     use HasFactory;
  
-    protected $fillable = ['nom', 'services_id','description','statut','regle_id'];
+    protected $fillable = ['nom', 'services_id','description','statut','regles_id'];
 
     // Relation many-to-many avec Service via la table pivot
     public function services()

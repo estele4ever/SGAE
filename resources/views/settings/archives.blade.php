@@ -8,6 +8,15 @@
             {{ session('success') }}
         </div>
     @endif
+    @if ($errors->any())
+        <div class="bg-green-100 text-red-800 p-4 rounded mb-4">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
     <form method="POST" action="{{ route('settings.addArchiveProfile') }}">
         @csrf
         <!-- Infos principales -->
@@ -35,7 +44,7 @@
         </div>
 
         <!-- Ajout dynamique de champs -->
-        <h3 class="text-xl font-bold mb-2">Champs personnalisés</h3>
+        <h3 class="text-xl font-bold mb-2">Champs personnalisés (caracteristiques de l'archive)</h3>
         <div id="champs-container" class="mb-4"></div>
 
         <button type="button" onclick="ajouterChamp()" class="bg-green-500 text-white px-3 py-1 rounded mb-4">➕ Ajouter un champ</button>
@@ -52,12 +61,14 @@
         <tr>
             <th class="border px-4 py-2">Nom du profil</th>
             <th class="border px-4 py-2">Statut</th>
+            <th class="border px-4 py-2">Regles de conservation</th>
             <th class="border px-4 py-2">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach($archiveTypes as $profile)
         <tr class="hover:bg-gray-50">
+            
             <td class="border px-4 py-2">{{ $profile->nom }}</td>
 
             <!-- Switch de statut -->
@@ -65,8 +76,11 @@
                 <form method="POST" action="{{ route('settings.updateTypeStatus', $profile->id) }}">
                     @csrf
                     @method('PATCH')
-                    <input type="checkbox" onchange="this.form.submit()" {{ $profile->statut == 1 ? 'checked' : '' }}>
+                    <input type="hidden" name="statut" value="0">
+                    <input type="checkbox" name="statut" value="1" onchange="this.form.submit()" {{ $profile->statut == 1 ? 'checked' : '' }}>
                 </form>
+            </td>
+            <td class="border px-4 py-2"> {{ $profile->regle_id->duree  }}
             </td>
 
             <!-- Actions -->
@@ -143,50 +157,7 @@
 <script>
 function openEditModal(id) {
     
-    fetch(`/settings/archive-profile/${id}/edit`)
-    .then(response => response.json())
-    .then(data => {
-        // Remplir les champs principaux
-        alert('bonjour')
-        document.getElementById('editNom').value = data.profile.nom;
-        document.getElementById('editStatut').checked = (data.profile.statut === 'actif');
-        
-        // Nettoyer les anciens champs
-        const fieldsContainer = document.getElementById('editFieldsContainer');
-        fieldsContainer.innerHTML = '';
-
-        // Recharger les champs existants
-        data.fields.forEach((field, index) => {
-            const fieldDiv = document.createElement('div');
-            fieldDiv.classList.add('mb-2');
-
-            fieldDiv.innerHTML = `
-                <input type="hidden" name="existing_fields[${index}][id]" value="${field.id}">
-                <label class="block mb-1 font-semibold">Nom du champ :</label>
-                <input type="text" name="existing_fields[${index}][nom_champ]" value="${field.nom_champ}" class="w-full border p-2 mb-2">
-
-                <label class="block mb-1 font-semibold">Type :</label>
-                <input type="text" name="existing_fields[${index}][type_champ]" value="${field.type_champ}" class="w-full border p-2 mb-2">
-
-                <label class="block mb-1 font-semibold">Obligatoire :</label>
-                <input type="checkbox" name="existing_fields[${index}][obligatoire]" ${field.obligatoire ? 'checked' : ''}>
-                <hr class="my-3">
-                <bouton>annuler</bouton>
-
-            `;
-            fieldsContainer.appendChild(fieldDiv);
-        });
-
-        // Mettre à jour l'action du formulaire
-        document.getElementById('editProfileForm').action = `/settings/archives/updateArchiveType/${id}`;
-        
-        // Ouvrir le modal
-        document.getElementById('editModal').classList.remove('hidden');
-    })
-    .catch(error => {
-        console.error('Erreur lors du chargement du profil :', error);
-        alert('Erreur chargement du profil.');
-    });
+   
 }
 
 function closeEditModal() {
@@ -202,7 +173,7 @@ function addNewEditField() {
     fieldDiv.classList.add('mb-2');
     fieldDiv.innerHTML = `
         <label class="block mb-1 font-semibold">Nom du champ :</label>
-        <input type="text" name="new_fields[${index}][nom_champ]" class="w-full border p-2 mb-2">
+        <input type="text" name="new_fields[${index}][nom_champ]" title="veuillez entrer le \"nom\" pour designer le nom , \"document\" pour designer un fichier" class="w-full border p-2 mb-2">
 
         <label class="block mb-1 font-semibold">Type :</label>
         <input type="text" name="new_fields[${index}][type_champ]" class="w-full border p-2 mb-2">
@@ -251,7 +222,7 @@ function ajouterChamp() {
     const container = document.getElementById('champs-container');
     const champHTML = `
         <div class="flex items-center gap-2 mb-2">
-            <input type="text" name="champs[nom_champ][]" placeholder="Nom du champ" class="border p-2 flex-1" required>
+            <input type="text" name="champs[nom_champ][]" title="veuillez entrer **nom** pour designer le nom , **document** pour designer un fichier" placeholder="Nom du champ" class="border p-2 flex-1" required>
             <select name="champs[type_champ][]" class="border p-2 flex-1" required>
                 <option value="text">Texte</option>
                 <option value="number">Nombre</option>
