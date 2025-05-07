@@ -120,6 +120,14 @@
         <label class="block mb-1 font-semibold">Statut :</label>
         <input type="checkbox" id="editStatut" name="statut">
     </div>
+    
+    <input type="text" id="editDescription" name="description" class="w-full border p-2 mb-4">
+
+    <label for="editServiceId" class="block mb-1 font-semibold">Service :</label>
+    <select id="editServiceId" name="services_id" class="w-full border p-2 mb-4"></select>
+
+    <label for="editRegleId" class="block mb-1 font-semibold">Règle de conservation :</label>
+    <select id="editRegleId" name="regles_id" class="w-full border p-2 mb-4"></select>
 
     <div id="editFieldsContainer" class="mb-4">
         <!-- Champs dynamiques chargés ici -->
@@ -155,9 +163,53 @@
 
 
 <script>
+
 function openEditModal(id) {
-    
-   
+    document.getElementById('editProfileForm').action = `/settings/archives/updateArchiveType/${id}`;
+
+    fetch(`/settings/archives/updateArchiveType/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            // Remplir les champs du formulaire
+           // document.getElementById('editArchiveId').value = data.id;
+            document.getElementById('editNom').value = data.nom;
+            document.getElementById('editDescription').value = data.description;
+           // document.getElementById('editServiceId').value = data.service;
+           // document.getElementById('editRegleId').value = data.regle;
+            
+            // Afficher la règle (par son nom ou sa durée)
+            const regleSelect = document.getElementById('editRegleId');
+            regleSelect.innerHTML = ''; // reset
+            data.regles.forEach(regle => {
+                const option = document.createElement('option');
+                option.value = regle.id;
+                option.textContent = regle.nom + ' - ' + regle.duree + ' jours';
+                if (regle.id === data.regle_id) {
+                    option.selected = true;
+                }
+                regleSelect.appendChild(option);
+            });
+
+            // Services
+            const serviceSelect = document.getElementById('editServiceId');
+            serviceSelect.innerHTML = ''; // reset
+            data.services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = service.nom;
+                if (service.id === data.service_id) {
+                    option.selected = true;
+                }
+                serviceSelect.appendChild(option);
+            });
+
+            // Afficher la modale
+            document.getElementById('editModal').classList.remove('hidden');
+        })
+        .catch(error => {
+            console.error('Erreur récupération de l’archive :', error);
+            alert('Impossible de charger les données.');
+        });
 }
 
 function closeEditModal() {
@@ -181,7 +233,8 @@ function addNewEditField() {
         <label class="block mb-1 font-semibold">Obligatoire :</label>
         <input type="checkbox" name="new_fields[${index}][obligatoire]">
         <hr class="my-3">
-        <bouton>annuler</bouton>
+        <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 py-1 rounded">Annuler</button>
+
     `;
     fieldsContainer.appendChild(fieldDiv);
 }
@@ -232,7 +285,7 @@ function ajouterChamp() {
             <label class="flex items-center">
                 <input type="checkbox" name="champs[obligatoire][]" value="1" class="mr-1"> Obligatoire
             </label>
-        <bouton type="submit" class="bg-red-500 text-white px-3 py-1 rounded">annuler</bouton>
+       <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 py-1 rounded">Annuler</button>
 
         </div>
     `;

@@ -44,13 +44,11 @@ class ArchiveController extends Controller
 
     $user = Auth::user();
     $type = TypeArchive::findOrFail($request->archive_profile_id);
-    dd($type);
-    $regle_id = Regle::findOrFail($type->regles_id);
-    
+   
+    $regle_id = Regle::where('nom', $type->regles_id)->firstOrFail();
     $dureearchives = $regle_id->duree;
-    dd($dureearchives);
     $datesuppression = Carbon::now()->addDays($dureearchives);
-    //dd($request->fichier);
+
     // Gestion de l'upload de fichier
     $fichierPath = null;
     if ($request->hasFile('fichier')) {
@@ -74,7 +72,7 @@ class ArchiveController extends Controller
     public function show($id)
     {
         $archive = Archive::findOrFail($id);
-
+        dd($archive);
         $champs = json_decode($archive->donnees, true);
 
         return view('archives.show', compact('archive', 'champs'));
@@ -98,14 +96,13 @@ public function edit(Request $request,$id){
     }
 
     // Télécharger le fichier
-   /* public function telecharger($id)
+   public function telecharger($id)
     {
         $archive = Archive::findOrFail($id);
-
         if (!$archive->fichier || !Storage::disk('public')->exists($archive->fichier)) {
             abort(404);
         }
 
         return Storage::disk('public')->download($archive->fichier);
-    }*/
+    }
 }
