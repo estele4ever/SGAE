@@ -28,28 +28,6 @@ class SettingsController extends Controller
         return view('settings.archives', compact('services', 'archiveTypes', 'totalProfiles','regles'));
     }
     
-    /*public function addArchiveType(Request $request) {
-
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            //'services_ids' => 'required|array', // Correction : tableau de services
-            'services_id' => 'exists:services,id', // Vérifier que chaque service existe
-            'description' => 'nullable|string',
-            'statut' => 'required|boolean'
-        ]);
-
-        $typeArchive = TypeArchive::create([
-            'nom' => $request->nom,
-            'services_id' => $request->services_id,
-            'description' => $request->description,
-            'statut' => $request->statut
-        ]);
-    
-        // Associer les services sélectionnés
-        $typeArchive->services()->attach($request->services_id);
-    
-        return redirect()->route('settings.archives')->with('success', 'Type d\'archive ajouté avec succès.');
-    }*/
     public function getProfile($id)
     {
         $profile = TypeArchive::findOrFail($id);
@@ -101,7 +79,24 @@ class SettingsController extends Controller
 
         return redirect()->route('settings.archives')->with('success', 'Type d\'archive mis à jour avec succès.');
     }*/
-    public function updateArchiveType(Request $request, $id){
+    public function updateArchiveType($id)
+{
+    $profile = ArchiveProfile::findOrFail($id);
+
+    return response()->json([
+        'id' => $profile->id,
+        'nom' => $profile->nom,
+        'description' => $profile->description,
+        'statut' => $profile->statut,
+        'regle_id' => $profile->regles_id,
+        'service_id' => $profile->services_id,
+        'regles' => Regle::all(),
+        'services' => Service::all()
+    ]);
+    
+}
+
+    /*public function updateArchiveType(Request $request, $id){
         // Valider les données principales
         $request->validate([
             'nom' => 'required|string|max:255',
@@ -145,7 +140,7 @@ class SettingsController extends Controller
         }
 
         return redirect()->route('settings.archives')->with('success', 'Profil d\'archives mis à jour avec succès.');
-    }
+    }*/
 
     public function updateTypeStatus(Request $request, $id){
            // dd($request->all(),$id);
@@ -177,6 +172,7 @@ class SettingsController extends Controller
 
     public function addArchiveProfile(Request $request){
         // 1. Valider les données principales
+
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -187,14 +183,14 @@ class SettingsController extends Controller
             'regles_id' => 'required|string'
         ]);
         
-
+        $regle = Regle::findOrFail($validated['regles_id']);
         // 2. Créer le profil
         $profile = TypeArchive::create([
             'nom' => $validated['nom'],
             'description' => $validated['description'],
             'services_id' => $validated['services_id'],
             'statut' => $validated['statut'],
-            'regles_id' => $validated['regles_id']
+            'regles_id' => $regle->nom
         ]);
         // 3. Ajouter les champs
         foreach ($request->champs['nom_champ'] as $index => $nom_champ) {

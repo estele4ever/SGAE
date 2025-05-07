@@ -80,7 +80,7 @@
                     <input type="checkbox" name="statut" value="1" onchange="this.form.submit()" {{ $profile->statut == 1 ? 'checked' : '' }}>
                 </form>
             </td>
-            <td class="border px-4 py-2"> {{ $profile->regle_id->duree  }}
+            <td class="border px-4 py-2"> {{ $profile->regles_id }}
             </td>
 
             <!-- Actions -->
@@ -120,6 +120,14 @@
         <label class="block mb-1 font-semibold">Statut :</label>
         <input type="checkbox" id="editStatut" name="statut">
     </div>
+    
+    <input type="text" id="editDescription" name="description" class="w-full border p-2 mb-4">
+
+    <label for="editServiceId" class="block mb-1 font-semibold">Service :</label>
+    <select id="editServiceId" name="services_id" class="w-full border p-2 mb-4"></select>
+
+    <label for="editRegleId" class="block mb-1 font-semibold">Règle de conservation :</label>
+    <select id="editRegleId" name="regles_id" class="w-full border p-2 mb-4"></select>
 
     <div id="editFieldsContainer" class="mb-4">
         <!-- Champs dynamiques chargés ici -->
@@ -155,6 +163,7 @@
 
 
 <script>
+
 function openEditModal(id) {
     
     fetch(`/archives/${id}`)
@@ -221,7 +230,8 @@ function addNewEditField() {
         <label class="block mb-1 font-semibold">Obligatoire :</label>
         <input type="checkbox" name="new_fields[${index}][obligatoire]">
         <hr class="my-3">
-        <bouton>annuler</bouton>
+        <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 py-1 rounded">Annuler</button>
+
     `;
     fieldsContainer.appendChild(fieldDiv);
 }
@@ -272,7 +282,7 @@ function ajouterChamp() {
             <label class="flex items-center">
                 <input type="checkbox" name="champs[obligatoire][]" value="1" class="mr-1"> Obligatoire
             </label>
-        <bouton type="submit" class="bg-red-500 text-white px-3 py-1 rounded">annuler</bouton>
+       <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 py-1 rounded">Annuler</button>
 
         </div>
     `;
