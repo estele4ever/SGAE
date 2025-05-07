@@ -19,7 +19,7 @@ return new class extends Migration
         $table->string('service_id');
         $table->string('metadata');
         $table->string('fichier')->nullable(); // Stockera le chemin du fichier
-        $table->timestamps('deleted_at'); // Pour enregistrer la date de création
+        $table->timestamp('deleted_at')->nullable();// Pour enregistrer la date de création
         $table->timestamps(); // Pour enregistrer la date de création
     });
 }

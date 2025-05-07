@@ -80,7 +80,7 @@
                     <input type="checkbox" name="statut" value="1" onchange="this.form.submit()" {{ $profile->statut == 1 ? 'checked' : '' }}>
                 </form>
             </td>
-            <td class="border px-4 py-2"> {{ $profile->regle_id->duree  }}
+            <td class="border px-4 py-2"> {{ $profile->regles_id }}
             </td>
 
             <!-- Actions -->

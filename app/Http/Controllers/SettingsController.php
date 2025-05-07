@@ -177,6 +177,7 @@ class SettingsController extends Controller
 
     public function addArchiveProfile(Request $request){
         // 1. Valider les données principales
+
         $validated = $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'nullable|string',
@@ -187,14 +188,14 @@ class SettingsController extends Controller
             'regles_id' => 'required|string'
         ]);
         
-
+        $regle = Regle::findOrFail($validated['regles_id']);
         // 2. Créer le profil
         $profile = TypeArchive::create([
             'nom' => $validated['nom'],
             'description' => $validated['description'],
             'services_id' => $validated['services_id'],
             'statut' => $validated['statut'],
-            'regles_id' => $validated['regles_id']
+            'regles_id' => $regle->nom
         ]);
         // 3. Ajouter les champs
         foreach ($request->champs['nom_champ'] as $index => $nom_champ) {
