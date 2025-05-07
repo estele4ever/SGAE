@@ -39,7 +39,7 @@
             <select name="role" class="border p-2 w-full" required>
                 <option value="" disabled selected>Sélectionnez un rôle</option>
                 @foreach($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->privilege }}</option>
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
                 @endforeach
             </select>
         </div>
@@ -83,7 +83,7 @@
         <select name="role" class="border p-2 flex-1 mb-2">
             <option value="" disabled selected>Tous les rôles</option>
             @foreach($roles as $role)
-                <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>{{ $role->privilege }}</option>
+                <option value="{{ $role->id }}" {{ request('role') == $role->id ? 'selected' : '' }}>{{ $role->name }}</option>
             @endforeach
         </select>
         
@@ -142,7 +142,7 @@
             <select name="role" id="edit_role" class="border p-2 w-full mb-2" required>
                 <option value="" disabled selected>Sélectionnez un rôle</option>
                 @foreach($roles as $role)
-                    <option value="{{ $role->id }}">{{ $role->privilege }}</option>
+                    <option value="{{ $role->id }}">{{ $role->name }}</option>
                 @endforeach
             </select>
 

@@ -319,11 +319,11 @@ public function regle()
     public function store(Request $request)
     {
         $request->validate([
-            'privilege' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         Role::create([
-            'privilege' => $request->privilege,
+            'name' => $request->privilege,
         ]);
 
         return redirect()->route('settings.roles')->with('success', 'Rôle ajouté avec succès.');
@@ -333,11 +333,11 @@ public function regle()
     public function update(Request $request, Role $role)
     {
         $request->validate([
-            'privilege' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
         ]);
 
         $role->update([
-            'privilege' => $request->privilege,
+            'name' => $request->privilege,
         ]);
 
         return redirect()->route('settings.roles')->with('success', 'Rôle mis à jour avec succès.');
@@ -421,7 +421,7 @@ public function regle()
         ]);
         
 
-        $regle = Regle::create([
+         Regle::create([
             'nom' => $request->nom,
             'description' => $request->description,
             'duree' => $duree

@@ -157,7 +157,47 @@
 <script>
 function openEditModal(id) {
     
-   
+    fetch(`/archives/${id}`)
+        .then(response => response.json())
+        .then(data => {
+            // Remplir les champs du formulaire
+            document.getElementById('editArchiveId').value = data.id;
+            document.getElementById('editNom').value = data.nom;
+            document.getElementById('editDescription').value = data.description;
+            
+            // Afficher la règle (par son nom ou sa durée)
+            const regleSelect = document.getElementById('editRegleId');
+            regleSelect.innerHTML = ''; // reset
+            data.regles.forEach(regle => {
+                const option = document.createElement('option');
+                option.value = regle.id;
+                option.textContent = regle.nom + ' - ' + regle.duree + ' jours';
+                if (regle.id === data.regle_id) {
+                    option.selected = true;
+                }
+                regleSelect.appendChild(option);
+            });
+
+            // Services
+            const serviceSelect = document.getElementById('editServiceId');
+            serviceSelect.innerHTML = ''; // reset
+            data.services.forEach(service => {
+                const option = document.createElement('option');
+                option.value = service.id;
+                option.textContent = service.nom;
+                if (service.id === data.service_id) {
+                    option.selected = true;
+                }
+                serviceSelect.appendChild(option);
+            });
+
+            // Afficher la modale
+            document.getElementById('editModal').classList.remove('hidden');
+        })
+        .catch(error => {
+            console.error('Erreur récupération de l’archive :', error);
+            alert('Impossible de charger les données.');
+        });
 }
 
 function closeEditModal() {
