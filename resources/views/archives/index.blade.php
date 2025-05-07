@@ -25,6 +25,9 @@
 
        
     </div>
+    <div class="mb-4">
+    <input type="text" id="searchInput" placeholder="Rechercher une archive..." class="w-full border p-2 rounded" onkeyup="filterArchives()">
+</div>
 
     <div class="bg-white shadow overflow-hidden rounded-lg">
         <table class="min-w-full table-auto border">
@@ -49,7 +52,7 @@
                         };
                     @endphp
                     <tr class="border-b odd:bg-gray-100 even:bg-white">
-                        <td class="px-4 py-2">{{ $archive->nom }}</td>
+                        <td class="px-4 py-2">{{ $archive->titre }}</td>
                         <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
                         <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
                         <td class="px-4 py-2 flex items-center space-x-4">
@@ -59,9 +62,13 @@
                             </a>
 
                             <!-- Modifier -->
-                            <a href="{{ route('archives.edit', $archive->id) }}" title="Modifier l'archive">
-                                <i class="fas fa-pen text-blue-500 fa-lg"></i>
-                            </a>
+                            <button 
+                                class="text-blue-500" 
+                                onclick="openEditModal({{ $archive->id }}, '{{ addslashes($archive->titre) }}', '{{ addslashes($archive->description) }}', '{{ $archive->type_id }}')"
+                                title="Modifier l'archive">
+                                <i class="fas fa-pen fa-lg"></i>
+                            </button>
+
 
                             <!-- Supprimer -->
                             <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?');">
@@ -82,8 +89,87 @@
                 @endif
             </tbody>
         </table>
+
+
+        <!-- Modal d'édition -->
+        <div id="editModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
+            <div class="bg-white p-6 rounded-lg w-full max-w-lg shadow-lg relative">
+                <h2 class="text-xl font-bold mb-4">Modifier l'archive</h2>
+                <form id="editForm" method="POST" enctype="multipart/form-data">
+                    @csrf
+                    @method('PUT')
+                    <div class="mb-4">
+                        <label for="editTitre" class="block font-semibold">Nom</label>
+                        <input type="text" name="titre" id="editTitre" class="w-full border rounded p-2">
+                    </div>
+                    <div class="mb-4">
+                        <label for="editType" class="block font-semibold">Type d'archive</label>
+                        <select name="type_id" id="editType" class="w-full border rounded p-2">
+                            @foreach($types as $type)
+                                <option value="{{ $type->id }}">{{ $type->nom }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="editDescription" class="block font-semibold">Description</label>
+                        <textarea name="description" id="editDescription" class="w-full border rounded p-2"></textarea>
+                    </div>
+                    <div class="mb-4">
+                        <label for="editFichier" class="block font-semibold">Fichier (optionnel)</label>
+                        <input type="file" name="fichier" id="editFichier" class="w-full">
+                    </div>
+                    <div class="flex justify-end space-x-4">
+                        <button type="button" onclick="closeEditModal()" class="bg-gray-500 text-white px-4 py-2 rounded">Annuler</button>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Enregistrer</button>
+                    </div>
+                </form>
+            </div>
+</div>
+
     </div>
 
-   
+    <script>
+    function filterArchives() {
+        const input = document.getElementById("searchInput");
+        const filter = input.value.toLowerCase();
+        const rows = document.querySelectorAll("table tbody tr");
+
+        rows.forEach(row => {
+            const nomCell = row.querySelector("td:nth-child(1)");
+            const profilCell = row.querySelector("td:nth-child(2)");
+
+            if (nomCell && profilCell) {
+                const nomText = nomCell.textContent.toLowerCase();
+                const profilText = profilCell.textContent.toLowerCase();
+
+                if (nomText.includes(filter) || profilText.includes(filter)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
+    }
+
+
+    // Fonction pour ouvrir le modal d'édition
+    function openEditModal(id, titre, description, typeId) {
+        document.getElementById('editTitre').value = titre;
+        document.getElementById('editDescription').value = description;
+        document.getElementById('editType').value = typeId;
+
+        const form = document.getElementById('editForm');
+        form.action = `/archives/${id}`; // Assure-toi que cette route existe avec PUT
+
+        document.getElementById('editModal').classList.remove('hidden');
+        document.getElementById('editModal').classList.add('flex');
+    }
+
+    function closeEditModal() {
+        document.getElementById('editModal').classList.add('hidden');
+        document.getElementById('editModal').classList.remove('flex');
+    }
+</script>
+
 </div>
 @endsection

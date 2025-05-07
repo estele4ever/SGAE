@@ -19,7 +19,10 @@ class ArchiveController extends Controller
     public function index()
     {
         $archives = Archive::latest()->get();
-        return view('archives.index', compact('archives'));
+        $types = TypeArchive::all();
+return view('archives.index', compact('archives', 'types'));
+
+        
     }
 
     // Formulaire création
@@ -33,41 +36,40 @@ class ArchiveController extends Controller
     // Enregistrement d'une nouvelle archive
 
     public function store(Request $request)
-{
-    $request->validate([
-        'nom' => 'required|string|max:255',
-        'description' => 'required|string',
-        'archive_profile_id' => 'required|exists:type_archives,id',
-        'champs' => 'required|array',
-        'fichier' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xls,xlsx|max:20480', // 20MB Max
-    ]);
+    {
+        $request->validate([
+            'nom' => 'required|string|max:255',
+            'description' => 'required|string',
+            'archive_profile_id' => 'required|exists:type_archives,id',
+            'champs' => 'required|array',
+            'fichier' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xls,xlsx|max:20480', // 20MB Max
+        ]);
 
-    $user = Auth::user();
-    $type = TypeArchive::findOrFail($request->archive_profile_id);
-   
-    $regle_id = Regle::where('nom', $type->regles_id)->firstOrFail();
-    $dureearchives = $regle_id->duree;
-    $datesuppression = Carbon::now()->addDays($dureearchives);
+        $user = Auth::user();
+        $type = TypeArchive::findOrFail($request->archive_profile_id);
+    
+        $regle_id = Regle::where('nom', $type->regles_id)->firstOrFail();
+        $dureearchives = $regle_id->duree;
+        $datesuppression = Carbon::now()->addDays($dureearchives);
 
-    // Gestion de l'upload de fichier
-    $fichierPath = null;
-    if ($request->hasFile('fichier')) {
-        $fichierPath = $request->file('fichier')->store('archives', 'public');
-    }
+        // Gestion de l'upload de fichier
+        $fichierPath = null;
+        if ($request->hasFile('fichier')) {
+            $fichierPath = $request->file('fichier')->store('archives', 'public');
+        }
+dd($fichierPath);        // Créer l'archive principale
+        $archive = Archive::create([
+            'titre' => $request->nom,
+            'description' => $request->description,
+            'type_id' => $request->archive_profile_id,
+            'service_id' => $user->service, // Enregistrement automatique du service de l'utilisateur
+            'metadata' => json_encode($request->champs), // Sauvegarde tous les champs dynamiques comme métadonnées
+            'deleted_at' => $datesuppression,
+            'fichier' => $fichierPath, // Sauvegarde le chemin du fichier
+        ]);
 
-    // Créer l'archive principale
-    $archive = Archive::create([
-        'titre' => $request->nom,
-        'description' => $request->description,
-        'type_id' => $request->archive_profile_id,
-        'service_id' => $user->service, // Enregistrement automatique du service de l'utilisateur
-        'metadata' => json_encode($request->champs), // Sauvegarde tous les champs dynamiques comme métadonnées
-        'deleted_at' => $datesuppression,
-        'fichier' => $fichierPath, // Sauvegarde le chemin du fichier
-    ]);
-
-    return redirect()->route('archives.index')->with('success', 'Archive créée avec succès.');
-} 
+        return redirect()->route('archives.index')->with('success', 'Archive créée avec succès.');
+    } 
     // Affichage d'une archive
     public function show($id)
     {
@@ -80,6 +82,31 @@ class ArchiveController extends Controller
 public function edit(Request $request,$id){
 
 }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'titre' => 'required|string|max:255',
+            'description' => 'required|string',
+            'type_id' => 'required|exists:type_archives,id',
+            'fichier' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xls,xlsx|max:20480',
+        ]);
+
+        $archive = Archive::findOrFail($id);
+        $archive->titre = $request->titre;
+        $archive->description = $request->description;
+        $archive->type_id = $request->type_id;
+
+        if ($request->hasFile('fichier')) {
+            $fichierPath = $request->file('fichier')->store('archives', 'public');
+            $archive->fichier = $fichierPath;
+        }
+
+        $archive->save();
+
+        return redirect()->route('archives.index')->with('success', 'Archive modifiée avec succès.');
+    }
+
     // Suppression d'une archive
     public function destroy($id)
     {
