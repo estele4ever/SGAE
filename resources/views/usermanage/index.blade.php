@@ -109,10 +109,10 @@
                 <td class="p-2">{{ $user->role }}</td>
                 <td class="p-2">{{ $user->service }}</td>
                 <td class="p-2 space-x-2">
-                    <button onclick="openEditModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}', '{{ $user->role }}', '{{ $user->permission }}')" class="text-blue-500">Modifier</button>
+                    <button onclick="openEditModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}', '{{ $user->role }}', '{{ $user->permission }}')" class="text-blue-500">Modifier<i class="fas fa-pen fa-lg"></i></button>
                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
                         @csrf @method('DELETE')
-                        <button onclick="return confirm('Confirmer la suppression ?')" class="text-red-500">Supprimer</button>
+                        <button onclick="return confirm('Confirmer la suppression ?')" class="text-red-500">Supprimer <i class="fas fa-trash text-red-500 fa-lg"></i></button>
                     </form>
                 </td>
             </tr>

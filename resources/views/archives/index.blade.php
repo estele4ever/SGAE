@@ -64,7 +64,7 @@
                             <!-- Modifier -->
                             <button 
                                 class="text-blue-500" 
-                                onclick="openEditModal({{ $archive->id }}, '{{ addslashes($archive->titre) }}', '{{ addslashes($archive->description) }}', '{{ $archive->type_id }}')"
+                                onclick="openEditModal('{{ $archive->id }}', '{{ addslashes($archive->titre) }}', '{{ addslashes($archive->description) }}', '{{ $archive->type_id }}')"
                                 title="Modifier l'archive">
                                 <i class="fas fa-pen fa-lg"></i>
                             </button>

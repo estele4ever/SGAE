@@ -14,7 +14,7 @@
 </div>
 
 <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
-    <h2 class="text-2xl font-bold mb-6 text-center">Regle de conservation</h2>
+    <h2 class="text-2xl font-bold mb-6 text-center">Regle de conservation des archives</h2>
     @if(session('success'))
         <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
             {{ session('success') }}
@@ -51,13 +51,13 @@
             <div>
                 <strong>{{$regle->duree}}</strong>
             </div>
-            <button onclick="openEditModal('{{ $regle->id }}', '{{ $regle->nom }}', '{{ $regle->description }}', '{{ $regle->duree }}')" class="text-blue-500 hover:text-blue-700">Modifier</button>
+            <button onclick="openEditModal('{{ $regle->id }}', '{{ $regle->nom }}', '{{ $regle->description }}', '{{ $regle->duree }}')" class="text-blue-500 hover:text-blue-700">Modifier <i class="fas fa-pen fa-lg"></i></button>
 
             <div>
                 <form method="POST" action="{{ route('settings.deleteRegle', $regle->id) }}" class="inline">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700">Supprimer</button>
+                    <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700">Supprimer <i class="fas fa-trash text-red-500 fa-lg"></i></button>
                 </form>
             </div>
         </li>

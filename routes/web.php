@@ -53,7 +53,6 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
     Route::get('/archives/index', [ArchiveController::class, 'index'])->name('archives.index');
     Route::get('/archives/edit/{id}', [ArchiveController::class, 'edit'])->name('archives.edit');
     Route::put('/archives/{archive}', [ArchiveController::class, 'update'])->name('archives.update');
-
     Route::get('/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
     Route::post('/archives/store', [ArchiveController::class, 'store'])->name('archives.store');
     Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
