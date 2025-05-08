@@ -29,32 +29,32 @@
     <div class="mt-6">
         <strong>Fichier :</strong> 
         @if($archive->fichier)
-            <a href="{{ asset($archive->fichier) }}" class="text-blue-600 hover:underline" target="_blank">Télécharger le fichier</a>
+            <a href="{{ asset('storage/' . $archive->fichier) }}" class="text-blue-600 hover:underline" target="_blank">Télécharger le fichier</a>
         @else
             <span class="text-gray-500 italic">Aucun fichier disponible</span>
         @endif
     </div>
-</div>
-<div class="mt-6">
-            @php
-                $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
-            @endphp
+
+    <div class="mt-6">
+        @php
+            $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
+        @endphp
+        
+        @if(in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
+            <h2 class="text-lg font-semibold">Aperçu de l'image :</h2>
+            <img src="{{ asset('storage/' . $archive->fichier) }}" alt="{{ $archive->titre }}" class="w-full h-auto rounded mt-4">
             
-            @if(in_array($extension, ['jpg', 'jpeg', 'png', 'gif']))
-                <h2 class="text-lg font-semibold">Aperçu de l'image :</h2>
-                <img src="{{ asset($archive->fichier) }}" alt="{{ $archive->titre }}" class="w-full h-auto rounded mt-4">
-                
-            @elseif(in_array($extension, ['pdf']))
-                <h2 class="text-lg font-semibold">Aperçu du PDF :</h2>
-                <iframe src="{{ asset($archive->fichier) }}" width="100%" height="500px" class="rounded mt-4"></iframe>
-                
-            @elseif(in_array($extension, ['xls', 'xlsx']))
-                <h2 class="text-lg font-semibold">Aperçu de l'Excel :</h2>
-                <iframe src="https://docs.google.com/gview?url={{ asset($archive->fichier) }}&embedded=true" width="100%" height="500px" class="rounded mt-4"></iframe>
-                
-            @else
-                <p class="text-gray-600">Aperçu non disponible pour ce type de fichier.</p>
-            @endif
-
-
+        @elseif(in_array($extension, ['pdf']))
+            <h2 class="text-lg font-semibold">Aperçu du PDF :</h2>
+            <iframe src="{{ asset('storage/' . $archive->fichier) }}" width="100%" height="500px" class="rounded mt-4"></iframe>
+            
+        @elseif(in_array($extension, ['xls', 'xlsx']))
+            <h2 class="text-lg font-semibold">Aperçu de l'Excel :</h2>
+            <iframe src="https://docs.google.com/gview?url={{ asset('storage/' . $archive->fichier) }}&embedded=true" width="100%" height="500px" class="rounded mt-4"></iframe>
+            
+        @else
+            <p class="text-gray-600">Aperçu non disponible pour ce type de fichier.</p>
+        @endif
+    </div>
+</div>
 @endsection

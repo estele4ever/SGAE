@@ -3,6 +3,14 @@
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
     <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Liste des Archives</h1>
+        <a href="{{ route('archives.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            + Ajouter une Archive
+        </a>
+
+       
+    </div>
+    <div class="mb-4">
     @if(session('success'))
             <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
                 {{ session('success') }}
@@ -18,14 +26,7 @@
                 </ul>
             </div>
         @endif
-        <h1 class="text-2xl font-bold text-gray-800">Liste des Archives</h1>
-        <a href="{{ route('archives.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            + Ajouter une Archive
-        </a>
-
-       
-    </div>
-    <div class="mb-4">
+    
     <input type="text" id="searchInput" placeholder="Rechercher une archive..." class="w-full border p-2 rounded" onkeyup="filterArchives()">
 </div>
 

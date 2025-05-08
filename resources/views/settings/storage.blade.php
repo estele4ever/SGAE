@@ -42,27 +42,63 @@
     </div>
 
     <!-- Liste des regles -->
-    <ul class="list-disc pl-6" id="regleList">
-        @foreach($regles as $regle)
-        <li class="flex justify-between items-center mb-4 p-2 border-b regle-item">
-            <div class="flex-1">
-                <strong>{{ $regle->nom }}</strong> - {{ $regle->description }}
-            </div>
-            <div>
-                <strong>{{$regle->duree}}</strong>
-            </div>
-            <button onclick="openEditModal('{{ $regle->id }}', '{{ $regle->nom }}', '{{ $regle->description }}', '{{ $regle->duree }}')" class="text-blue-500 hover:text-blue-700">Modifier</button>
+    <!-- Tableau des règles -->
+<div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200 border" id="regleList">
+        <thead class="bg-gray-200">
+            <tr>
+                <th class="px-4 py-2 text-left">Nom</th>
+                <th class="px-4 py-2 text-left">Description</th>
+                <th class="px-4 py-2 text-left">Durée</th>
+                <th class="px-4 py-2 text-left">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach($regles as $regle)
+                <tr class="regle-item odd:bg-gray-100 even:bg-white">
+                    <td class="px-4 py-2">{{ $regle->nom }}</td>
+                    <td class="px-4 py-2">{{ $regle->description }}</td>
+                    <td class="px-4 py-2">
+    @php
+        $jours = $regle->duree;
+        $annees = intdiv($jours, 365);
+        $reste = $jours % 365;
 
-            <div>
-                <form method="POST" action="{{ route('settings.deleteRegle', $regle->id) }}" class="inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700">Supprimer</button>
-                </form>
-            </div>
-        </li>
-        @endforeach
-    </ul>
+        $mois = intdiv($reste, 30);
+        $reste %= 30;
+
+        $semaines = intdiv($reste, 7);
+        $reste %= 7;
+
+        $affichage = [];
+        if ($annees) $affichage[] = "$annees an" . ($annees > 1 ? 's' : '');
+        if ($mois) $affichage[] = "$mois mois";
+        if ($semaines) $affichage[] = "$semaines semaine" . ($semaines > 1 ? 's' : '');
+        if ($reste) $affichage[] = "$reste jour" . ($reste > 1 ? 's' : '');
+    @endphp
+    {{ implode(' ', $affichage) }}
+</td>
+
+                    <td class="px-4 py-2 space-x-2">
+                        <button onclick="openEditModal('{{ $regle->id }}', '{{ $regle->nom }}', '{{ $regle->description }}', '{{ $regle->duree }}', '{{ $regle->temporalite }}')" class="text-blue-500 hover:text-blue-700" title="Modifier">  <i class="fas fa-pen fa-lg"></i></button>
+                        <form method="POST" action="{{ route('settings.deleteRegle', $regle->id) }}" class="inline">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700" title="Supprimer">   <i class="fas fa-trash text-red-500 fa-lg" ></i></button>
+                        </form>
+                    </td>
+                </tr>
+            @endforeach
+
+            @if($regles->isEmpty())
+                <tr>
+                    <td colspan="4" class="text-center py-4 text-gray-500">Aucune règle trouvée.</td>
+                </tr>
+            @endif
+        </tbody>
+    </table>
+</div>
+
 </div>
 
 <!-- 🛠️ MODAL MODIFICATION -->

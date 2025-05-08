@@ -43,6 +43,8 @@
             <td class="px-4 py-2">{{ $service->nom }}</td>
             <td class="px-4 py-2">{{ $service->description }}</td>
             <td class="px-4 py-2">
+
+            
                 <form method="POST" action="{{ route('settings.updateServiceStatus', $service->id) }}" class="inline">
                     @csrf
                     @method('PATCH')

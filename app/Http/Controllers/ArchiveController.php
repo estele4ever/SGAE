@@ -37,6 +37,7 @@ return view('archives.index', compact('archives', 'types'));
 
     public function store(Request $request)
     {
+        //dd($request->all());
         $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'required|string',
@@ -55,9 +56,11 @@ return view('archives.index', compact('archives', 'types'));
         // Gestion de l'upload de fichier
         $fichierPath = null;
         if ($request->hasFile('fichier')) {
-            $fichierPath = $request->file('fichier')->store('archives', 'public');
+            $originalName = $request->file('fichier')->getClientOriginalName(); // nom original avec extension
+            $fichierPath = $request->file('fichier')->storeAs('archives', $originalName, 'public');
         }
-dd($fichierPath);        // Créer l'archive principale
+        
+        //dd($fichierPath);        // Créer l'archive principale
         $archive = Archive::create([
             'titre' => $request->nom,
             'description' => $request->description,
@@ -74,14 +77,14 @@ dd($fichierPath);        // Créer l'archive principale
     public function show($id)
     {
         $archive = Archive::findOrFail($id);
-        dd($archive);
         $champs = json_decode($archive->donnees, true);
-
-        return view('archives.show', compact('archive', 'champs'));
+    
+        // Générer le chemin complet du fichier
+        $cheminFichier = asset('storage/' . $archive->fichier);
+    
+        return view('archives.show', compact('archive', 'champs', 'cheminFichier'));
     }
-public function edit(Request $request,$id){
 
-}
 
     public function update(Request $request, $id)
     {
