@@ -24,9 +24,9 @@
         <tbody>
             @foreach($roles as $role)
             <tr class="border-b">
-                <td class="p-2">{{ $role->privilege }}</td>
+                <td class="p-2">{{ $role->name }}</td>
                 <td class="p-2 space-x-2">
-                    <button onclick="openEditModal('{{ $role->id }}', '{{ $role->privilege }}')" class="text-blue-500">Modifier</button>
+                    <button onclick="openEditModal('{{ $role->id }}', '{{ $role->name }}')" class="text-blue-500">Modifier</button>
                     <form action="{{ route('settings.deleteRole', $role->id) }}" method="POST" class="inline">
                         @csrf @method('DELETE')
                         <button onclick="return confirm('Confirmer la suppression ?')" class="text-red-500">Supprimer</button>
@@ -48,7 +48,7 @@
 
             <input type="hidden" name="id" id="edit_id">
 
-            <input type="text" name="privilege" id="edit_privilege" placeholder="Nom du rôle" class="border p-2 w-full mb-2" required>
+            <input type="text" name="name" id="edit_privilege" placeholder="Nom du rôle" class="border p-2 w-full mb-2" required>
 
             <div class="flex justify-end space-x-2 mt-4">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-400 text-white rounded">Annuler</button>
@@ -59,9 +59,9 @@
 </div>
 
 <script>
-    function openEditModal(id, privilege) {
+    function openEditModal(id, name) {
         document.getElementById('edit_id').value = id;
-        document.getElementById('edit_privilege').value = privilege;
+        document.getElementById('edit_privilege').value = name;
 
         // Modifier l'action du formulaire 
         document.getElementById('editForm').action = "{{ route('settings.updateRole', ':id') }}".replace(':id', id);

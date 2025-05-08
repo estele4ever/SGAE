@@ -164,57 +164,25 @@
 
 <script>
 
-function openEditModal(id) {
-    document.getElementById('editProfileForm').action = `/settings/archives/updateArchiveType/${id}`;
+function openEditModal(id, Nom, description, service,regle) {
+        document.getElementById('editNom').value = Nom;
+        document.getElementById('editDescription').value = description;
+        document.getElementById('editService').value = service;
+        document.getElementById('editRegle').value = regle;
 
-    fetch(`/settings/archives/updateArchiveType/${id}`)
-        .then(response => response.json())
-        .then(data => {
-            // Remplir les champs du formulaire
-           // document.getElementById('editArchiveId').value = data.id;
-            document.getElementById('editNom').value = data.nom;
-            document.getElementById('editDescription').value = data.description;
-           // document.getElementById('editServiceId').value = data.service;
-           // document.getElementById('editRegleId').value = data.regle;
-            
-            // Afficher la règle (par son nom ou sa durée)
-            const regleSelect = document.getElementById('editRegleId');
-            regleSelect.innerHTML = ''; // reset
-            data.regles.forEach(regle => {
-                const option = document.createElement('option');
-                option.value = regle.id;
-                option.textContent = regle.nom + ' - ' + regle.duree + ' jours';
-                if (regle.id === data.regle_id) {
-                    option.selected = true;
-                }
-                regleSelect.appendChild(option);
-            });
+        const form = document.getElementById('editForm');
+        form.action = `/archives/${id}`; // Assure-toi que cette route existe avec PUT
 
-            // Services
-            const serviceSelect = document.getElementById('editServiceId');
-            serviceSelect.innerHTML = ''; // reset
-            data.services.forEach(service => {
-                const option = document.createElement('option');
-                option.value = service.id;
-                option.textContent = service.nom;
-                if (service.id === data.service_id) {
-                    option.selected = true;
-                }
-                serviceSelect.appendChild(option);
-            });
+        document.getElementById('editModal').classList.remove('hidden');
+        document.getElementById('editModal').classList.add('flex');
+    }
 
-            // Afficher la modale
-            document.getElementById('editModal').classList.remove('hidden');
-        })
-        .catch(error => {
-            console.error('Erreur récupération de l’archive :', error);
-            alert('Impossible de charger les données.');
-        });
-}
+    function closeEditModal() {
+        document.getElementById('editModal').classList.add('hidden');
+        document.getElementById('editModal').classList.remove('flex');
+    }
 
-function closeEditModal() {
-    document.getElementById('editModal').classList.add('hidden');
-}
+
 
 // Ajouter un nouveau champ dynamiquement dans la modification
 function addNewEditField() {
