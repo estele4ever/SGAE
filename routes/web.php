@@ -89,7 +89,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
         Route::post('/archives/add', [SettingsController::class, 'addArchiveProfile'])->name('settings.addArchiveProfile');
         Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
         Route::delete('/archives/{id}/delete', [SettingsController::class, 'deleteArchiveType'])->name('settings.deleteArchiveType');
-        Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
+       // Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveProfile'])->name('settings.updateArchiveType');
         Route::patch('/settings/types/{id}/status', [SettingsController::class, 'updateTypeStatus'])->name('settings.updateTypeStatus');
         Route::get('/archive-profile/{id}/fields', [SettingsController::class, 'getProfileFields'])->name('settings.getProfileFields');
 // Récupérer un profil d'archive par son ID
