@@ -14,28 +14,38 @@
         <button type="submit" class="bg-blue-500 text-white px-4">Ajouter</button>
     </form>
 
-    <table class="table-auto w-full">
-        <thead>
-            <tr class="bg-gray-200">
-                <th class="p-2">Nom du privilege</th>
-                <th class="p-2">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach($roles as $role)
-            <tr class="border-b">
-                <td class="p-2">{{ $role->name }}</td>
-                <td class="p-2 space-x-2">
-                    <button onclick="openEditModal('{{ $role->id }}', '{{ $role->name }}')" class="text-blue-500">Modifier</button>
-                    <form action="{{ route('settings.deleteRole', $role->id) }}" method="POST" class="inline">
+    <table class="table-auto w-full border-collapse border border-gray-300 shadow-md rounded overflow-hidden">
+    <thead class="bg-gray-200 text-gray-700">
+        <tr>
+            <th class="p-3 text-left border">Nom du privilège</th>
+            <th class="p-3 text-center border">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach($roles as $role)
+        <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
+            <td class="p-3 border">{{ $role->name }}</td>
+            <td class="p-3 border">
+                <div class="flex justify-center space-x-2">
+                    <!-- Modifier -->
+                    <button onclick="openEditModal('{{ $role->id }}', '{{ $role->name }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow" title="Modifier">
+                        <i class="fas fa-pen"></i>
+                    </button>
+
+                    <!-- Supprimer -->
+                    <form action="{{ route('settings.deleteRole', $role->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')" class="inline">
                         @csrf @method('DELETE')
-                        <button onclick="return confirm('Confirmer la suppression ?')" class="text-red-500">Supprimer</button>
+                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
                     </form>
-                </td>
-            </tr>
-            @endforeach
-        </tbody>
-    </table>
+                </div>
+            </td>
+        </tr>
+        @endforeach
+    </tbody>
+</table>
+
 </div>
 
 <!-- MODAL MODIFICATION -->

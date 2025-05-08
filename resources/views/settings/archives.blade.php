@@ -56,53 +56,61 @@
 </div>
 <h2 class="text-2xl font-bold mt-8 mb-4"><strong>({{ $totalProfiles }})</strong> Profils d'archives existants </h2>
 
-<table class="w-full table-auto border-collapse border border-gray-300">
-    <thead class="bg-gray-100">
+<table class="w-full table-auto border-collapse border border-gray-300 shadow-md rounded overflow-hidden">
+    <thead class="bg-gray-200 text-gray-700">
         <tr>
-            <th class="border px-4 py-2">Nom du profil</th>
-            <th class="border px-4 py-2">Statut</th>
-            <th class="border px-4 py-2">Regles de conservation</th>
-            <th class="border px-4 py-2">Actions</th>
+            <th class="border px-4 py-3 text-left">Nom du profil</th>
+            <th class="border px-4 py-3 text-center">Statut</th>
+            <th class="border px-4 py-3 text-left">Règles de conservation</th>
+            <th class="border px-4 py-3 text-center">Actions</th>
         </tr>
     </thead>
     <tbody>
         @foreach($archiveTypes as $profile)
-        <tr class="hover:bg-gray-50">
-            
+        <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
+            <!-- Nom -->
             <td class="border px-4 py-2">{{ $profile->nom }}</td>
 
-            <!-- Switch de statut -->
+            <!-- Statut -->
             <td class="border px-4 py-2 text-center">
                 <form method="POST" action="{{ route('settings.updateTypeStatus', $profile->id) }}">
                     @csrf
                     @method('PATCH')
                     <input type="hidden" name="statut" value="0">
-                    <input type="checkbox" name="statut" value="1" onchange="this.form.submit()" {{ $profile->statut == 1 ? 'checked' : '' }}>
+                    <input type="checkbox" name="statut" value="1" onchange="this.form.submit()" {{ $profile->statut == 1 ? 'checked' : '' }} class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500">
                 </form>
             </td>
-            <td class="border px-4 py-2"> {{ $profile->regles_id }}
-            </td>
+
+            <!-- Règles -->
+            <td class="border px-4 py-2">{{ $profile->regles_id }}</td>
 
             <!-- Actions -->
-            <td class="border px-4 py-2 flex space-x-2 justify-center">
-                <!-- Modifier -->
-                <button onclick="openEditModal('{{ $profile->id }}')" class="bg-blue-500 text-white px-3 py-1 rounded">Modifier</button>
+            <td class="border px-4 py-2">
+                <div class="flex justify-center space-x-2">
+                    <!-- Modifier -->
+                    <button onclick="openEditModal('{{ $profile->id }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow" title="Modifier">
+                        <i class="fas fa-pen"></i>
+                    </button>
 
-                <!-- Voir détails -->
-                <button onclick="openDetailModal('{{ $profile->id }}')" class="bg-green-500 text-white px-3 py-1 rounded">Voir détails</button>
+                    <!-- Détails -->
+                    <button onclick="openDetailModal('{{ $profile->id }}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow" title="Détails">
+                        <i class="fas fa-eye"></i>
+                    </button>
 
-                <!-- Supprimer -->
-                <form method="POST" action="{{ route('settings.deleteArchiveType', $profile->id) }}" onsubmit="return confirm('Confirmer la suppression ?')">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="bg-red-500 text-white px-3 py-1 rounded">Supprimer</button>
-                </form>
+                    <!-- Supprimer -->
+                    <form method="POST" action="{{ route('settings.deleteArchiveType', $profile->id) }}" onsubmit="return confirm('Confirmer la suppression ?')">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow" title="Supprimer">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </form>
+                </div>
             </td>
         </tr>
         @endforeach
     </tbody>
 </table>
-
 <!-- Modal Modifier -->
 <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
     <div class="bg-white p-6 rounded shadow w-1/2">
