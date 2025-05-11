@@ -55,10 +55,13 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
     Route::put('/archives/{archive}', [ArchiveController::class, 'update'])->name('archives.update');
     Route::get('/archives/create', [ArchiveController::class, 'create'])->name('archives.create');
     Route::post('/archives/store', [ArchiveController::class, 'store'])->name('archives.store');
-    Route::get('/archives/{id}', [ArchiveController::class, 'show'])->name('archives.show');
+    Route::get('/archives/show/{id}', [ArchiveController::class, 'show'])->name('archives.show');
     Route::delete('/archives/{id}', [ArchiveController::class, 'destroy'])->name('archives.destroy');
     Route::get('/archives/{id}/telecharger', [ArchiveController::class, 'telecharger'])->name('archives.telecharger');
+    
     Route::post('/archives/{id}/geler', [ArchiveController::class, 'geler'])->name('archives.geler');
+    Route::get('/archives/gele', [ArchiveController::class, 'gelArchives'])->name('archives.gel.index');
+    Route::delete('/archives/gel/supprimer', [ArchiveController::class, 'supprimerArchivesObsoletes'])->name('archives.gel.supprimer');
 
     Route::get('/archive/{id}', [ArchiveController::class, 'show'])->middleware('service.check');
 
@@ -67,7 +70,6 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
     Route::prefix('settings')->middleware('auth')->group(function () {
         Route::get('/security', [SettingsController::class, 'security'])->name('settings.security');
-    // Route::get('/services', [SettingsController::class, 'services'])->name('settings.services');
         Route::get('/archives', [SettingsController::class, 'archives'])->name('settings.archives');
         Route::get('/statistics', [SettingsController::class, 'statistics'])->name('settings.statistics');
 
@@ -89,13 +91,11 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
         Route::post('/archives/add', [SettingsController::class, 'addArchiveProfile'])->name('settings.addArchiveProfile');
         Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveType'])->name('settings.updateArchiveType');
         Route::delete('/archives/{id}/delete', [SettingsController::class, 'deleteArchiveType'])->name('settings.deleteArchiveType');
-       // Route::put('/archives/updateArchiveType/{id}', [SettingsController::class, 'updateArchiveProfile'])->name('settings.updateArchiveType');
         Route::patch('/settings/types/{id}/status', [SettingsController::class, 'updateTypeStatus'])->name('settings.updateTypeStatus');
         Route::get('/archive-profile/{id}/fields', [SettingsController::class, 'getProfileFields'])->name('settings.getProfileFields');
-// Récupérer un profil d'archive par son ID
         Route::get('/archive-profile/{id}', [SettingsController::class, 'getProfile'])->name('settings.getProfile');
 
-// Récupérer les champs d'un profil d'archive
+        // Récupérer les champs d'un profil d'archive
         Route::get('/archive-profile/{id}/fields', [SettingsController::class, 'getProfileFields'])->name('settings.getProfileFields');
         Route::get('/archive-profile/{id}/edit', [SettingsController::class, 'editArchiveProfile'])->name('settings.editArchiveProfile');
 

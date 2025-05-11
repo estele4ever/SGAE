@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Archive;
-
+use App\Models\RegistreGel;
 use App\Models\Regle;
 use App\Models\TypeArchive;
 use Exception;
@@ -43,7 +43,7 @@ return view('archives.index', compact('archives', 'types'));
             'description' => 'required|string',
             'archive_profile_id' => 'required|exists:type_archives,id',
             'champs' => 'required|array',
-            'fichier' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xls,xlsx|max:20480', // 20MB Max
+            'fichier' => 'required|file|mimes:jpg,jpeg,png,pdf,xls,xlsx,doc,docx,html,htm,zip',
         ]);
 
         $user = Auth::user();
@@ -76,6 +76,7 @@ return view('archives.index', compact('archives', 'types'));
     // Affichage d'une archive
     public function show($id)
     {
+       
         $archive = Archive::findOrFail($id);
         $champs = json_decode($archive->donnees, true);
     
@@ -135,4 +136,69 @@ return view('archives.index', compact('archives', 'types'));
 
         return Storage::disk('public')->download($archive->fichier);
     }
+
+    public function gelArchives()
+    {
+        // Récupérer les archives gelées dont la durée est dépassée
+        $archivesObsoletes = Archive::whereNotNull('deleted_at')
+    ->whereHas('gels', function ($query) {
+        $query->where('statut', 1)
+              ->whereRaw("(archives.deleted_at + (registre_gels.duree || ' days')::interval) <= NOW()")
+              ->whereRaw("CAST(registre_gels.archive_id AS BIGINT) = archives.id");
+    })
+    ->with(['gels' => function ($query) {
+        $query->where('statut', 1);
+    }])
+    ->get();
+
+    
+        return view('archives.gel', compact('archivesObsoletes'));
+    }
+    
+    public function supprimerArchivesObsoletes()
+{
+    $archives = Archive::whereNotNull('deleted_at')
+        ->whereHas('registreGel', function ($query) {
+            $query->where('statut', 'actif')
+                  ->whereRaw('DATE_ADD(archives.deleted_at, INTERVAL registre_gels.duree DAY) <= NOW()');
+        })
+        ->with('registreGel')
+        ->get();
+
+    foreach ($archives as $archive) {
+        // Supprimer le fichier s'il existe
+        if ($archive->fichier && Storage::disk('public')->exists($archive->fichier)) {
+            Storage::disk('public')->delete($archive->fichier);
+        }
+
+        // Supprimer le gel associé
+        $archive->registreGel()->delete();
+
+        // Suppression définitive
+        $archive->forceDelete();
+    }
+
+    return redirect()->route('archives.gel.index')->with('success', 'Toutes les archives obsolètes ont été supprimées.');
+}
+
+
+    public function geler(Request $request, $id)
+{
+    
+    $request->validate([
+        'motif' => 'required|string',
+        'duree' => 'required|integer|min:1',
+        'statut' => 'required|boolean',
+    ]);
+
+    RegistreGel::create([
+        'archive_id' => $id,
+        'motif' => $request->motif,
+        'duree' => $request->duree,
+        'statut' => $request->statut,
+    ]);
+
+    return redirect()->route('archives.show', $id)->with('success', 'L’archive a été gelée avec succès.');
+}
+
 }

@@ -2,14 +2,18 @@
 
 @section('content')
 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between items-center mb-6">
-        <h1 class="text-2xl font-bold text-gray-800">Liste des Archives</h1>
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Liste des Archives</h1>
+    <div class="flex space-x-2">
         <a href="{{ route('archives.create') }}" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
             + Ajouter une Archive
         </a>
-
-       
+        <a href="{{ route('archives.gel.index') }}" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded">
+            🧊 Gel des Archives
+        </a>
     </div>
+</div>
+
     <div class="mb-4">
     @if(session('success'))
             <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
@@ -49,10 +53,12 @@
                             'doc', 'docx' => 'fa-file-word text-blue-600',
                             'xls', 'xlsx' => 'fa-file-excel text-green-600',
                             'jpg', 'jpeg', 'png' => 'fa-file-image text-yellow-500',
+                            'html', 'htm' => 'fa-file-code text-purple-600',
+                            'zip' => 'fa-file-archive text-orange-600',
                             default => 'fa-file text-gray-600',
                         };
                     @endphp
-                    <tr class="border-b odd:bg-gray-100 even:bg-white">
+                    <tr class="border-b odd:bg-gray-150 even:bg-white">
                         <td class="px-4 py-2">{{ $archive->titre }}</td>
                         <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
                         <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
@@ -70,15 +76,29 @@
                                 <i class="fas fa-pen fa-lg"></i>
                             </button>
 
+                            @php
+                                $gel = DB::table('registre_gels')
+                                    ->where('archive_id', $archive->id)
+                                    ->where('statut', '1')
+                                    ->whereRaw("(created_at + (duree || ' days')::interval) > NOW()")
+                                    ->first();
+                            @endphp
 
-                            <!-- Supprimer -->
-                            <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?');">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" title="Supprimer l'archive">
-                                    <i class="fas fa-trash text-red-500 fa-lg"></i>
-                                </button>
-                            </form>
+                            @if (is_null($gel) || !$gel->statut)
+                        <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700" title="Supprimer">   <i class="fas fa-trash text-red-500 fa-lg" ></i></button>
+                        </form>
+                                @else
+                                    <button disabled 
+                                            class="bg-gray-300 text-gray-500 py-1 px-3 rounded inline-flex items-center cursor-not-allowed" title="Archive gelée">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6 18l12-12M3 12a9 9 0 0115.75-6.5" />
+                                        </svg>
+                                        Gelée
+                                    </button>
+                                @endif
                         </td>
                     </tr>
                 @endforeach

@@ -49,7 +49,7 @@
 
         <div class="mb-4">
             <label class="block mb-2 font-semibold">Fichier <span class="text-red-600">*</span></label>
-            <input type="file" name="fichier" class="w-full border p-2" required>
+            <input type="file" name="fichier" class="w-full border p-2" required  accept=".html, .htm, .doc, .docx, .zip, .pdf, .xls, .xlsx, .jpg, .jpeg, .png">
         </div>
 
         <!-- Champs dynamiques (selon profil) -->

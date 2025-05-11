@@ -22,6 +22,15 @@ class Archive extends Model
     {
         return $this->belongsTo(TypeArchive::class);
     }
+    public function registreGel()
+{
+    return $this->hasOne(RegistreGel::class, 'archive_id');
+}
+public function gels()
+{
+    return $this->hasMany(\App\Models\RegistreGel::class, 'archive_id');
+}
+
 }
 
 

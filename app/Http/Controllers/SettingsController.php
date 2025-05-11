@@ -71,7 +71,7 @@ class SettingsController extends Controller
     }
     public function updateArchiveType($id)
 {
-    $profile = ArchiveProfile::findOrFail($id);
+    $profile = TypeArchive::findOrFail($id);
 
     return response()->json([
         'id' => $profile->id,

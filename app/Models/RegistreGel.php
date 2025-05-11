@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 class RegistreGel extends Model
 {
     use HasFactory;
-    protected $fillable = ['motif', 'date_gel', 'duree','statut','archive_id'];
-
+    protected $fillable = ['motif', 'duree','statut','archive_id'];
+    
+    public function archive()
+    {
+        return $this->belongsTo(Archive::class, 'archive_id');
+    }
+    
 }
