@@ -124,8 +124,8 @@ class SettingsController extends Controller
             'description' => 'nullable|string',
             'services_id' => 'required|exists:services,id',
             'statut' => 'required|boolean',
-            'champs.nom_champ' => 'required|array',
-            'champs.type_champ' => 'required|array',
+            'champs.nom_champ' => 'array',
+            'champs.type_champ' => 'array',
             'regles_id' => 'required|string'
         ]);
         

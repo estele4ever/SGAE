@@ -141,7 +141,7 @@ return view('archives.index', compact('archives', 'types'));
     {
         // Récupérer les archives gelées dont la durée est dépassée
         $archivesObsoletes = Archive::whereNotNull('deleted_at')
-    ->whereHas('gels', function ($query) {
+        ->whereHas('gels', function ($query) {
         $query->where('statut', 1)
               ->whereRaw("(archives.deleted_at + (registre_gels.duree || ' days')::interval) <= NOW()")
               ->whereRaw("CAST(registre_gels.archive_id AS BIGINT) = archives.id");
@@ -151,8 +151,20 @@ return view('archives.index', compact('archives', 'types'));
     }])
     ->get();
 
+    //recuperer toutes les archives geler pour degeler
+    $archivegeler = Archive::whereNotNull('deleted_at')
+    ->whereExists(function ($query) {
+        $query->select('*')
+            ->from('registre_gels')
+            ->whereColumn('archives.id', 'archive_id')
+            ->where('statut', 1)
+            ->whereRaw("(archives.deleted_at + (registre_gels.duree || ' days')::interval) > NOW()");
+    })
+    ->get();
+
     
-        return view('archives.gel', compact('archivesObsoletes'));
+   
+        return view('archives.gel', compact('archivesObsoletes' , 'archivegeler'));
     }
     
     public function supprimerArchivesObsoletes()

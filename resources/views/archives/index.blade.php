@@ -58,7 +58,7 @@
                             default => 'fa-file text-gray-600',
                         };
                     @endphp
-                    <tr class="border-b odd:bg-gray-150 even:bg-white">
+                    <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray' : 'bg-white' }} hover:bg-blue-50">
                         <td class="px-4 py-2">{{ $archive->titre }}</td>
                         <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
                         <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
