@@ -3,9 +3,8 @@
 @section('content')
 <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-xl font-bold mb-4">Gestion du stockage</h2>
-    <p>Espace utilisé : 10 Go</p>
-
-    <progress value="5" max="40" class="w-full"></progress>
+    <p>Espace utilisé : {{ $formattedSize }} Go</p>
+    <progress value={{ $formattedSize }} max="40" class="w-full"></progress>
 
     <form method="POST" action="" class="mt-4">
         @csrf

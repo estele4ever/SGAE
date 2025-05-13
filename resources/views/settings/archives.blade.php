@@ -101,12 +101,12 @@
                 <td class="border px-4 py-2">
                     <div class="flex justify-center space-x-2">
                         <!-- Modifier -->
-                        <button onclick="openEditModal('{{ $profile->id }}', '{{ addslashes($profile->nom) }}', '{{ addslashes($profile->description) }}', '{{ $profile->statut }}', '{{ $profile->regles_id }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow" title="Modifier">
+                        <button onclick="openEditModal('{{ $profile->id }}', '{{ addslashes($profile->nom) }}', '{{ addslashes($profile->description) }}', '{{ $profile->statut }}', '{{ $profile->regles_id }}')" class="text-blue-500"  title="Modifier">
                             <i class="fas fa-pen"></i>
                         </button>
 
                         <!-- Détails -->
-                        <button onclick="openDetailModal('{{ $profile->id }}')" class="bg-green-500 hover:bg-green-600 text-white px-3 py-1 rounded shadow" title="Détails">
+                        <button onclick="openDetailModal('{{ $profile->id }}')" class="text-blue-500" title="Détails">
                             <i class="fas fa-eye"></i>
                         </button>
 
@@ -114,7 +114,7 @@
                         <form method="POST" action="{{ route('settings.deleteArchiveType', $profile->id) }}" onsubmit="return confirm('Confirmer la suppression ?')">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow" title="Supprimer">
+                            <button type="submit" class="text-red-500 hover:text-red-700" title="Supprimer">
                                 <i class="fas fa-trash"></i>
                             </button>
                         </form>

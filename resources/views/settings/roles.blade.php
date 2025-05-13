@@ -28,14 +28,14 @@
             <td class="p-3 border">
                 <div class="flex justify-center space-x-2">
                     <!-- Modifier -->
-                    <button onclick="openEditModal('{{ $role->id }}', '{{ $role->name }}')" class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow" title="Modifier">
+                    <button onclick="openEditModal('{{ $role->id }}', '{{ $role->name }}')"  class="text-blue-500" title="Modifier">
                         <i class="fas fa-pen"></i>
                     </button>
 
                     <!-- Supprimer -->
                     <form action="{{ route('settings.deleteRole', $role->id) }}" method="POST" onsubmit="return confirm('Confirmer la suppression ?')" class="inline">
                         @csrf @method('DELETE')
-                        <button class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow" title="Supprimer">
+                        <button class="text-red-500 hover:text-red-700" title="Supprimer">
                             <i class="fas fa-trash"></i>
                         </button>
                     </form>

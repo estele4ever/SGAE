@@ -25,7 +25,8 @@
 
     <!-- Champ de recherche -->
     <div class="mb-4">
-        <input type="text" id="searchServiceInput" placeholder="Rechercher un service..." class="w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
+    <input type="text" id="searchInput" placeholder="Rechercher un service..." class="w-full border p-2 rounded" onkeyup="filterServices()">
+
     </div>
 <!-- Liste des services -->
 <table class="min-w-full border border-gray-300 shadow-md rounded overflow-hidden" id="serviceList">
@@ -169,15 +170,27 @@
 
         {{-- Script JavaScript pour la recherche instantanée --}}
         <script>
-            document.getElementById("searchServiceInput").addEventListener("keyup", function() {
-                let filter = this.value.toLowerCase();
-                let items = document.querySelectorAll("#serviceList .service-item");
+                function filterServices() {
+                const input = document.getElementById("searchInput");
+                const filter = input.value.toLowerCase();
+                const rows = document.querySelectorAll("table tbody tr");
 
-                items.forEach(function(item) {
-                    let text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(filter) ? "" : "none";
+                rows.forEach(row => {
+                    const nomCell = row.querySelector("td:nth-child(1)");
+                    const profilCell = row.querySelector("td:nth-child(2)");
+
+                    if (nomCell && profilCell) {
+                        const nomText = nomCell.textContent.toLowerCase();
+                        const profilText = profilCell.textContent.toLowerCase();
+
+                        if (nomText.includes(filter) || profilText.includes(filter)) {
+                            row.style.display = "";
+                        } else {
+                            row.style.display = "none";
+                        }
+                    }
                 });
-            });
+            }
 
             function openEditModal(id, nom, description, statut) {
                 document.getElementById('edit_id').value = id;

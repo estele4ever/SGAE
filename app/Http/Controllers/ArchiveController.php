@@ -17,8 +17,10 @@ class ArchiveController extends Controller
 {
     // Liste des archives
     public function index()
-    {
-        $archives = Archive::latest()->get();
+    {$archives = Archive::whereRaw("deleted_at  >= NOW()")
+    ->latest()
+    ->get();
+       // $archives = Archive::latest()->get()->whereRaw("(archives.deleted_at + (registre_gels.duree || ' days')::interval) >= NOW()");
         $types = TypeArchive::all();
 return view('archives.index', compact('archives', 'types'));
 
@@ -37,7 +39,7 @@ return view('archives.index', compact('archives', 'types'));
 
     public function store(Request $request)
     {
-        //dd($request->all());
+        
         $request->validate([
             'nom' => 'required|string|max:255',
             'description' => 'required|string',
@@ -139,36 +141,34 @@ return view('archives.index', compact('archives', 'types'));
 
     public function gelArchives()
     {
-        // Récupérer les archives gelées dont la durée est dépassée
-        $archivesObsoletes = Archive::whereNotNull('deleted_at')
-        ->whereHas('gels', function ($query) {
-        $query->where('statut', 1)
-              ->whereRaw("(archives.deleted_at + (registre_gels.duree || ' days')::interval) <= NOW()")
-              ->whereRaw("CAST(registre_gels.archive_id AS BIGINT) = archives.id");
-    })
-    ->with(['gels' => function ($query) {
-        $query->where('statut', 1);
-    }])
+    // Récupérer les archives  dont la durée est dépassée
+    $archivesObsoletes = Archive::whereNotNull('deleted_at')
+    ->whereRaw("deleted_at < NOW()")
     ->get();
-
+    
+    
     //recuperer toutes les archives geler pour degeler
     $archivegeler = Archive::whereNotNull('deleted_at')
-    ->whereExists(function ($query) {
-        $query->select('*')
-            ->from('registre_gels')
-            ->whereColumn('archives.id', 'archive_id')
-            ->where('statut', 1)
+    ->whereHas('registreGel', function ($query) {
+        $query->where('statut', 1)
             ->whereRaw("(archives.deleted_at + (registre_gels.duree || ' days')::interval) > NOW()");
     })
+    ->with('gels') // utile pour accéder à $archive->gels dans la vue
     ->get();
-
-    
    
         return view('archives.gel', compact('archivesObsoletes' , 'archivegeler'));
     }
     
-    public function supprimerArchivesObsoletes()
-{
+    public function degeler($id){
+    // Supposons que vous ayez un modèle RegistreGel
+    RegistreGel::where('archive_id', $id)
+        ->where('statut', 1)
+        ->update(['statut' => 0]);
+
+    return redirect()->back()->with('success', 'Archive dégélée avec succès.');
+    }
+    
+    public function supprimerArchivesObsoletes(){
     $archives = Archive::whereNotNull('deleted_at')
         ->whereHas('registreGel', function ($query) {
             $query->where('statut', 'actif')

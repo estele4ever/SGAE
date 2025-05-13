@@ -36,7 +36,7 @@
 
     <div class="bg-white shadow overflow-hidden rounded-lg">
         <table class="min-w-full table-auto border">
-            <thead class="bg-gray-200 text-gray-700">
+            <thead class="bg-gray-200 text-gray-900">
                 <tr>
                     <th class="px-4 py-2 text-left">Nom</th>
                     <th class="px-4 py-2 text-left">Profil</th>
@@ -58,7 +58,8 @@
                             default => 'fa-file text-gray-600',
                         };
                     @endphp
-                    <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray' : 'bg-white' }} hover:bg-blue-50">
+                    <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
+
                         <td class="px-4 py-2">{{ $archive->titre }}</td>
                         <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
                         <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>

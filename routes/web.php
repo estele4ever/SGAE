@@ -62,6 +62,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
     Route::post('/archives/{id}/geler', [ArchiveController::class, 'geler'])->name('archives.geler');
     Route::get('/archives/gele', [ArchiveController::class, 'gelArchives'])->name('archives.gel.index');
     Route::delete('/archives/gel/supprimer', [ArchiveController::class, 'supprimerArchivesObsoletes'])->name('archives.gel.supprimer');
+    Route::post('/archives/degeler/{id}', [ArchiveController::class, 'degeler'])->name('archives.degeler');
 
     Route::get('/archive/{id}', [ArchiveController::class, 'show'])->middleware('service.check');
 

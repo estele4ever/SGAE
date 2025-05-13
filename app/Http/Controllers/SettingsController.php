@@ -303,6 +303,11 @@ public function regle()
 
         return redirect()->route('settings.storage')->with('success', 'Stockage nettoyé avec succès.');
     }
+
+   
+
+// Utilisation
+    
     public function security() {
         $users = User::all(); // Récupère tous les utilisateurs existants
         return view('settings.security', compact('users'));
@@ -315,10 +320,26 @@ public function regle()
     }
 
     //////////////////////////////  REGLE DE CONSERVATION///////////////////////////////////////
+    public function formatSize($bytes, $decimals = 2) {
+        $units = ['B', 'KB', 'MB', 'GB', 'TB'];
+        $factor = floor((strlen($bytes) - 1) / 3);
+        return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . @$units[$factor];
+    }
+
     public function regles() {
         $regles = Regle::all();
-        return view('settings.storage', compact('regles'));
 
+        $files = Storage::files();
+        $totalSize = 0;
+
+        foreach ($files as $file) {
+            $totalSize += Storage::size($file);
+        }
+        //dd($totalSize); // Pour déboguer et voir la taille formatée
+
+        $formattedSize = $this->formatSize($totalSize);
+
+        return view('settings.storage', compact('regles', 'formattedSize'));
     }
     function convertDaysToPeriod($days) {
         $years = floor($days / 365);
