@@ -12,7 +12,7 @@ use App\Models\TypeArchive;
 use App\Models\ArchiveProfileField;
 
 
-//dd($request->all());
+
 
 class SettingsController extends Controller
 {
@@ -83,6 +83,27 @@ class SettingsController extends Controller
         'regles' => Regle::all(),
         'services' => Service::all()
     ]);
+
+   /* public function updateArchiveType(Request $request, $id)
+{
+    $request->validate([
+        'nom' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'statut' => 'required|boolean',
+        'regle_id' => 'required|exists:regles,id',
+        'service_id' => 'required|exists:services,id',
+    ]);
+
+    $archiveType = TypeArchive::findOrFail($id);
+    $archiveType->nom = $request->input('nom');
+    $archiveType->description = $request->input('description');
+    $archiveType->statut = $request->input('statut');
+    $archiveType->regles_id = $request->input('regle_id');
+    $archiveType->services_id = $request->input('service_id');
+    $archiveType->save();
+
+    return redirect()->back()->with('success', 'Type d\'archive mis à jour avec succès.');
+}*/
     
 }
 

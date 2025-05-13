@@ -106,7 +106,9 @@
                         </button>
 
                         <!-- Détails -->
-                        <button onclick="openDetailModal('{{ $profile->id }}')" class="text-blue-500" title="Détails">
+                         
+                        <button onclick="openEditModal('{{ $profile->id }}', '{{ addslashes($profile->nom) }}', '{{ addslashes($profile->description) }}', '{{ $profile->statut }}', '{{ $profile->regles_id }}', '{{ $profile->services_id }}')"
+                            class="text-blue-500" title="Détails">
                             <i class="fas fa-eye"></i>
                         </button>
 
@@ -125,10 +127,11 @@
         </tbody>
     </table>
 <!-- Modal Modifier -->
+ 
     <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
         <div class="bg-white p-6 rounded shadow w-1/2">
             <h3 class="text-xl font-bold mb-4">Modifier Profil d'Archive</h3>
-            <form id="editProfileForm" method="POST" action="" enctype="multipart/form-data">
+            <form id="editProfileForm" method="POST" action="" enctype="multipart/form-data" class="max-h-[80vh] overflow-y-auto">
         @csrf
         @method('PUT')
 
@@ -185,16 +188,38 @@
 
 <script>
 
-function openEditModal(id, Nom, description, statut,regles_id) {
-    
-        document.getElementById('editNom').value = Nom;
+    const services = @json($services);
+    const regles = @json($regles);
+    function openEditModal(id, nom, description, statut, regles_id, service_id) { 
+        // Service
+        const serviceSelect = document.getElementById('editServiceId');
+        serviceSelect.innerHTML = '';
+        services.forEach(service => {
+            serviceSelect.innerHTML += `<option value="${service.id}">${service.nom}</option>`;
+        });
+
+        // Règles
+        const regleSelect = document.getElementById('editRegleId');
+        regleSelect.innerHTML = '';
+        regles.forEach(regle => {
+            regleSelect.innerHTML += `<option value="${regle.id}">${regle.nom}</option>`;
+        });
+
+        // Pré-sélectionner
+        serviceSelect.value = service_id; // tu dois ajouter service_id en paramètre à ta fonction
+        regleSelect.value = regles_id;
+
+        document.getElementById('editNom').value = nom;
         document.getElementById('editDescription').value = description;
-        document.getElementById('editStatut').value = statut;
+        document.getElementById('editStatut').checked = statut == 1;
+;
        // document.getElementById('editRegle').value = regles_id;
 
-        const form = document.getElementById('editForm');
+        const form = document.getElementById('editProfileForm');
+        
+
         form.action = `/settings/archives/updateArchiveType/${id}`; // Assure-toi que cette route existe avec PUT
-        alert('hello')
+        
         document.getElementById('editModal').classList.remove('hidden');
         document.getElementById('editModal').classList.add('flex');
     }

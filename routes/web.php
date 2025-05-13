@@ -75,7 +75,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
         Route::get('/statistics', [SettingsController::class, 'statistics'])->name('settings.statistics');
 
         // Routes pour gere les securites
-        Route::get('/security', [SettingsController::class, 'editUsers'])->name('settings.editUsers');
+        Route::get('/securite', [SettingsController::class, 'editUsers'])->name('settings.editUsers');
 
 
         // Routes pour gérer les services
