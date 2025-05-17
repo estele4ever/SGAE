@@ -4,7 +4,7 @@ services:
   runtime: node
   plan: free
   buildCommand: npm install
-  startCommand: npm start
+  startCommand: npm run dev
   envVars:
     - key: DATABASE_URL
       fromDatabase:
