@@ -1,11 +1,11 @@
 version: 1
 services:
-  web:
-    type: web
-    name: système de gestion des archives
-    env: node
-    plan: free
-    buildCommand: npm install
-    startCommand: npm start
-    envVars:
-      NODE_ENV: production
+    web:
+        type: web
+        name: système de gestion des archives
+        env: node
+        plan: free
+        buildCommand: npm install
+        startCommand: npm start
+        envVars:
+            NODE_ENV: production
