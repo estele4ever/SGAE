@@ -9,7 +9,7 @@ services:
       npm install && 
       composer install && 
       php artisan migrate --seed
-    startCommand: 'php artisan serve --host 0.0.0.0 --port 8000 & npm run dev'
+    startCommand: 'php artisan serve --host 0.0.0.0 --port 10000 & npm run dev'
     envVars:
       - key: DATABASE_URL
         fromDatabase:
