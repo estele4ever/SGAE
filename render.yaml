@@ -1,11 +1,21 @@
 version: 1
 services:
-    web:
-        type: web
-        name: système de gestion des archives
-        env: node
-        plan: free
-        buildCommand: npm install
-        startCommand: npm start
-        envVars:
-            NODE_ENV: production
+  web:
+    type: web
+    name: système de gestion des archives
+    env: node
+    plan: free
+    buildCommand: |
+      npm install && 
+      composer install && 
+      php artisan migrate --seed
+    startCommand: 'php artisan serve --host 0.0.0.0 --port 8000 & npm run dev'
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: sgae-db  # Nom de la base de données sur Render
+          property: connectionString
+
+databases:
+  - name: sgae-db  # Votre base de données PostgreSQL
+    plan: free
