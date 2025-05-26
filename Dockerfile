@@ -36,6 +36,10 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction \
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
+RUN if [ "$RENDER_MIGRATE_AND_SEED" = "true" ]; then \
+      php artisan migrate:fresh --seed --force; \
+    fi
+
 EXPOSE 8000
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]

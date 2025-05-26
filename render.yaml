@@ -12,6 +12,8 @@ services:
         value: production
       - key: APP_DEBUG
         value: false
+      - key: RENDER_MIGRATE_AND_SEED  # Nom arbitraire
+        value: "true"  # Active les migrations
       - key: DB_CONNECTION
         value: pgsql
       - key: DB_HOST
