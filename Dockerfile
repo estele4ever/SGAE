@@ -32,6 +32,44 @@ RUN composer install --no-dev --optimize-autoloader --no-interaction && \
 RUN chown -R www-data:www-data storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
+FROM php:8.2-fpm
+
+# Installer les dépendances système
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    libpng-dev \
+    libjpeg-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
+    unzip \
+    curl \
+    git \
+    nano \
+    libpq-dev
+
+# Installer Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copier les fichiers de l'application
+WORKDIR /var/www
+
+COPY . .
+
+# Installer les dépendances PHP via Composer
+RUN composer install --optimize-autoloader --no-dev
+
+# Donner les bons droits
+RUN chown -R www-data:www-data /var/www \
+    && chmod -R 755 /var/www/storage
+
+# Exposer le port
+EXPOSE 9000
+
+# Exécuter migrations + seeders avant de lancer PHP
+CMD php artisan migrate --force && php artisan db:seed --force && php-fpm
+
+
 EXPOSE 8000
 
 CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
