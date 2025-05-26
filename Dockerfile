@@ -1,6 +1,7 @@
+# Utilisez une image officielle PHP avec Apache
 FROM php:8.2-apache
 
-# Étape 1: Installer les dépendances système
+# Installer les dépendances système
 RUN apt-get update && apt-get install -y \
     git \
     unzip \
@@ -10,51 +11,33 @@ RUN apt-get update && apt-get install -y \
     libzip-dev \
     libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd zip pdo pdo_mysql pdo_pgsql
+    && docker-php-ext-install -j$(nproc) gd zip pdo pdo_mysql pdo_pgsql opcache
 
+# Installer Composer
+COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-# Étape 2: Installer Node.js et npm
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
+# Installer Node.js
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm
 
-
-# Étape 3: Installer Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
 # Configurer Apache
-ENV APACHE_DOCUMENT_ROOT /var/www/html/public
-RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
-    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
+COPY . /var/www/html/
+RUN chown -R www-data:www-data /var/www/html/storage \
+    && chmod -R 775 /var/www/html/storage \
     && a2enmod rewrite
 
-# Configurer PHP
-COPY docker/php.ini /usr/local/etc/php/conf.d/app.ini
+# Installer les dépendances
+RUN composer install --no-dev --optimize-autoloader --no-interaction \
+    && npm install --omit=dev \
+    && npm run build \
+    && php artisan optimize:clear
 
-WORKDIR /var/www/html
+# Configurer le virtualhost
+COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
 
+# Port exposé
+EXPOSE 80
 
-
-# Étape 4: Copier les fichiers
-COPY . .
-
-# Étape 5: Installer les dépendances (réécrite correctement)
-RUN composer install --no-dev --optimize-autoloader --no-interaction && \
-    npm install --omit=dev && \
-    npm install vite && \
-    npm run build && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-
-# Étape 6: Configurer les permissions
-RUN chown -R www-data:www-data storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
-
-RUN if [ "$RENDER_MIGRATE_AND_SEED" = "true" ]; then \
-      php artisan migrate:fresh --seed --force; \
-    fi
-
-EXPOSE 8000
-
-CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
+# Commande de démarrage
+CMD ["apache2-foreground"]
