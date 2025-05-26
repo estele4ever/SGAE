@@ -12,13 +12,17 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd zip pdo pdo_mysql pdo_pgsql
 
-# Étape 2: Installer Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Étape 3: Installer Node.js et npm
+# Étape 2: Installer Node.js et npm
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    && corepack enable
+    && npm install -g npm
+
+
+# Étape 3: Installer Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+
 
 WORKDIR /var/www
 
@@ -27,7 +31,8 @@ COPY . .
 
 # Étape 5: Installer les dépendances
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && npm install --production \
+    && npm install --omit=dev \  # Changement de --production à --omit=dev
+    && npm install vite \  # Installation explicite de Vite
     && npm run build \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
