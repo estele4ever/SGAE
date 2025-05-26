@@ -29,13 +29,14 @@ WORKDIR /var/www
 # Étape 4: Copier les fichiers
 COPY . .
 
-# Étape 5: Installer les dépendances
-RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && npm install --omit=dev \  # Changement de --production à --omit=dev
-    && npm install vite \  # Installation explicite de Vite
-    && npm run build \
-    && apt-get clean \
-    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# Étape 5: Installer les dépendances (réécrite correctement)
+RUN composer install --no-dev --optimize-autoloader --no-interaction && \
+    npm install --omit=dev && \
+    npm install vite && \
+    npm run build && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 
 # Étape 6: Configurer les permissions
 RUN chown -R www-data:www-data storage bootstrap/cache \
