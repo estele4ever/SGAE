@@ -1,43 +1,37 @@
-# Utilisez une image officielle PHP avec Apache
-FROM php:8.2-apache
+FROM php:8.4-cli
 
-# Installer les dépendances système
+# Étape 1: Installer les dépendances système
 RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    libpq-dev \
+    git unzip libpng-dev libjpeg-dev libfreetype6-dev \
+    libzip-dev libpq-dev curl \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip pdo pdo_mysql pdo_pgsql opcache
+    && docker-php-ext-install gd zip pdo pdo_mysql pdo_pgsql
 
-# Installer Composer
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
-
-# Installer Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - \
+# Étape 2: Installer Node.js et npm
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm
 
-# Configurer Apache
-COPY . /var/www/html/
-RUN chown -R www-data:www-data /var/www/html/storage \
-    && chmod -R 775 /var/www/html/storage \
-    && a2enmod rewrite
+# Étape 3: Installer Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Installer les dépendances
-RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && npm install --omit=dev \
-    && npm run build \
-    && php artisan optimize:clear
+WORKDIR /var/www
 
-# Configurer le virtualhost
-COPY docker/apache.conf /etc/apache2/sites-available/000-default.conf
+# Étape 4: Copier les fichiers
+COPY . .
 
-# Port exposé
-EXPOSE 80
+# Étape 5: Installer les dépendances (réécrite correctement)
+RUN composer install --no-dev --optimize-autoloader --no-interaction && \
+    npm install --omit=dev && \
+    npm install vite && \
+    npm run build && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Commande de démarrage
-CMD ["apache2-foreground"]
+# Étape 6: Configurer les permissions
+RUN chown -R www-data:www-data storage bootstrap/cache && \
+    chmod -R 775 storage bootstrap/cache
+
+EXPOSE 8000
+
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
