@@ -22,9 +22,18 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 # Étape 3: Installer Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Configurer Apache
+ENV APACHE_DOCUMENT_ROOT /var/www/html/public
+RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
+    && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
+    && a2enmod rewrite
+
+# Configurer PHP
+COPY docker/php.ini /usr/local/etc/php/conf.d/app.ini
+
+WORKDIR /var/www/html
 
 
-WORKDIR /var/www
 
 # Étape 4: Copier les fichiers
 COPY . .
