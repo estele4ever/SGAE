@@ -1,43 +1,60 @@
 FROM php:8.2-apache
 
-# 1. Installer les dépendances
+# Étape 1: Installer les dépendances système
 RUN apt-get update && apt-get install -y \
-    git unzip libpng-dev libjpeg-dev libfreetype6-dev \
-    libzip-dev libpq-dev libonig-dev \
+    git \
+    unzip \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install gd pdo pdo_mysql pdo_pgsql mbstring zip opcache
+    && docker-php-ext-install gd zip pdo pdo_mysql pdo_pgsql
 
-# 2. Installer Node.js
+
+# Étape 2: Installer Node.js et npm
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
     && npm install -g npm
 
-# 3. Installer Composer
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
 
-# 4. Configurer Apache
+# Étape 3: Installer Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Configurer Apache
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf \
     && sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf /etc/apache2/conf-available/*.conf \
     && a2enmod rewrite
 
+# Configurer PHP
+COPY docker/php.ini /usr/local/etc/php/conf.d/app.ini
+
 WORKDIR /var/www/html
 
-# 5. Copier l'application
+
+
+# Étape 4: Copier les fichiers
 COPY . .
 
-# 6. Installer les dépendances
-RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && npm install --omit=dev \
-    && npm run build \
-    && chown -R www-data:www-data storage bootstrap/cache \
+# Étape 5: Installer les dépendances (réécrite correctement)
+RUN composer install --no-dev --optimize-autoloader --no-interaction && \
+    npm install --omit=dev && \
+    npm install vite && \
+    npm run build && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+
+# Étape 6: Configurer les permissions
+RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
 
-# 7. Migration (optionnel)
 RUN if [ "$RENDER_MIGRATE_AND_SEED" = "true" ]; then \
       php artisan migrate:fresh --seed --force; \
     fi
 
-# 8. Port et commande
-EXPOSE 80
-CMD ["apache2-foreground"]
+EXPOSE 8000
+
+CMD ["php", "artisan", "serve", "--host=0.0.0.0", "--port=8000"]
