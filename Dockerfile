@@ -1,40 +1,40 @@
 FROM php:8.4-cli
 
-# Install system dependencies
+# Étape 1: Installer les dépendances système
 RUN apt-get update && apt-get install -y \
-    libpng-dev libjpeg-dev libfreetype6-dev \
-    zlib1g-dev libzip-dev libpq-dev \
+    git \
+    unzip \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libzip-dev \
+    libpq-dev \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install -j$(nproc) gd zip pdo pdo_mysql pdo_pgsql opcache
+    && docker-php-ext-install gd zip pdo pdo_mysql pdo_pgsql
 
-# Install Composer
-COPY --from=composer:2 /usr/bin/composer /usr/local/bin/composer
+# Étape 2: Installer Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Install Node.js
+# Étape 3: Installer Node.js et npm
 RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
     && apt-get install -y nodejs \
-    && npm install -g npm
+    && corepack enable
 
 WORKDIR /var/www
 
-# Copy application files
+# Étape 4: Copier les fichiers
 COPY . .
 
-# Install PHP and JS dependencies
+# Étape 5: Installer les dépendances
 RUN composer install --no-dev --optimize-autoloader --no-interaction \
-    && npm ci --only=production \
-    && npm run dev \
-    && rm -rf ~/.composer/cache/ \
+    && npm install --production \
+    && npm run build \
     && apt-get clean \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Set permissions
+# Étape 6: Configurer les permissions
 RUN chown -R www-data:www-data storage bootstrap/cache \
     && chmod -R 775 storage bootstrap/cache
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s \
-    CMD curl -f http://localhost:8000/up || exit 1
 
 EXPOSE 8000
 
