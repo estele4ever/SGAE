@@ -33,6 +33,8 @@ RUN composer install --no-dev --optimize-autoloader && \
 RUN chown -R www-data:www-data storage bootstrap/cache && \
     chmod -R 775 storage bootstrap/cache
 
+
+RUN php artisan storage:link 
 # Port exposé
 EXPOSE 8000
 
