@@ -107,7 +107,7 @@
 
                         <!-- Détails -->
                          
-                        <button onclick="openEditModal('{{ $profile->id }}', '{{ addslashes($profile->nom) }}', '{{ addslashes($profile->description) }}', '{{ $profile->statut }}', '{{ $profile->regles_id }}', '{{ $profile->services_id }}')"
+                        <button onclick="openDetailModal('{{ $profile->id }}', '{{ addslashes($profile->nom) }}', '{{ addslashes($profile->description) }}', '{{ $profile->statut }}', '{{ $profile->regles_id }}', '{{ $profile->services_id }}')"
                             class="text-blue-500" title="Détails">
                             <i class="fas fa-eye"></i>
                         </button>
@@ -130,44 +130,46 @@
  
     <div id="editModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
         <div class="bg-white p-6 rounded shadow w-1/2">
-            <h3 class="text-xl font-bold mb-4">Modifier Profil d'Archive</h3>
-            <form id="editProfileForm" method="POST" action="" enctype="multipart/form-data" class="max-h-[80vh] overflow-y-auto">
-        @csrf
-        @method('PUT')
+            <h2 class="text-xl font-bold mb-4">Modifier Profil d'Archive</h2>
+    <form id="editProfileForm" method="POST" action="" enctype="multipart/form-data" class="max-h-[80vh] overflow-y-auto">
+    @csrf
+    @method('PUT')
 
-        <div class="mb-4">
-            <label for="editNom" class="block mb-1 font-semibold">Nom du profil :</label>
-            <input type="text" id="editNom" name="nom" class="w-full border p-2">
-        </div>
+    <div class="mb-4">
+        <label for="editNom" class="block mb-1 font-semibold">Nom du profil :</label>
+        <input type="text" id="editNom" name="nom" class="w-full border p-2">
+    </div>
 
-        <div class="mb-4">
-            <label class="block mb-1 font-semibold">Statut :</label>
-            <input type="checkbox" id="editStatut" name="statut">
-        </div>
-        
-        <input type="text" id="editDescription" name="description" class="w-full border p-2 mb-4">
+    <div class="mb-4">
+        <label class="block mb-1 font-semibold">Statut :</label>
+        <input type="checkbox" id="editStatut" name="statut">
+    </div>
+    
+    <input type="text" id="editDescription" name="description" class="w-full border p-2 mb-4">
 
-        <label for="editServiceId" class="block mb-1 font-semibold">Service :</label>
-        <select id="editServiceId" name="services_id" class="w-full border p-2 mb-4"></select>
+    <label for="editServiceId" class="block mb-1 font-semibold">Service :</label>
+    <select id="editServiceId" name="services_id" class="w-full border p-2 mb-4"></select>
 
-        <label for="editRegleId" class="block mb-1 font-semibold">Règle de conservation :</label>
-        <select id="editRegleId" name="regles_id" class="w-full border p-2 mb-4"></select>
+    <label for="editRegleId" class="block mb-1 font-semibold">Règle de conservation :</label>
+    <select id="editRegleId" name="regles_id" class="w-full border p-2 mb-4"></select>
 
-        <div id="editFieldsContainer" class="mb-4">
-            <!-- Champs dynamiques chargés ici -->
-        </div>
+    <div id="editFieldsContainer" class="mb-4">
+        <!-- Champs dynamiques chargés ici -->
+    </div>
 
-        <button type="button" onclick="addNewEditField()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Ajouter un champ
+    <button type="button" onclick="addNewEditField()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Ajouter un champ
+    </button>
+
+    <div class="mt-4 flex justify-between">
+        <button type="button" onclick="history.back()" class="bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">
+            Annuler
         </button>
-
-        <div class="mt-4">
-            <button type="submit" class="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded">
-                Enregistrer les modifications
-            </button>
-        </div>
-    </form>
-
+        <button type="submit" class="bg-green-600 hover:bg-green-800 text-white font-bold py-2 px-4 rounded">
+            Enregistrer les modifications
+        </button>
+    </div>
+</form>
         </div>
     </div>
 
@@ -232,28 +234,34 @@
 
 
 // Ajouter un nouveau champ dynamiquement dans la modification
+// Ajouter un nouveau champ dynamiquement dans la modification (version sur une ligne)
 function addNewEditField() {
     const fieldsContainer = document.getElementById('editFieldsContainer');
     const index = fieldsContainer.children.length;
 
     const fieldDiv = document.createElement('div');
-    fieldDiv.classList.add('mb-2');
+    fieldDiv.classList.add('flex', 'items-center', 'gap-2', 'mb-2');
     fieldDiv.innerHTML = `
-        <label class="block mb-1 font-semibold">Nom du champ :</label>
-        <input type="text" name="new_fields[${index}][nom_champ]" title="veuillez entrer le \"nom\" pour designer le nom , \"document\" pour designer un fichier" class="w-full border p-2 mb-2">
-
-        <label class="block mb-1 font-semibold">Type :</label>
-        <input type="text" name="new_fields[${index}][type_champ]" class="w-full border p-2 mb-2">
-
-        <label class="block mb-1 font-semibold">Obligatoire :</label>
-        <input type="checkbox" name="new_fields[${index}][obligatoire]">
-        <hr class="my-3">
+        <input type="text" name="new_fields[${index}][nom_champ]" 
+               title="veuillez entrer 'nom' pour designer le nom, 'document' pour designer un fichier" 
+               placeholder="Nom du champ" 
+               class="border p-2 flex-1">
+               
+        <select name="new_fields[${index}][type_champ]" class="border p-2 flex-1">
+            <option value="text">Texte</option>
+            <option value="number">Nombre</option>
+            <option value="date">Date</option>
+            <option value="file">Fichier</option>
+        </select>
+        
+        <label class="flex items-center">
+            <input type="checkbox" name="new_fields[${index}][obligatoire]" value="1" class="mr-1"> Obligatoire
+        </label>
+        
         <button type="button" onclick="this.parentElement.remove()" class="bg-red-500 text-white px-3 py-1 rounded">Annuler</button>
-
     `;
     fieldsContainer.appendChild(fieldDiv);
 }
-
 
 
 function openDetailModal(id) {
