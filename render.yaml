@@ -1,0 +1,46 @@
+services:
+  - type: web
+    name: Gestion_des_archives
+    runtime: docker
+    dockerfilePath: Dockerfile
+    plan: standard
+    env: production
+    healthCheckPath: /up
+    autoDeploy: yes
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: RENDER_MIGRATE_AND_SEED  # Nom arbitraire
+        value: "true"  # Active les migrations
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: SGAEBD  # Nom de votre service PostgreSQL
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: SGAEBD
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: SGAEBD
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: SGAEBD
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: SGAEBD
+          property: password
+
+  - type: postgresql
+    name: SGAEBD
+    plan: standard
+    region: frankfurt  # Choisissez votre région
+    ipAllowList: []
+    databaseName: SGAEBD_prod
+    user: estele

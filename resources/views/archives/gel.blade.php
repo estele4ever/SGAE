@@ -66,12 +66,7 @@
                             </a>
 
                             <!-- Modifier -->
-                            <button 
-                                class="text-blue-500" 
-                                onclick="openEditModal('{{ $archive->id }}', '{{ addslashes($archive->titre) }}', '{{ addslashes($archive->description) }}', '{{ $archive->type_id }}')"
-                                title="Modifier l'archive">
-                                <i class="fas fa-pen fa-lg"></i>
-                            </button>
+                           
 
                             
                         <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
