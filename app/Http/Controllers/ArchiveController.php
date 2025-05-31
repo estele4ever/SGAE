@@ -95,7 +95,7 @@ return view('archives.index', compact('archives', 'types'));
             'titre' => 'required|string|max:255',
             'description' => 'required|string',
             'type_id' => 'required|exists:type_archives,id',
-            'fichier' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xls,xlsx|max:20480',
+            'fichier' => 'nullable|file|mimes:jpg,jpeg,png,pdf,xls,xlsx,doc,docx,html,htm,zip|max:20480',
         ]);
 
         $archive = Archive::findOrFail($id);
