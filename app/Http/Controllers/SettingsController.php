@@ -107,21 +107,70 @@ class SettingsController extends Controller
         return redirect()->route('settings.archives')->with('success', 'Profil d\'archive mis à jour avec succès.');
     }
 
-    public function updateArchiveType(Request $request,$id){
-        dd($request->all(),$id);
-        $profile = TypeArchive::findOrFail($id);
+    public function updateArchiveType(Request $request, $id) {
+    // 1. Valider les données principales
+    $validated = $request->validate([
+        'nom' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'services_id' => 'required|exists:services,id',
+        'statut' => 'required|boolean',
+        'regles_id' => 'required|exists:regles,id',
+        'new_fields.nom_champ' => 'nullable|array',
+        'new_fields.type_champ' => 'nullable|array',
+        'new_fields.obligatoire' => 'nullable|array',
+        'fields' => 'nullable|array',
+        'fields.*.nom_champ' => 'nullable|string',
+        'fields.*.type_champ' => 'nullable|string',
+        'fields.*.obligatoire' => 'nullable|boolean',
+        'fields.*.id' => 'nullable|exists:archive_profile_fields,id'
+    ]);
 
-        return response()->json([
-            'id' => $profile->id,
-            'nom' => $profile->nom,
-            'description' => $profile->description,
-            'statut' => $profile->statut,
-            'regle_id' => $profile->regles_id,
-            'service_id' => $profile->services_id,
-            'regles' => Regle::all(),
-            'services' => Service::all()
-        ]);
+    // 2. Trouver et mettre à jour le profil
+    $profile = TypeArchive::findOrFail($id);
+    $regle = Regle::findOrFail($validated['regles_id']);
+    
+    $profile->update([
+        'nom' => $validated['nom'],
+        'description' => $validated['description'],
+        'services_id' => $validated['services_id'],
+        'statut' => $validated['statut'],
+        'regles_id' => $regle->nom
+    ]);
+
+    // 3. Mettre à jour les champs existants
+    if ($request->has('fields')) {
+        foreach ($request->fields as $fieldData) {
+            if (isset($fieldData['id'])) {
+                ArchiveProfileField::where('id', $fieldData['id'])
+                    ->update([
+                        'nom_champ' => $fieldData['nom_champ'],
+                        'type_champ' => $fieldData['type_champ'],
+                        'obligatoire' => $fieldData['obligatoire'] ?? false,
+                    ]);
+            }
+        }
     }
+
+    // 4. Ajouter les nouveaux champs
+    if ($request->has('new_fields.nom_champ')) {
+        $existingFieldsCount = ArchiveProfileField::where('archive_profile_id', $id)->count();
+        
+        foreach ($request->new_fields['nom_champ'] as $index => $nomChamp) {
+            ArchiveProfileField::create([
+                'archive_profile_id' => $profile->id,
+                'nom_champ' => $nomChamp,
+                'type_champ' => $request->new_fields['type_champ'][$index],
+                'obligatoire' => isset($request->new_fields['obligatoire'][$index]) ? 1 : 0,
+                'ordre' => $existingFieldsCount + $index,
+            ]);
+        }
+    }
+
+    // 5. Supprimer les champs qui ne sont plus présents (si nécessaire)
+    // (À implémenter selon vos besoins)
+
+    return redirect()->back()->with('success', 'Profil d\'archive mis à jour avec succès.');
+}
 
 /* public function updateArchiveType(Request $request, $id)
 {
