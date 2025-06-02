@@ -27,7 +27,7 @@ COPY . .
 # Installer les dépendances Laravel et builder Vite
 RUN composer install --no-dev --optimize-autoloader && \
     npm install && \
-    npm run dev
+    npm run build
 
 # Permissions
 RUN chown -R www-data:www-data storage bootstrap/cache && \
