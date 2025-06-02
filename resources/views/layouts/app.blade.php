@@ -1,29 +1,41 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
     <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-        <title>{{ config('app.name', 'SGAE') }}</title>
-        <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/logo-transparent.png') }}">
+    <title>{{ config('app.name', 'SGAE') }}</title>
+    <link rel="icon" type="image/png" sizes="192x192" href="{{ asset('images/logo-transparent.png') }}">
 
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-        <!-- Font Awesome -->
-        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-        <script src="//unpkg.com/alpinejs" defer></script>
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    
+    <!-- Styles -->
+    <style>
+        /* Coller ici le contenu complet de votre fichier resources/css/app.css */
+        @tailwind base;
+        @tailwind components;
+        @tailwind utilities;
+        
+        /* Ajoutez vos styles personnalisés si nécessaire */
+        .your-custom-class {
+            /* styles */
+        }
+    </style>
 
-        <!-- Scripts -->
-     @production
-    <link href="{{ asset('build/assets/app-CSS-HASH.css') }}" rel="stylesheet">
-    <script src="{{ asset('build/assets/app-JS-HASH.js') }}"></script>
-@else
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-@endproduction
-    </head>
+    <!-- Scripts -->
+    @production
+        <script src="{{ asset('build/assets/app.js') }}"></script>
+    @else
+        @vite(['resources/js/app.js'])
+    @endproduction
+    <script src="//unpkg.com/alpinejs" defer></script>
+</head>
     <body class="font-sans antialiased bg-gray-100">
         <div class="flex h-screen overflow-hidden">
             <!-- Sidebar -->
