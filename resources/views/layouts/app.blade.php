@@ -31,8 +31,10 @@
     <!-- Scripts -->
     @production
         <script src="{{ asset('build/assets/app.js') }}"></script>
+        <script src="{{ asset('build/assets/app.css') }}"></script>
     @else
-        @vite(['resources/js/app.js'])
+               @vite(['resources/css/app.css', 'resources/js/app.js'])
+
     @endproduction
     <script src="//unpkg.com/alpinejs" defer></script>
 </head>
