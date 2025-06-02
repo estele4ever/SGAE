@@ -141,8 +141,12 @@
     </div>
 
     <div class="mb-4">
-        <label class="block mb-1 font-semibold">Statut :</label>
-        <input type="checkbox" id="editStatut" name="statut">
+        
+        <select name="statut" id="editStatut" class="border p-2 flex-1 mb-2 md:mb-0" required>
+                    <option value="">Sélectionnez le statut</option>
+                    <option value="1">Actif</option>
+                    <option value="0">Inactif</option>
+                </select>
     </div>
     
     <input type="text" id="editDescription" name="description" class="w-full border p-2 mb-4">
@@ -298,7 +302,7 @@ function ajouterChamp() {
     const container = document.getElementById('champs-container');
     const champHTML = `
         <div class="flex items-center gap-2 mb-2">
-            <input type="text" name="champs[nom_champ][]" title="veuillez entrer **nom** pour designer le nom , **document** pour designer un fichier" placeholder="Nom du champ" class="border p-2 flex-1" required>
+            <input type="text" name="champs[nom_champ][]" placeholder="Nom du champ" class="border p-2 flex-1" required>
             <select name="champs[type_champ][]" class="border p-2 flex-1" required>
                 <option value="text">Texte</option>
                 <option value="number">Nombre</option>

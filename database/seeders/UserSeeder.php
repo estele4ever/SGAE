@@ -23,5 +23,7 @@ class UserSeeder extends Seeder
             'permission' => 'all', // Permissions pour l'administrateur
             'password' => Hash::make('12345678'), 
         ]);
+
+        
     }
 }

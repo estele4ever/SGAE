@@ -1,16 +1,23 @@
 <?php
 namespace App\Http\Controllers;
 
+use App\Models\Role ;
 use App\Models\User;
-use App\Models\Role;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
+
+
+
 class UserController extends Controller
 {
+    
    public function index(Request $request)
 {
+    dd('Reached index method');
+$this->authorize('gérer les utilisateurs');
+    
     $services = Service::all(); //  pour récupérer les services
     $roles = Role::all(); // Idem pour les rôles
     
@@ -29,8 +36,14 @@ class UserController extends Controller
 
     return view('usermanage.index', compact('users', 'services', 'roles'));
 }
+/*
+@if(auth()->user()->can('voir utilisateurs'))
+    <!-- Code pour afficher la liste des utilisateurs -->
+@endif
 
-
+@if(auth()->user()->can('creer utilisateurs'))
+    <a href="{{ route('users.create') }}">Créer un utilisateur</a>
+@endif*/
     public function create()
     {
         $roles = Role::all(); 
@@ -67,7 +80,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
-            'role' => $role->privilege,
+            'role' => $role->name,
             'service' => $service->nom,
             'permission' => $request->service ?? '',
         ]);
@@ -93,7 +106,7 @@ class UserController extends Controller
         $user->update([
             'name' => $request->name,
             'email' => $request->email,
-            'role' => $role->privilege,
+            'role' => $role->name,
             'service' => $service->nom,
             'permission' => $request->permission,
         ]);

@@ -14,11 +14,20 @@
 
 <div class="max-w-6xl mx-auto bg-white p-6 rounded-lg shadow-md">
     <h2 class="text-2xl font-bold mb-6 text-center">Regle de conservation des archives</h2>
-    @if(session('success'))
-        <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
-            {{ session('success') }}
-        </div>
-    @endif
+   @if(session('success'))
+            <div class="bg-green-100 text-green-800 p-4 rounded mb-4">
+                {{ session('success') }}
+            </div>
+        @endif
+        @if ($errors->any())
+            <div class="bg-green-100 text-red-800 p-4 rounded mb-4">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
     <!-- Formulaire d'ajout de service -->
     <form method="POST" action="{{ route('settings.addRegle') }}" class="mb-8">
         @csrf

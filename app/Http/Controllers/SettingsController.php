@@ -14,6 +14,7 @@ use App\Models\ArchiveProfileField;
 
 
 
+
 class SettingsController extends Controller
 {
  
@@ -136,6 +137,7 @@ class SettingsController extends Controller
         'statut' => $validated['statut'],
         'regles_id' => $regle->nom
     ]);
+        
 
     // 3. Mettre à jour les champs existants
     if ($request->has('fields')) {
@@ -150,11 +152,9 @@ class SettingsController extends Controller
             }
         }
     }
-
     // 4. Ajouter les nouveaux champs
-    if ($request->has('new_fields.nom_champ')) {
+    if ($request->has('new_fields')) {
         $existingFieldsCount = ArchiveProfileField::where('archive_profile_id', $id)->count();
-        
         foreach ($request->new_fields['nom_champ'] as $index => $nomChamp) {
             ArchiveProfileField::create([
                 'archive_profile_id' => $profile->id,
@@ -336,30 +336,33 @@ public function regle()
         ]);
 
         Role::create([
-            'name' => $request->privilege,
+            'name' => $request->name,
         ]);
 
         return redirect()->route('settings.roles')->with('success', 'Rôle ajouté avec succès.');
     }
 
     // Méthode pour mettre à jour un rôle existant
-    public function update(Request $request, Role $role)
+    public function update(Request $request, $id)
     {
         $request->validate([
             'name' => 'required|string|max:255',
         ]);
-
+        $role= Role::findOrFail($id);
         $role->update([
-            'name' => $request->privilege,
+            'name' => $request->name,
         ]);
 
         return redirect()->route('settings.roles')->with('success', 'Rôle mis à jour avec succès.');
     }
 
     // Méthode pour supprimer un rôle
-    public function destroy(Role $role)
+    public function destroy($id)
     {
+        $role= Role::findOrFail($id);
+
         $role->delete();
+
         return redirect()->route('settings.roles')->with('success', 'Rôle supprimé avec succès.');
     }
 

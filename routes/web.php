@@ -10,6 +10,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -124,13 +126,4 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
     });
 
 
-
-/*Route::get('/archives', [ArchiveController::class, 'index'])
-    ->middleware(['permission:voir archives']);
-
-Route::get('/archives/create', [ArchiveController::class, 'create'])
-    ->middleware(['permission:créer archives']);
-
-    Route::get('/gestion-utilisateurs', [UserController::class, 'index'])
-        ->middleware('permission:voir utilisateurs');*/
 require __DIR__.'/auth.php';

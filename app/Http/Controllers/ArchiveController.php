@@ -5,13 +5,19 @@ namespace App\Http\Controllers;
 use App\Models\Archive;
 use App\Models\RegistreGel;
 use App\Models\Regle;
+use App\Models\Role ;
+use App\Models\Service;
 use App\Models\TypeArchive;
+use App\Models\User;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\File;
 use Carbon\Carbon;
+use Spatie\Permission\Models\Permission;
+
+
 
 class ArchiveController extends Controller
 {
@@ -27,6 +33,8 @@ return view('archives.index', compact('archives', 'types'));
         
     }
 
+
+    
     // Formulaire création
     public function create()
     {
