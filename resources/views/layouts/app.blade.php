@@ -17,7 +17,12 @@
         <script src="//unpkg.com/alpinejs" defer></script>
 
         <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+     @production
+    <link href="{{ asset('build/assets/app-CSS-HASH.css') }}" rel="stylesheet">
+    <script src="{{ asset('build/assets/app-JS-HASH.js') }}"></script>
+@else
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+@endproduction
     </head>
     <body class="font-sans antialiased bg-gray-100">
         <div class="flex h-screen overflow-hidden">
