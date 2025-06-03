@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\TypeArchive;
 use Illuminate\View\View;
 
+
 class DashboardController extends Controller
 {
     //
@@ -33,19 +34,23 @@ class DashboardController extends Controller
         
     
     }
-    public function index(): View
-    { $archiveCount = Archive::count();
+    public function index(): View{
+        $archiveCount = Archive::count();
         $serviceCount = Service::count();
         $userCount = User::count();
         $archiveTypeCount = TypeArchive::count();
-//dd($archiveCount, $serviceCount, $userCount, $archiveTypeCount);
+        //dd($archiveCount, $serviceCount, $userCount, $archiveTypeCount);
         return view('dashboard', [
             'archiveCount' => $archiveCount,
             'serviceCount' => $serviceCount,
             'userCount' => $userCount,
             'archiveTypeCount' => $archiveTypeCount,
         ]);
-
-
-}
+    }
+    public function mvc(): View{
+        $user = User::all();
+        return view('usermanage.index', [
+            'user' => $user,
+        ]);
+    }
 }

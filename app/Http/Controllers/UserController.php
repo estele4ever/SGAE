@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     
-   public function index(Request $request)
+   /*public function index(Request $request)
 {
     dd('Reached index method');
 $this->authorize('gérer les utilisateurs');
@@ -43,7 +43,7 @@ $this->authorize('gérer les utilisateurs');
 
 @if(auth()->user()->can('creer utilisateurs'))
     <a href="{{ route('users.create') }}">Créer un utilisateur</a>
-@endif*/
+@endif
     public function create()
     {
         $roles = Role::all(); 
@@ -124,5 +124,5 @@ $this->authorize('gérer les utilisateurs');
 {
     $this->middleware('permission:voir archives')->only('index');
     $this->middleware('permission:creer archives')->only('create');
-}
+}*/
 }
