@@ -1,7 +1,8 @@
 @extends('layouts.app')
 
-@section('content')
-<div class="container mx-auto">
+@section('content')   
+ <div class="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md">
+
     <h2 class="text-xl font-bold mb-4">Gestion des utilisateurs</h2>
     
     @if(session('success'))
@@ -64,8 +65,7 @@
                 <path fill-rule="evenodd" d="M10 3a1 1 0 00-1 1v12a1 1 0 002 0V4a1 1 0 00-1-1zm-7 7a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z" clip-rule="evenodd" />
             </svg>
         </a>
-    </div>
-
+    </div></div>
     <hr class="my-4">
     <h2 id="usersList" class="text-lg font-bold mb-4">Liste des utilisateurs</h2>
     
@@ -109,10 +109,12 @@
                 <td class="p-2">{{ $user->role }}</td>
                 <td class="p-2">{{ $user->service }}</td>
                 <td class="p-2 space-x-2">
-                    <button onclick="openEditModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}', '{{ $user->role }}', '{{ $user->permission }}')" class="text-blue-500">Modifier<i class="fas fa-pen fa-lg"></i></button>
+                    <button onclick="openEditModal('{{ $user->id }}', '{{ $user->name }}', '{{ $user->email }}', '{{ $user->role }}', '{{ $user->permission }}')" class="text-blue-500">
+                        <i class="fas fa-pen fa-lg"></i></button>
                     <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="inline">
                         @csrf @method('DELETE')
-                        <button onclick="return confirm('Confirmer la suppression ?')" class="text-red-500">Supprimer <i class="fas fa-trash text-red-500 fa-lg"></i></button>
+                        <button onclick="return confirm('Confirmer la suppression ?')" class="text-red-500">
+                             <i class="fas fa-trash text-red-500 fa-lg"></i></button>
                     </form>
                 </td>
             </tr>

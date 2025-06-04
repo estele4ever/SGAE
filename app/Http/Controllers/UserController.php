@@ -13,10 +13,8 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     
-   /*public function index(Request $request)
+   public function mvc(Request $request)
 {
-    dd('Reached index method');
-$this->authorize('gérer les utilisateurs');
     
     $services = Service::all(); //  pour récupérer les services
     $roles = Role::all(); // Idem pour les rôles
@@ -36,14 +34,7 @@ $this->authorize('gérer les utilisateurs');
 
     return view('usermanage.index', compact('users', 'services', 'roles'));
 }
-/*
-@if(auth()->user()->can('voir utilisateurs'))
-    <!-- Code pour afficher la liste des utilisateurs -->
-@endif
 
-@if(auth()->user()->can('creer utilisateurs'))
-    <a href="{{ route('users.create') }}">Créer un utilisateur</a>
-@endif
     public function create()
     {
         $roles = Role::all(); 
@@ -124,5 +115,5 @@ $this->authorize('gérer les utilisateurs');
 {
     $this->middleware('permission:voir archives')->only('index');
     $this->middleware('permission:creer archives')->only('create');
-}*/
+}
 }
