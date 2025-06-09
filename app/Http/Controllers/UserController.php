@@ -6,13 +6,15 @@ use App\Models\User;
 use App\Models\Service;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\WelcomeUserMail;
+use Illuminate\Support\Facades\Mail;
+use App\Notifications\EnvoyerAccesUtilisateur;
 
-
-
+use Exception;
+    
 
 class UserController extends Controller
 {
-    
    public function mvc(Request $request)
 {
     
@@ -52,33 +54,58 @@ class UserController extends Controller
         return view('usermanage.edituser', compact('users', 'roles', 'services'));
     }
 
+    
+
     public function store(Request $request)
-    {
-       //dd($request->all());
+{
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'email' => 'required|email|unique:users',
+        'password' => 'required|min:8|confirmed',
+        'role' => 'required',
+        'service' => 'required',
+        'permission' => 'nullable',
+    ]);
 
-       $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users',
-            'password' => 'required|min:8|confirmed',
-            'role' => 'required',
-            'service' => 'required',
-            'permission' => 'nullable',
-        ]);
-        $role = Role::findOrFail($request->role);
-        $service = Service::findOrFail($request->service);
+    $role = Role::findOrFail($request->role);
+    $service = Service::findOrFail($request->service);
+    
+    $password = $request->password;
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $role->name,
-            'service' => $service->nom,
-            'permission' => $request->service ?? '',
-        ]);
-       // $user = User::find(1);
-        //$user->assignRole('admin');// Ou 'creator', 'admin', etc.
-        return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
-    }
+    $user = User::create([
+        'name' => $request->name,
+        'email' => $request->email,
+        'password' => Hash::make($password),
+        'role' => $role->name,
+        'service' => $service->nom,
+        'permission' => $request->permission ?? '',
+    ]);
+
+    // Envoi de l'email
+   // Mail::to($user->email)->send(new WelcomeUserMail($user->name, $password));
+ //$user->notify(new EnvoyerAccesUtilisateur($request->password));
+
+
+ try {
+    Mail::to($user->email)->send(new WelcomeUserMail($user->name, $password));
+
+    // Optionnel : message de confirmation si tout va bien
+    return response()->json(['message' => 'Email envoyé avec succès.']);
+} catch (Exception $e) {
+    // Log de l'erreur côté serveur pour débogage
+    //Log::error('Erreur lors de l’envoi de l’email : ' . $e->getMessage());
+
+    // Réponse compréhensible pour l'utilisateur
+    return response()->json([
+        'message' => 'Impossible d’envoyer l’email. Vérifiez les paramètres SMTP dans .env.',
+        
+    ], 500);
+}
+
+
+    return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
+}
+
 
     
 
