@@ -112,150 +112,143 @@
     <script src="//unpkg.com/alpinejs" defer></script>
 </head>
     <body class="font-sans antialiased bg-gray-100">
-        <div class="flex h-screen overflow-hidden">
-            <!-- Sidebar - Desktop -->
-            <aside class="sidebar w-64 bg-gray-800 text-white flex-shrink-0 h-screen fixed top-0 left-0 z-40 overflow-y-auto">
-                <div class="p-6">
-                    <x-application-logoblanc class="w-20 h-20 fill-current text-gray-500" />
-                    <h2 class="text-lg font-semibold">{{ config('app.name', 'SGAE') }}</h2>
-                </div>
-                <nav class="flex-1 mt-4 space-y-1 px-2">
-                    @php $route = Route::currentRouteName(); @endphp
-
-                    <a href="{{ route('Accueil') }}" class="block px-4 py-2 rounded hover:bg-gray-700 transition {{ $route === 'Accueil' ? 'bg-gray-700 font-semibold' : '' }}">
-                        <i class="fas fa-home mr-2"></i> <span class="nav-item-text">Accueil</span>
-                    </a>
-
-                    <a href="{{ route('dashboard') }}"
-                    class="block px-4 py-2 rounded hover:bg-gray-700 transition 
-                            {{ $route === 'dashboard' ? 'bg-gray-700 font-semibold' : '' }}">
-                        <i class="fas fa-tachometer-alt mr-2"></i> <span class="nav-item-text">Dashboard</span>
-                    </a>
-
-                    <a href="{{ route('archives.index') }}"
-                    class="block px-4 py-2 rounded hover:bg-gray-700 transition 
-                            {{ $route === 'archives.index' ? 'bg-gray-700 font-semibold' : '' }}">
-                        <i class="fas fa-archive mr-2"></i> <span class="nav-item-text">Archives</span>
-                    </a>
-
-                    <!-- Menu Paramètres -->
-                    <div x-data="{ open: false }" class="relative">
-                        <button @click="open = !open" class="w-full text-left flex items-center px-4 py-2 rounded hover:bg-gray-700 transition">
-                            <i class="fas fa-cogs mr-2"></i>
-                            <span class="nav-item-text">Paramètres</span>
-                            <svg class="w-4 h-4 ml-auto transform transition-transform" :class="{ 'rotate-90': open }"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                            </svg>
-                        </button>
-
-                        <div x-show="open" @click.away="open = false" x-transition
-                            class="mt-1 ml-4 space-y-1 bg-gray-900 rounded shadow-lg border border-gray-700 z-50">
-
-                            <a href="{{ route('settings.services') }}"
-                            class="block px-4 py-2 hover:bg-gray-700 rounded transition
-                                    {{ $route === 'settings.services' ? 'bg-gray-700 font-semibold' : '' }}">
-                                Organisation des services
-                            </a>
-                            <a href="{{ route('settings.archives') }}"
-                            class="block px-4 py-2 hover:bg-gray-700 rounded transition
-                                    {{ $route === 'settings.archives' ? 'bg-gray-700 font-semibold' : '' }}">
-                                Gestion des profils d'archives
-                            </a>
-                            <a href="{{ route('settings.regles') }}"
-                            class="block px-4 py-2 hover:bg-gray-700 rounded transition
-                                    {{ $route === 'settings.regles' ? 'bg-gray-700 font-semibold' : '' }}">
-                                Gestion du stockage
-                            </a>
-                            <a href="{{ route('settings.roles') }}"
-                            class="block px-4 py-2 hover:bg-gray-700 rounded transition
-                                    {{ $route === 'settings.roles' ? 'bg-gray-700 font-semibold' : '' }}">
-                                Gestion des rôles
-                            </a>
-                        </div>
-                    </div>
-
-                    <a href="{{ route('users.index') }}"
-                    class="block px-4 py-2 rounded hover:bg-gray-700 transition 
-                            {{ $route === 'users.index' ? 'bg-gray-700 font-semibold' : '' }}">
-                        <i class="fas fa-users mr-2"></i> <span class="nav-item-text">Gestion des utilisateurs</span>
-                    </a>
-
-                    <a href="{{ route('profile.edit') }}"
-                    class="block px-4 py-2 rounded hover:bg-gray-700 transition 
-                            {{ $route === 'profile.edit' ? 'bg-gray-700 font-semibold' : '' }}">
-                        <i class="fas fa-user mr-2"></i> <span class="nav-item-text">Profil</span>
-                    </a>
-                 
-                    <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button type="submit"
-                                class="w-full text-left block px-4 py-2 rounded hover:bg-gray-700 transition">
-                            <i class="fas fa-sign-out-alt mr-2"></i> <span class="nav-item-text">Déconnexion</span>
-                        </button>
-                    </form>
-                </nav>
-            </aside>
-
-            <!-- Main Content -->
-            <div class="main-content flex-1 overflow-y-auto">
-                <!-- Top Navigation -->
-                <header class="bg-white shadow sticky top-0 z-30">
-                    <div class="relative h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
-                        <div class="header-content text-left w-full">
-                            @php
-                                $user = Auth::user();
-                            @endphp
-                            @if($user)
-                                <h1 class="text-sm sm:text-base "><strong>Bienvenue M. {{$user->name}}</strong></h1>
-                            @else
-                                <p>Connectez-vous !</p>
-                            @endif
-                        </div>
-                        <button class="mobile-menu-button" onclick="toggleSidebar()">
-                            <i class="fas fa-bars text-xl"></i>
-                        </button>
-                    </div>
-                </header>
-
-                <!-- Page Content -->
-                <main class="p-4 sm:p-6">
-                    @yield('content')
-                </main>
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar - Desktop -->
+        <aside class="sidebar w-64 bg-gray-800 text-white flex-shrink-0 h-screen fixed top-0 left-0 z-40 overflow-y-auto">
+            <div class="p-6">
+                <x-application-logoblanc class="w-20 h-20 fill-current text-gray-500" />
+                <h2 class="text-lg font-semibold">{{ config('app.name', 'SGAE') }}</h2>
             </div>
-        </div>
+            <nav class="flex-1 mt-4 space-y-1 px-2">
+                @php $route = Route::currentRouteName(); @endphp
 
-        <script>
-            function toggleSidebar() {
-                const sidebar = document.querySelector('.sidebar');
-                const button = document.querySelector('.mobile-menu-button');
-                
-                sidebar.classList.toggle('sidebar-mobile-open');
-                button.classList.toggle('open');
-                
-                // Changer l'icône
-                const icon = button.querySelector('i');
-                if (sidebar.classList.contains('sidebar-mobile-open')) {
-                    icon.classList.remove('fa-bars');
-                    icon.classList.add('fa-times');
-                } else {
-                    icon.classList.remove('fa-times');
-                    icon.classList.add('fa-bars');
-                }
+                <a href="{{ route('Accueil') }}" class="nav-link {{ $route === 'Accueil' ? 'active' : '' }}">
+                    <i class="fas fa-home mr-2"></i> Accueil
+                </a>
+
+                <a href="{{ route('dashboard') }}" class="nav-link {{ $route === 'dashboard' ? 'active' : '' }}">
+                    <i class="fas fa-tachometer-alt mr-2"></i> Dashboard
+                </a>
+
+                <a href="{{ route('archives.index') }}" class="nav-link {{ $route === 'archives.index' ? 'active' : '' }}">
+                    <i class="fas fa-archive mr-2"></i> Archives
+                </a>
+
+                <!-- Menu Paramètres -->
+                <div x-data="{ open: false }" class="relative">
+                    <button @click="open = !open" class="nav-link flex items-center">
+                        <i class="fas fa-cogs mr-2"></i> Paramètres
+                        <svg class="w-4 h-4 ml-auto transition-transform" :class="{ 'rotate-90': open }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                        </svg>
+                    </button>
+                    <div x-show="open" @click.away="open = false" x-transition class="submenu">
+                        <a href="{{ route('settings.services') }}" class="submenu-item {{ $route === 'settings.services' ? 'active' : '' }}">
+                            Organisation des services
+                        </a>
+                        <a href="{{ route('settings.archives') }}" class="submenu-item {{ $route === 'settings.archives' ? 'active' : '' }}">
+                            Gestion des profils d'archives
+                        </a>
+                        <a href="{{ route('settings.regles') }}" class="submenu-item {{ $route === 'settings.regles' ? 'active' : '' }}">
+                            Gestion du stockage
+                        </a>
+                        <a href="{{ route('settings.roles') }}" class="submenu-item {{ $route === 'settings.roles' ? 'active' : '' }}">
+                            Gestion des rôles
+                        </a>
+                    </div>
+                </div>
+
+                <a href="{{ route('users.index') }}" class="nav-link {{ $route === 'users.index' ? 'active' : '' }}">
+                    <i class="fas fa-users mr-2"></i> Gestion des utilisateurs
+                </a>
+
+                <a href="{{ route('profile.edit') }}" class="nav-link {{ $route === 'profile.edit' ? 'active' : '' }}">
+                    <i class="fas fa-user mr-2"></i> Profil
+                </a>
+
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button type="submit" class="nav-link">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Déconnexion
+                    </button>
+                </form>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content flex-1 overflow-y-auto">
+            <!-- Top Navigation -->
+            <header class="bg-white shadow sticky top-0 z-30">
+                <div class="relative h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
+                    <div class="header-content text-left w-full">
+                        @php $user = Auth::user(); @endphp
+                        <h1 class="text-sm sm:text-base">
+                            <strong>Bienvenue M. {{$user->name}}</strong>
+                        </h1>
+                    </div>
+                    <button class="mobile-menu-button" onclick="toggleSidebar()">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Page Content -->
+            <main class="p-4 sm:p-6">
+                @yield('content')
+            </main>
+        </div>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const button = document.querySelector('.mobile-menu-button');
+            sidebar.classList.toggle('sidebar-mobile-open');
+            button.classList.toggle('open');
+            const icon = button.querySelector('i');
+            icon.classList.toggle('fa-bars');
+            icon.classList.toggle('fa-times');
+        }
+        
+        document.addEventListener('click', function(event) {
+            const sidebar = document.querySelector('.sidebar');
+            const button = document.querySelector('.mobile-menu-button');
+            if (window.innerWidth <= 768 && !sidebar.contains(event.target) && !button.contains(event.target) && sidebar.classList.contains('sidebar-mobile-open')) {
+                toggleSidebar();
             }
-            
-            // Fermer le sidebar si on clique à l'extérieur
-            document.addEventListener('click', function(event) {
-                const sidebar = document.querySelector('.sidebar');
-                const button = document.querySelector('.mobile-menu-button');
-                
-                if (window.innerWidth <= 768 && 
-                    !sidebar.contains(event.target) && 
-                    !button.contains(event.target) &&
-                    sidebar.classList.contains('sidebar-mobile-open')) {
-                    toggleSidebar();
-                }
-            });
-        </script>
-    </body>
+        });
+    </script>
+
+    <style>
+        .nav-link {
+            display: block;
+            padding: 12px 16px;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+        .nav-link:hover {
+            background-color: #4a5568; /* Gray 700 */
+        }
+        .nav-link.active {
+            background-color: #4a5568; /* Gray 700 */
+            font-weight: 600;
+        }
+        .submenu {
+            margin-top: 0.25rem;
+            margin-left: 1rem;
+            background-color: #1a202c; /* Gray 900 */
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            z-index: 50;
+        }
+        .submenu-item {
+            display: block;
+            padding: 12px 16px;
+            transition: background-color 0.2s;
+        }
+        .submenu-item:hover {
+            background-color: #4a5568; /* Gray 700 */
+        }
+    </style>
+</body>
 </html>
