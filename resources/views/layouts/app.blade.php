@@ -148,7 +148,7 @@
                 <a href="{{ route('dashboard') }}"
                 class="block px-4 py-2 rounded hover:bg-gray-700 transition 
                         {{ $route === 'dashboard' ? 'bg-gray-700 font-semibold' : '' }}">
-                    <i class="fas fa-tachometer-alt mr-2"></i> <span class="nav-item-text">Dashboard</span>
+                    <i class="fas fa-tachometer-alt mr-2"></i> <span class="nav-item-text">Tableau de board</span>
                 </a>
 
                 <a href="{{ route('archives.index') }}"
@@ -242,7 +242,8 @@
                 @yield('content')
             </main>
         </div>
-    </div>     <script>
+    </div>  
+       <script>
             function toggleSidebar() {
                 const sidebar = document.querySelector('.sidebar');
                 const button = document.querySelector('.mobile-menu-button');

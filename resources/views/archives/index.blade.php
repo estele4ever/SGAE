@@ -40,6 +40,7 @@
                 <tr>
                     <th class="px-4 py-2 text-left">Nom</th>
                     <th class="px-4 py-2 text-left">Profil</th>
+                    <th class="px-4 py-2 text-left">Service</th>
                     <th class="px-4 py-2 text-left">Date de création</th>
                     <th class="px-4 py-2 text-left">Actions</th>
                 </tr>
@@ -60,7 +61,8 @@
                     @endphp
                     <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
 
-                        <td class="px-4 py-2">{{ $archive->titre }}</td>
+                        <td class="px-4 py-2">{{ ucwords(strtolower($archive->titre))  }}</td>
+                        <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
                         <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
                         <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
                         <td class="px-4 py-2 flex items-center space-x-4">
