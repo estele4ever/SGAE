@@ -24,5 +24,10 @@ class TypeArchive extends Model
 {
     return $this->hasMany(ArchiveProfileField::class, 'archive_profile_id');
 }
+// Dans app/Models/TypeArchive.php
+public function archives()
+{
+    return $this->hasMany(Archive::class, 'type_id'); // Adaptez 'type_archive_id' au nom réel de votre colonne
+}
 }
 

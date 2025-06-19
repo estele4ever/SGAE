@@ -22,9 +22,9 @@
         /* Styles pour mobile */
         @media (max-width: 768px) {
             .sidebar {
-                width: 100%;
+                width: 80%;
                 position: fixed;
-                height: auto;
+                height: 100%;
                 top: 0;
                 left: 0;
                 z-index: 40;
@@ -227,6 +227,7 @@
                         @endphp
                         @if($user)
                             <h1 class="text-sm sm:text-base"><strong>Bienvenue M. {{$user->name}}</strong></h1>
+                            <i><span>{{$user->service}}</span></i>
                         @else
                             <p>Connectez-vous !</p>
                         @endif

@@ -21,4 +21,14 @@ class Service extends Model
     {
         return $this->belongsToMany(TypeArchive::class, 'service_type_archive');
     }
+
+    // Dans app/Models/Service.php
+public function archives()
+{
+    return $this->hasMany(Archive::class);
+}
+    public function scopeWithArchivesCount($query)
+{
+    return $query->withCount('archives');
+}
 }

@@ -63,7 +63,7 @@
 
                         <td class="px-4 py-2">{{ ucwords(strtolower($archive->titre))  }}</td>
                         <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
-                        <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
+                        <td class="px-4 py-2">{{ $archive->service_id }}</td>
                         <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
                         <td class="px-4 py-2 flex items-center space-x-4">
                             <!-- Voir -->
