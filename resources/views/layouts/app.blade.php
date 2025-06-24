@@ -22,9 +22,9 @@
         /* Styles pour mobile */
         @media (max-width: 768px) {
             .sidebar {
-                width: 100%;
+                width: 80%;
                 position: fixed;
-                height: auto;
+                height: 100%;
                 top: 0;
                 left: 0;
                 z-index: 40;
