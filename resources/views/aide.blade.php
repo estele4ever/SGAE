@@ -1,67 +1,273 @@
-@extends('layouts.app')
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Gestion des Archives</title>
+        <!-- Fonts -->
+        <link rel="preconnect" href="https://fonts.bunny.net">
+        <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
+        <!-- Styles -->
+        <style>
+            /* Tailwind CSS v3.2.4 */
+            *,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}
+            ::after,::before{--tw-content:''}
+            html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Figtree, sans-serif;font-feature-settings:normal}
+            body{margin:0;line-height:inherit;background-image:url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=60');background-size:cover;background-position:center;background-attachment:fixed}
+            hr{height:0;color:inherit;border-top-width:1px}
+            abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}
+            h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}
+            a{color:inherit;text-decoration:inherit}
+            b,strong{font-weight:bolder}
+            code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-size:1em}
+            small{font-size:80%}
+            sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}
+            sub{bottom:-.25em}
+            sup{top:-.5em}
+            table{text-indent:0;border-color:inherit;border-collapse:collapse}
+            button,input,optgroup,select,textarea{font-family:inherit;font-size:100%;font-weight:inherit;line-height:inherit;color:inherit;margin:0;padding:0}
+            button,select{text-transform:none}
+            [type=button],[type=reset],[type=submit],button{-webkit-appearance:button;background-color:transparent;background-image:none}
+            :-moz-focusring{outline:auto}
+            :-moz-ui-invalid{box-shadow:none}
+            progress{vertical-align:baseline}
+            ::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}
+            [type=search]{-webkit-appearance:textfield;outline-offset:-2px}
+            ::-webkit-search-decoration{-webkit-appearance:none}
+            ::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}
+            summary{display:list-item}
+            blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}
+            fieldset{margin:0;padding:0}
+            legend{padding:0}
+            menu,ol,ul{list-style:none;margin:0;padding:0}
+            textarea{resize:vertical}
+            input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}
+            [role=button],button{cursor:pointer}
+            :disabled{cursor:default}
+            audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}
+            img,video{max-width:100%;height:auto}
+            [hidden]{display:none}
+            *, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }
+            ::-webkit-backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }
+            ::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: }
+            .relative{position:relative}
+            .mx-auto{margin-left:auto;margin-right:auto}
+            .mx-6{margin-left:1.5rem;margin-right:1.5rem}
+            .ml-4{margin-left:1rem}
+            .mt-12{margin-top:3rem}
+            .mt-6{margin-top:1.5rem}
+            .mt-4{margin-top:1rem}
+            .mb-8{margin-bottom:2rem}
+            .-mt-px{margin-top:-1px}
+            .mr-1{margin-right:0.25rem}
+            .flex{display:flex}
+            .inline-flex{display:inline-flex}
+            .grid{display:grid}
+            .h-16{height:4rem}
+            .h-7{height:1.75rem}
+            .h-6{height:1.5rem}
+            .h-5{height:1.25rem}
+            .h-10{height:2.5rem}
+            .min-h-screen{min-height:100vh}
+            .w-auto{width:auto}
+            .w-16{width:4rem}
+            .w-7{width:1.75rem}
+            .w-6{width:1.5rem}
+            .w-5{width:1.25rem}
+            .w-10{width:2.5rem}
+            .max-w-7xl{max-width:80rem}
+            .shrink-0{flex-shrink:0}
+            .scale-100{--tw-scale-x:1;--tw-scale-y:1;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}
+            .grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}
+            .items-center{align-items:center}
+            .justify-center{justify-content:center}
+            .gap-6{gap:1.5rem}
+            .gap-4{gap:1rem}
+            .self-center{align-self:center}
+            .rounded-lg{border-radius:0.5rem}
+            .rounded-full****
 
-@section('content')
-<div class="max-w-5xl mx-auto bg-white p-6 rounded shadow">
-    <h1 class="text-2xl font-bold mb-4 text-gray-800">📘 Aide - Guide d'utilisation de l'application SGAE</h1>
+            .bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity))}
+            .bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity))}
+            .bg-opacity-90{--tw-bg-opacity:0.9}
+            .p-6{padding:1.5rem}
+            .px-6{padding-left:1.5rem;padding-right:1.5rem}
+            .py-8{padding-top:2rem;padding-bottom:2rem}
+            .p-4{padding:1rem}
+            .text-center{text-align:center}
+            .text-right{text-align:right}
+            .text-xl{font-size:1.25rem;line-height:1.75rem}
+            .text-sm{font-size:0.875rem;line-height:1.25rem}
+            .text-2xl{font-size:1.5rem;line-height:2rem}
+            .font-semibold{font-weight:600}
+            .font-bold{font-weight:700}
+            .leading-relaxed{line-height:1.625}
+            .text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity))}
+            .text-gray-900{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity))}
+            .text-gray-500{--tw-text-opacity彼此
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2 text-blue-700">1. Accueil</h2>
-        <p>L'écran d'accueil vous souhaite la bienvenue et affiche un résumé de votre activité. Il est accessible via le menu latéral.</p>
-    </section>
+            .underline{-webkit-text-decoration-line:underline;text-decoration-line:underline}
+            .antialiased{-webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale}
+            .shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}
+            .shadow-gray-500\/20{--tw-shadow-color:rgb(107 114 128 / 0.2);--tw-shadow:var(--tw-shadow-colored)}
+            .transition-all{transition-property:all;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}
+            .selection\:bg-red-500 *::selection{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity))}
+            .selection\:text-white *::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}
+            .selection\:bg-red-500::selection{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity))}
+            .selection\:text-white::selection{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}
+            .hover\:text-gray-900:hover{--tw-text-opacity:1;color:rgb(17 24 39 / var(--tw-text-opacity))}
+            .hover\:text-gray-700:hover{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity))}
+            .focus\:rounded-sm:focus{border-radius:0.125rem}
+            .focus\:outline:focus{outline-style:solid}
+            .focus\:outline-2:focus{outline-width:2px}
+            .focus\:outline-red-500:focus{outline-color:#ef4444}
+            .group:hover .group-hover\:stroke-gray-600{stroke:#4b5563}
+            .z-10{z-index:10}
+            @media (prefers-reduced-motion: no-preference){
+                .motion-safe\:hover\:scale-\[1.01\]:hover{--tw-scale-x:1.01;--tw-scale-y:1.01;transform:translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))}
+            }
+            @media (prefers-color-scheme: dark){
+                .dark\:bg-gray-900{--tw-bg-opacity:1;background-color:rgb(17 24 39 / var(--tw-bg-opacity))}
+                .dark\:bg-gray-800\/50{background-color:rgb(31 41 55 / 0.5)}
+                .dark\:bg-red-800\/20{background-color:rgb(153 27 27 / 0.2)}
+                .dark\:bg-gradient-to-bl{background-image:linear-gradient(to bottom left, var(--tw-gradient-stops))}
+                .dark\:from-gray-700\/50{--tw-gradient-from:rgb(55 65 81 / 0.5);--tw-gradient-to:rgb(55 65 81 / 0);--tw-gradient-stops:var(--tw-gradient-from), var(--tw-gradient-to)}
+                .dark\:via-transparent{--tw-gradient-to:rgb(0 0 0 / 0);--tw-gradient-stops:var(--tw-gradient-from), transparent, var(--tw-gradient-to)}
+                .dark\:stroke-gray-600{stroke:#4b5563}
+                .dark\:text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity))}
+                .dark\:text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}
+                .dark\:shadow-none{--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}
+                .dark\:ring-1{--tw-ring-offset-shadow:var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color);--tw-ring-shadow:var(--tw-ring-inset) 0 0 0 calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);box-shadow:var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)}
+                .dark\:ring-inset{--tw-ring-inset:inset}
+                .dark\:ring-white\/5{--tw-ring-color:rgb(255 255 255 / 0.05)}
+                .dark\:hover\:text-white:hover{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity))}
+                .group:hover .dark\:group-hover\:stroke-gray-400{stroke:#9ca3af}
+            }
+            @media (min-width: 640px){
+                .sm\:fixed{position:fixed}
+                .sm\:top-0{top:0px}
+                .sm\:right-0{right:0px}
+                .sm\:ml-0{margin-left:0px}
+                .sm\:flex{display:flex}
+                .sm\:items-center{align-items:center}
+                .sm\:justify-center{justify-content:center}
+                .sm\:justify-between{justify-content:space-between}
+                .sm\:text-left{text-align:left}
+                .sm\:text-right{text-align:right}
+            }
+            @media (min-width: 768px){
+                .md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}
+            }
+            @media (min-width: 1024px){
+                .lg\:gap-8{gap:2rem}
+                .lg\:p-8{padding:2rem}
+            }
+        </style>
+    </head>
+    <body class="antialiased">
+        <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-opacity-90">
+            @if (Route::has('login'))
+                <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+                    @auth
+                        <a href="{{ url('/dashboard') }}" class="font-semibold text-white hover:text-gray-200 focus:outline focus:outline-2 focus:outline-red-500">Tableau de bord</a>
+                    @else
+                        <a href="{{ route('login') }}" class="font-semibold text-white hover:text-gray-200 focus:outline focus:outline-2 focus:outline-red-500">Connexion</a>
+                        @if (Route::has('register'))
+                            <a href="{{ route('register') }}" class="ml-4 font-semibold text-white hover:text-gray-200 focus:outline focus:outline-2 focus:outline-red-500">Inscription</a>
+                        @endif
+                    @endauth
+                </div>
+            @endif
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2 text-blue-700">2. Dashboard</h2>
-        <p>Le tableau de bord affiche les statistiques globales (nombre d'archives, utilisateurs, actions récentes...).</p>
-    </section>
+            <div class="max-w-7xl mx-auto py-8 lg:p-8">
+               
+        <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-opacity-90">
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2 text-blue-700">3. Archives</h2>
-        <ul class="list-disc pl-6 text-gray-700">
-            <li><strong>Ajouter une archive :</strong> Cliquez sur "Nouvelle archive", remplissez le formulaire en fonction du profile d'archive choisi . Le service est automatiquement enregistrer par les donnees de l’utilisateur connecté.</li>
-            <li><strong>Rechercher :</strong> Utilisez la barre de recherche rapide pour retrouver des archives.</li>
-            <li><strong>Geler une archive :</strong> Cliquez sur "Geler" dans la fiche archive, remplissez le motif et la durée. L’archive ne pourra pas être supprimée pendant ce temps.</li>
-            <li><strong>Suppression :</strong> Le bouton de suppression est désactivé si une archive est gelée.</li>
-        </ul>
-    </section>
+                    <a href="/">
+                    </a>
+                </div>
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2 text-blue-700">4. Gestion des utilisateurs</h2>
-        <p>Accessible depuis le menu "Gestion des utilisateurs". Vous pouvez :</p>
-        <ul class="list-disc pl-6 text-gray-700">
-            <li>Créer un nouvel utilisateur avec un rôle (admin ou agent) et l’assigner à un service et une permission.</li>
-            <li>Modifier ou supprimer un utilisateur.</li>
-            <li>activer ou desactiver un utilisateur.</li>
-            <li>Filtrer les utilisateurs par service ou rôle.</li>
-        </ul>
-    </section>
+                <h1 class="text-center text-2xl font-bold text-white mb-8">Gestion des Archives</h1>
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2 text-blue-700">5. Paramètres</h2>
-        <p>Dans le menu déroulant "Paramètres", vous pouvez configurer :</p>
-        <ul class="list-disc pl-6 text-gray-700">
-            <li><strong>Organisation des services :</strong> Créez et gérez les services rattachés aux utilisateurs.</li>
-            <li><strong>Profils d'archives :</strong> Définissez les profils d'archives.</li>
-            <li><strong>Règles de stockage :</strong> Configurez les durées ou emplacements de conservation.</li>
-            <li><strong>Rôles :</strong> Définissez les droits associés à chaque rôle dans l'application.</li>
-        </ul>
-    </section>
+                <div class="mt-12">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+                        <a href="/" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div>
+                                <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
+                                    </svg>
+                                </div>
+                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Documents</h2>
+                                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                                    Gestion complète des documents d'archives. Ajoutez, classez et retrouvez facilement tous vos documents archivés.
+                                </p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                            </svg>
+                        </a>
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2 text-blue-700">6. Profil & Déconnexion</h2>
-        <p>Depuis le menu, accédez à votre profil pour modifier vos informations ou vous déconnecter en toute sécurité.</p>
-    </section>
+                        <a href="/" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div>
+                                <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
+                                    </svg>
+                                </div>
+                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Catégories</h2>
+                                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                                    Organisez vos archives en catégories et sous-catégories pour un classement optimal et une recherche simplifiée.
+                                </p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                            </svg>
+                        </a>
 
-    <section class="mb-6">
-        <h2 class="text-xl font-semibold mb-2 text-blue-700">7. Navigation et accessibilité</h2>
-        <ul class="list-disc pl-6 text-gray-700">
-            <li>Le menu latéral reste accessible sur toutes les pages.</li>
-            <li>Les éléments actifs sont surlignés pour une meilleure orientation.</li>
-            <li>Les zones cliquables sont élargies pour éviter les erreurs de clic.</li>
-        </ul>
-    </section>
+                        <a href="/" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div>
+                                <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                                    </svg>
+                                </div>
+                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Recherche</h2>
+                                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                                    Outil de recherche puissant pour retrouver rapidement n'importe quel document dans vos archives grâce à des mots-clés, dates ou métadonnées.
+                                </p>
+                            </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                            </svg>
+                        </a>
 
-    <div class="text-right">
-        <a href="{{ route('Accueil') }}" class="text-blue-600 hover:underline">← Retour à l'accueil</a>
-    </div>
-</div>
-@endsection
+                        <div class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div>
+                                <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
+                                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
+                                    </svg>
+                                </div>
+                                <h2 class="mt-6 text-xl font-semibold text-gray-900 dark:text-white">Import/Export</h2>
+                                <p class="mt-4 text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                                    Importez des documents en masse ou exportez vos archives dans différents formats. Gestion des sauvegardes et restauration des données.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex justify-center mt-12 px-0 sm:items-center sm:justify-between">
+                    <div class="text-center text-sm text-white sm:text-left">
+                        Système de Gestion des Archives - © {{ date('Y') }}
+                    </div>
+                    <div class="text-center text-sm text-white sm:text-right sm:ml-0">
+                        Version 1.0
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

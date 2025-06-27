@@ -97,7 +97,26 @@
                 padding-right: 0;
             }
         }
-
+  <style>
+            /* [Votre CSS existant reste inchangé] */
+            
+            /* Ajoutez ce nouveau style pour le logo */
+            .logo-container {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            .app-logo {
+                width: 3rem;  /* 48px */
+                height: 3rem; /* 48px */
+                object-fit: contain;
+            }
+            .app-name {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: white;
+            }
+        </style>
         /* Styles globaux */
         body {
             font-family: 'Figtree', sans-serif;
@@ -139,6 +158,7 @@
                 <h2 class="text-lg font-semibold">{{ config('app.name', 'SGAE') }}</h2>
             </div>
             <nav class="flex-1 mt-4 space-y-1 px-2">
+
                 @php $route = Route::currentRouteName(); @endphp
 
                 <a href="{{ route('Accueil') }}" class="block px-4 py-2 rounded hover:bg-gray-700 transition {{ $route === 'Accueil' ? 'bg-gray-700 font-semibold' : '' }}">
