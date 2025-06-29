@@ -30,7 +30,7 @@
                     @endforeach
                 </select>
                 <select name="regles_id" class="w-full border p-2 mb-2" required>
-                    <option value="">-- Sélectionnez un regle de conservation --</option>
+                    <option value="">-- Sélectionnez une regle de conservation --</option>
                     @foreach($regles as $regle)
                         <option value="{{ $regle->id }}">{{ $regle->nom }}
                             
@@ -68,13 +68,19 @@
 
     </div>
     <h2 id="listeProfils" class="text-2xl font-bold mt-8 mb-4"><strong>({{ $totalProfiles }})</strong> Profils d'archives existants </h2>
-
+    @php
+        // Précharger tous les services et règles en une seule requête
+        $services = DB::table('services')->pluck('nom', 'id');
+    @endphp
     <table class="w-full table-auto border-collapse border border-gray-300 shadow-md rounded overflow-hidden">
         <thead class="bg-gray-200 text-gray-700">
             <tr>
                 <th class="border px-4 py-3 text-left">Nom du profil</th>
-                <th class="border px-4 py-3 text-center">Statut</th>
+                <th class="border px-4 py-3 text-center">Service</th>
+
                 <th class="border px-4 py-3 text-left">Règles de conservation</th>
+                <th class="border px-4 py-3 text-center">Statut</th>
+
                 <th class="border px-4 py-3 text-center">Actions</th>
             </tr>
         </thead>
@@ -84,6 +90,13 @@
                 <!-- Nom -->
                 <td class="border px-4 py-2">{{ $profile->nom }}</td>
 
+                <!-- Service -->
+            <td class="border px-4 py-2 text-center">
+                {{ $services[$profile->services_id] ?? 'Non défini' }}
+            </td>
+            
+                <!-- Règles -->
+                <td class="border px-4 py-2">{{ $profile->regles_id }}</td>
                 <!-- Statut -->
                 <td class="border px-4 py-2 text-center">
                     <form method="POST" action="{{ route('settings.updateTypeStatus', $profile->id) }}">
@@ -93,9 +106,6 @@
                         <input type="checkbox" name="statut" value="1" onchange="this.form.submit()" {{ $profile->statut == 1 ? 'checked' : '' }} class="h-4 w-4 text-blue-600 rounded focus:ring-blue-500">
                     </form>
                 </td>
-
-                <!-- Règles -->
-                <td class="border px-4 py-2">{{ $profile->regles_id }}</td>
 
                 <!-- Actions -->
                 <td class="border px-4 py-2">

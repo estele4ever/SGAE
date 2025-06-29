@@ -22,15 +22,13 @@ use Spatie\Permission\Models\Permission;
 class ArchiveController extends Controller
 {
     // Liste des archives
-    public function index()
-    {$archives = Archive::whereRaw("deleted_at  >= NOW()")
-    ->latest()
-    ->get();
+    public function index(){
+        $archives = Archive::whereRaw("deleted_at  >= NOW()")
+        ->latest()
+        ->get();
        // $archives = Archive::latest()->get()->whereRaw("(archives.deleted_at + (registre_gels.duree || ' days')::interval) >= NOW()");
         $types = TypeArchive::all();
-return view('archives.index', compact('archives', 'types'));
-
-        
+        return view('archives.index', compact('archives', 'types'));
     }
 
 
@@ -39,6 +37,7 @@ return view('archives.index', compact('archives', 'types'));
     public function create()
     {
         //$types = TypeArchive::all();
+
         $types = TypeArchive::where('statut', 1)->get();
         return view('archives.create', compact('types'));
     }
