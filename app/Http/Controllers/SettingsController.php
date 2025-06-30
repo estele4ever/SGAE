@@ -69,7 +69,6 @@ class SettingsController extends Controller
             'regles_id' => $regle->nom
         ]);
         // 3. Ajouter les champs
-dd($request->all());
 
         foreach ($request->champs['nom_champ'] as $index => $nom_champ) {
             ArchiveProfileField::create([
@@ -141,7 +140,6 @@ dd($request->all());
             'regles_id' => $regle->nom
         ]);
             
-//dd($request->all());
         // 3. Mettre à jour les champs existants
         if ($request->has('fields')) {
             foreach ($request->fields as $fieldData) {

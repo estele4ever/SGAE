@@ -38,6 +38,7 @@
                     <th class="px-4 py-2 text-left">Nom</th>
                     <th class="px-4 py-2 text-left">Profil</th>
                     <th class="px-4 py-2 text-left">Date de création</th>
+                    <th class="px-4 py-2 text-left">Obsolète  depuis </th>
                     <th class="px-4 py-2 text-left">Actions</th>
                 </tr>
             </thead>
@@ -55,10 +56,12 @@
                             default => 'fa-file text-gray-600',
                         };
                     @endphp
-                    <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray' : 'bg-white' }} hover:bg-blue-50">
-                        <td class="px-4 py-2">{{ $archive->titre }}</td>
+                    <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
+                    
+                    <td class="px-4 py-2">{{ ucwords(strtolower($archive->titre)) }}</td>
                         <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
                         <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
+                        <td class="px-4 py-2">{{ $archive->deleted_at }} </td>
                         <td class="px-4 py-2 flex items-center space-x-4">
                             <!-- Voir -->
                             <a href="{{ route('archives.show', $archive->id) }}" title="Voir l'archive">
@@ -114,7 +117,7 @@
                         $dateFinGel = $gel ? Carbon::parse($gel->created_at)->addDays((int)$gel->duree) : null;
                     @endphp
                     <tr class="border-t {{ $loop->even ? 'bg-gray-50' : 'bg-white' }}">
-                        <td class="p-2">{{ $archive->titre }}</td>
+                        <td class="p-2">{{ ucwords(strtolower($archive->titre)) }}</td>
                         <td class="p-2">{{ $archive->description }}</td>
                         <td class="p-2">{{ $gel->motif ?? '—' }}</td>
                         <td class="p-2">{{ $dateFinGel ? $dateFinGel->format('d/m/Y') : '—' }}</td> <!-- Affichage de la date -->

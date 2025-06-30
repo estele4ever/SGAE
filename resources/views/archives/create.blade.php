@@ -1,3 +1,6 @@
+@php
+    $user = Auth::user();
+@endphp
 @extends('layouts.app')
 
 @section('content')
@@ -28,12 +31,19 @@
         <!-- Profil d'archive -->
         <div class="mb-4">
             <label class="block mb-2 font-semibold">Profil d'archive</label>
-            <select id="archiveProfileSelect" name="archive_profile_id" class="w-full border p-2" required>
-                <option value="">-- Sélectionnez un type d'archive --</option>
-                @foreach($types as $profile)
-                    <option value="{{ $profile->id }}">{{ $profile->nom }}</option>
-                @endforeach
-            </select>
+                <select id="archiveProfileSelect" name="archive_profile_id" class="w-full border p-2" required>
+        <option value="">-- Sélectionnez un type d'archive --</option>
+        @foreach($types as $profile)
+            @php
+                $service = DB::table('services')
+                            ->where('id', $profile->services_id)
+                            ->first(); // Ajout de first() pour obtenir le résultat
+            @endphp
+            @if($service && strtolower(trim($service->nom)) == strtolower(trim($user->service)))
+                <option value="{{ $profile->id }}">{{ $profile->nom }}</option>
+            @endif
+        @endforeach
+    </select>
         </div>
 
         <!-- Champs fixes obligatoires -->

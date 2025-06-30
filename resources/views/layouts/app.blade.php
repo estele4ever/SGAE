@@ -1,3 +1,6 @@
+@php
+    $user = Auth::user();
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
@@ -97,8 +100,26 @@
                 padding-right: 0;
             }
         }
-
-        /* Styles globaux */
+  
+            /* [Votre CSS existant reste inchangé] */
+            
+            /* Ajoutez ce nouveau style pour le logo */
+            .logo-container {
+                display: flex;
+                align-items: center;
+                gap: 0.75rem;
+            }
+            .app-logo {
+                width: 3rem;  /* 48px */
+                height: 3rem; /* 48px */
+                object-fit: contain;
+            }
+            .app-name {
+                font-size: 1.25rem;
+                font-weight: 600;
+                color: white;
+            }
+        
         body {
             font-family: 'Figtree', sans-serif;
             -webkit-font-smoothing: antialiased;
@@ -139,6 +160,7 @@
                 <h2 class="text-lg font-semibold">{{ config('app.name', 'SGAE') }}</h2>
             </div>
             <nav class="flex-1 mt-4 space-y-1 px-2">
+
                 @php $route = Route::currentRouteName(); @endphp
 
                 <a href="{{ route('Accueil') }}" class="block px-4 py-2 rounded hover:bg-gray-700 transition {{ $route === 'Accueil' ? 'bg-gray-700 font-semibold' : '' }}">
@@ -156,7 +178,7 @@
                         {{ $route === 'archives.index' ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-archive mr-2"></i> <span class="nav-item-text">Archives</span>
                 </a>
-
+            @if($user->role == "admin")
                 <!-- Menu Paramètres -->
                 <div x-data="{ open: false }" class="relative">
                     <button @click="open = !open" class="w-full text-left flex items-center px-4 py-2 rounded hover:bg-gray-700 transition">
@@ -167,7 +189,7 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                         </svg>
                     </button>
-
+        
                     <div x-show="open" @click.away="open = false" x-transition
                         class="mt-1 ml-4 space-y-1 bg-gray-900 rounded shadow-lg border border-gray-700 z-50">
 
@@ -199,7 +221,8 @@
                         {{ $route === 'users.index' ? 'bg-gray-700 font-semibold' : '' }}">
                     <i class="fas fa-users mr-2"></i> <span class="nav-item-text">Gestion des utilisateurs</span>
                 </a>
-
+                        @endif
+                
                 <a href="{{ route('profile.edit') }}"
                 class="block px-4 py-2 rounded hover:bg-gray-700 transition 
                         {{ $route === 'profile.edit' ? 'bg-gray-700 font-semibold' : '' }}">
@@ -222,12 +245,10 @@
             <header class="shadow sticky top-0 z-30">
                 <div class="relative h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8">
                     <div class="header-content text-left w-full">
-                        @php
-                            $user = Auth::user();
-                        @endphp
+                        
                         @if($user)
                             <h1 class="text-sm sm:text-base"><strong>Bienvenue M. {{$user->name}}</strong></h1>
-                            <i><span>{{$user->service}}</span></i>
+                            {{strtolower(trim($user->service))}}
                         @else
                             <p>Connectez-vous !</p>
                         @endif

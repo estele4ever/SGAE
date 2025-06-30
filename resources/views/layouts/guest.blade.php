@@ -20,16 +20,31 @@
                 font-family: 'Figtree', sans-serif;
                 -webkit-font-smoothing: antialiased;
                 -moz-osx-font-smoothing: grayscale;
-                background-color: #f3f4f6;
                 color: #111827;
-            }
-            
-            .min-h-screen {
+                position: relative;
                 min-height: 100vh;
             }
             
+            .bg-overlay {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image: url("{{ asset('images/archive.jfif') }}");
+                background-size: cover;
+                background-position: center;
+                opacity: 0.6; /* Ajustez cette valeur pour contrôler la transparence */
+                z-index: -1;
+            }
+            
+            .content-container {
+                position: relative;
+                z-index: 1;
+            }
+            
             .bg-white {
-                background-color: #ffffff;
+                background-color: rgba(252, 249, 249, 0.93); /* Fond légèrement transparent */
             }
             
             .shadow-md {
@@ -93,7 +108,11 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
     <body>
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100">
+        <!-- Arrière-plan avec image transparente -->
+        <div class="bg-overlay"></div>
+        
+        <!-- Contenu principal -->
+        <div class="content-container min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0">
             <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white shadow-md overflow-hidden sm:rounded-lg">
                 {{ $slot }}
             </div>

@@ -81,10 +81,7 @@ class UserController extends Controller
         'permission' => $request->permission ?? '',
     ]);
 
-    // Envoi de l'email
-   // Mail::to($user->email)->send(new WelcomeUserMail($user->name, $password));
- //$user->notify(new EnvoyerAccesUtilisateur($request->password));
-
+    /*
 
  try {
     Mail::to($user->email)->send(new WelcomeUserMail($user->name, $password));
@@ -92,17 +89,14 @@ class UserController extends Controller
     // Optionnel : message de confirmation si tout va bien
     return response()->json(['message' => 'Email envoyé avec succès.']);
 } catch (Exception $e) {
-    // Log de l'erreur côté serveur pour débogage
-    //Log::error('Erreur lors de l’envoi de l’email : ' . $e->getMessage());
-
-    // Réponse compréhensible pour l'utilisateur
+    
     return response()->json([
         'message' => 'Impossible d’envoyer l’email. Vérifiez les paramètres SMTP dans .env.',
         
     ], 500);
 }
 
-
+*/
     return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
 }
 
