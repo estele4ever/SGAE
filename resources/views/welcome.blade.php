@@ -9,9 +9,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" />
         <!-- Styles -->
         <style>
-            /* Tailwind CSS v3.2.4 */
-            
-            *,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}
+             *,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}
             ::after,::before{--tw-content:''}
             html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:Figtree, sans-serif;font-feature-settings:normal}
             body{margin:0;line-height:inherit;background-image:url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');background-size:cover;background-position:center;background-attachment:fixed}
@@ -165,13 +163,12 @@
             
             /* Ajoutez ce nouveau style pour le logo */
             .logo-container {
-                display: flex;
                 align-items: center;
                 gap: 0.75rem;
             }
             .app-logo {
-                width: 3rem;  /* 48px */
-                height: 3rem; /* 48px */
+                width: 1rem;  /* 48px */
+                height: 1rem; /* 48px */
                 object-fit: contain;
             }
             .app-name {
@@ -179,13 +176,59 @@
                 font-weight: 600;
                 color: white;
             }
-        
+
+            /* Ajouts pour le responsive desktop */
+            @media (min-width: 768px) {
+                .desktop-container {
+                    max-width: 1200px;
+                    margin: 0 auto;
+                    padding: 2rem;
+                }
+                
+                .desktop-header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: 3rem;
+                }
+                
+                .desktop-logo-title {
+                    display: flex;
+                    align-items: center;
+                    gap: 1rem;
+                }
+                
+                .desktop-grid {
+                    grid-template-columns: repeat(2, minmax(0, 1fr));
+                    gap: 2rem;
+                }
+                
+                .desktop-card {
+                    height: 100%;
+                }
+            }
+
+            @media (min-width: 1024px) {
+                .desktop-grid {
+                    grid-template-columns: repeat(3, minmax(0, 1fr));
+                }
+                
+                .desktop-container {
+                    padding: 3rem;
+                }
+            }
+
+            @media (min-width: 1280px) {
+                .desktop-grid {
+                    grid-template-columns: repeat(4, minmax(0, 1fr));
+                }
+            }
         </style>
     </head>
     <body class="antialiased">
-        <div class="relative sm:flex sm:justify-center sm:items-center min-h-screen bg-opacity-80">
+        <div class="min-h-screen bg-opacity-80" style="background-image: url('https://images.unsplash.com/photo-1457369804613-52c61a468e7d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'); background-size: cover; background-position: center; background-attachment: fixed;">
             @if (Route::has('login'))
-                <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
+                <div class="fixed top-0 right-0 p-6 text-right z-10">
                     @auth
                         <a href="{{ url('/dashboard') }}" class="font-semibold text-white hover:text-gray-200 focus:outline focus:outline-2 focus:outline-red-500">Tableau de bord</a>
                     @else
@@ -197,21 +240,20 @@
                 </div>
             @endif
 
-            <div class="sm:fixed sm:top-0 sm:right-0 p-6 text-right z-10">
-                <div>
-                                <div class="h-20 w-20 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
-                                    <x-application-logo class="app-logo fill-current text-gray-200" />
-                                </div>
-                                
-                            </div>
-                
+            <div class="desktop-container">
+                <div class="desktop-header">
+                    <div class="desktop-logo-title">
+                        <div class="h-20 w-20 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
+                            <x-application-logo class="app-logo fill-current text-gray-200" />
+                        </div>
+                        <h1 class="text-3xl font-bold text-white">Gestion des Archives</h1>
+                    </div>
+                </div>
 
-                <h1 class="text-center text-3xl font-bold text-white mb-8">Gestion des Archives</h1>
-
-                <div class="mt-16">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
-                        <a href="/" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                            <div>
+                <div class="mt-8">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                        <a href="/" class="desktop-card scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex flex-col motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div class="flex-grow">
                                 <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" />
@@ -222,13 +264,13 @@
                                     Gestion complète des documents d'archives. Ajoutez, classez et retrouvez facilement tous vos documents archivés.
                                 </p>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-end shrink-0 stroke-red-500 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                             </svg>
                         </a>
 
-                        <a href="/" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                            <div>
+                        <a href="/" class="desktop-card scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex flex-col motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div class="flex-grow">
                                 <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
@@ -240,13 +282,13 @@
                                     Organisez vos archives en catégories et sous-catégories pour un classement optimal et une recherche simplifiée.
                                 </p>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-end shrink-0 stroke-red-500 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                             </svg>
                         </a>
 
-                        <a href="/" class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                            <div>
+                        <a href="/" class="desktop-card scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex flex-col motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div class="flex-grow">
                                 <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
@@ -257,13 +299,13 @@
                                     Outil de recherche puissant pour retrouver rapidement n'importe quel document dans vos archives grâce à des mots-clés, dates ou métadonnées.
                                 </p>
                             </div>
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-center shrink-0 stroke-red-500 w-6 h-6 mx-6">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-end shrink-0 stroke-red-500 w-6 h-6">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
                             </svg>
                         </a>
 
-                        <div class="scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
-                            <div>
+                        <a href="/" class="desktop-card scale-100 p-6 bg-white dark:bg-gray-800/50 dark:bg-gradient-to-bl dark:from-gray-700/50 dark:via-transparent dark:ring-1 dark:ring-inset dark:ring-white/5 rounded-lg shadow-2xl shadow-gray-500/20 dark:shadow-none flex flex-col motion-safe:hover:scale-[1.01] transition-all duration-250 focus:outline focus:outline-2 focus:outline-red-500">
+                            <div class="flex-grow">
                                 <div class="h-16 w-16 bg-red-50 dark:bg-red-800/20 flex items-center justify-center rounded-full">
                                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="w-7 h-7 stroke-red-500">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5" />
@@ -274,17 +316,16 @@
                                     Importez des documents en masse ou exportez vos archives dans différents formats. Gestion des sauvegardes et restauration des données.
                                 </p>
                             </div>
-                        </div>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" class="self-end shrink-0 stroke-red-500 w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12h15m0 0l-6.75-6.75M19.5 12l-6.75 6.75" />
+                            </svg>
+                        </a>
                     </div>
                 </div>
 
-                <div class="flex justify-center mt-16 px-0 sm:items-center sm:justify-between">
-                    <div class="text-center text-sm text-white sm:text-left">
-                        Système de Gestion des Archives - © {{ date('Y') }}
-                    </div>
-                    <div class="text-center text-sm text-white sm:text-right sm:ml-0">
-                        Version 1.0
-                    </div>
+                <div class="flex flex-col sm:flex-row justify-between items-center mt-16 text-sm text-white">
+                    <div>Système de Gestion des Archives - © {{ date('Y') }}</div>
+                    <div class="mt-4 sm:mt-0">Version 1.0</div>
                 </div>
             </div>
         </div>
