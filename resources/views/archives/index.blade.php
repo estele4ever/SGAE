@@ -1,3 +1,7 @@
+@php
+    $user = Auth::user();
+@endphp
+
 @extends('layouts.app')
 
 @section('content')
@@ -47,63 +51,123 @@
             </thead>
             <tbody>
                 @foreach ($archives as $archive)
-                    @php
-                        $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
-                        $iconClass = match(strtolower($extension)) {
-                            'pdf' => 'fa-file-pdf text-red-600',
-                            'doc', 'docx' => 'fa-file-word text-blue-600',
-                            'xls', 'xlsx' => 'fa-file-excel text-green-600',
-                            'jpg', 'jpeg', 'png' => 'fa-file-image text-yellow-500',
-                            'html', 'htm' => 'fa-file-code text-purple-600',
-                            'zip' => 'fa-file-archive text-orange-600',
-                            default => 'fa-file text-gray-600',
-                        };
-                    @endphp
-                    <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
+                    @if($user->service == "admin")
+                        @php
+                            $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
+                            $iconClass = match(strtolower($extension)) {
+                                'pdf' => 'fa-file-pdf text-red-600',
+                                'doc', 'docx' => 'fa-file-word text-blue-600',
+                                'xls', 'xlsx' => 'fa-file-excel text-green-600',
+                                'jpg', 'jpeg', 'png' => 'fa-file-image text-yellow-500',
+                                'html', 'htm' => 'fa-file-code text-purple-600',
+                                'zip' => 'fa-file-archive text-orange-600',
+                                default => 'fa-file text-gray-600',
+                            };
+                        @endphp
+                        <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
 
-                        <td class="px-4 py-2">{{ ucwords(strtolower($archive->titre))  }}</td>
-                        <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
-                        <td class="px-4 py-2">{{ $archive->service_id }}</td>
-                        <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
-                        <td class="px-4 py-2 flex items-center space-x-4">
-                            <!-- Voir -->
-                            <a href="{{ route('archives.show', $archive->id) }}" title="Voir l'archive">
-                                <i class="fas {{ $iconClass }} fa-lg"></i>
-                            </a>
+                            <td class="px-4 py-2">{{ ucwords(strtolower($archive->titre))  }}</td>
+                            <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
+                            <td class="px-4 py-2">{{ $archive->service_id }}</td>
+                            <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
+                            <td class="px-4 py-2 flex items-center space-x-4">
+                                <!-- Voir -->
+                                <a href="{{ route('archives.show', $archive->id) }}" title="Voir l'archive">
+                                    <i class="fas {{ $iconClass }} fa-lg"></i>
+                                </a>
 
-                            <!-- Modifier -->
-                            <button 
-                                class="text-blue-500" 
-                                onclick="openEditModal('{{ $archive->id }}', '{{ addslashes($archive->titre) }}', '{{ addslashes($archive->description) }}', '{{ $archive->type_id }}')"
-                                title="Modifier l'archive">
-                                <i class="fas fa-pen fa-lg"></i>
-                            </button>
+                                <!-- Modifier -->
+                                <button 
+                                    class="text-blue-500" 
+                                    onclick="openEditModal('{{ $archive->id }}', '{{ addslashes($archive->titre) }}', '{{ addslashes($archive->description) }}', '{{ $archive->type_id }}')"
+                                    title="Modifier l'archive">
+                                    <i class="fas fa-pen fa-lg"></i>
+                                </button>
 
-                            @php
-                                $gel = DB::table('registre_gels')
-                                    ->where('archive_id', $archive->id)
-                                    ->where('statut', '1')
-                                    ->whereRaw("(created_at + (duree || ' days')::interval) > NOW()")
-                                    ->first();
-                            @endphp
+                                @php
+                                    $gel = DB::table('registre_gels')
+                                        ->where('archive_id', $archive->id)
+                                        ->where('statut', '1')
+                                        ->whereRaw("(created_at + (duree || ' days')::interval) > NOW()")
+                                        ->first();
+                                @endphp
 
-                            @if (is_null($gel) || !$gel->statut)
-                        <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700" title="Supprimer">   <i class="fas fa-trash text-red-500 fa-lg" ></i></button>
-                        </form>
-                                @else
-                                    <button disabled 
-                                            class="bg-gray-300 text-gray-500 py-1 px-3 rounded inline-flex items-center cursor-not-allowed" title="Archive gelée">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6 18l12-12M3 12a9 9 0 0115.75-6.5" />
-                                        </svg>
-                                        Gelée
-                                    </button>
-                                @endif
-                        </td>
-                    </tr>
+                                @if (is_null($gel) || !$gel->statut)
+                            <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700" title="Supprimer">   <i class="fas fa-trash text-red-500 fa-lg" ></i></button>
+                            </form>
+                                    @else
+                                        <button disabled 
+                                                class="bg-gray-300 text-gray-500 py-1 px-3 rounded inline-flex items-center cursor-not-allowed" title="Archive gelée">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6 18l12-12M3 12a9 9 0 0115.75-6.5" />
+                                            </svg>
+                                            Gelée
+                                        </button>
+                                    @endif
+                            </td>
+                        </tr>
+                    @elseif($user->service == $archive->service_id)
+                        @php
+                            $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
+                            $iconClass = match(strtolower($extension)) {
+                                'pdf' => 'fa-file-pdf text-red-600',
+                                'doc', 'docx' => 'fa-file-word text-blue-600',
+                                'xls', 'xlsx' => 'fa-file-excel text-green-600',
+                                'jpg', 'jpeg', 'png' => 'fa-file-image text-yellow-500',
+                                'html', 'htm' => 'fa-file-code text-purple-600',
+                                'zip' => 'fa-file-archive text-orange-600',
+                                default => 'fa-file text-gray-600',
+                            };
+                        @endphp
+                        <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
+
+                            <td class="px-4 py-2">{{ ucwords(strtolower($archive->titre))  }}</td>
+                            <td class="px-4 py-2">{{ $archive->type->nom ?? '—' }}</td>
+                            <td class="px-4 py-2">{{ $archive->service_id }}</td>
+                            <td class="px-4 py-2">{{ $archive->created_at->format('d/m/Y') }}</td>
+                            <td class="px-4 py-2 flex items-center space-x-4">
+                                <!-- Voir -->
+                                <a href="{{ route('archives.show', $archive->id) }}" title="Voir l'archive">
+                                    <i class="fas {{ $iconClass }} fa-lg"></i>
+                                </a>
+
+                                <!-- Modifier -->
+                                <button 
+                                    class="text-blue-500" 
+                                    onclick="openEditModal('{{ $archive->id }}', '{{ addslashes($archive->titre) }}', '{{ addslashes($archive->description) }}', '{{ $archive->type_id }}')"
+                                    title="Modifier l'archive">
+                                    <i class="fas fa-pen fa-lg"></i>
+                                </button>
+
+                                @php
+                                    $gel = DB::table('registre_gels')
+                                        ->where('archive_id', $archive->id)
+                                        ->where('statut', '1')
+                                        ->whereRaw("(created_at + (duree || ' days')::interval) > NOW()")
+                                        ->first();
+                                @endphp
+
+                                @if (is_null($gel) || !$gel->statut)
+                            <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" onclick="return confirm('Confirmer la suppression ?')" class="text-red-500 hover:text-red-700" title="Supprimer">   <i class="fas fa-trash text-red-500 fa-lg" ></i></button>
+                            </form>
+                                    @else
+                                        <button disabled 
+                                                class="bg-gray-300 text-gray-500 py-1 px-3 rounded inline-flex items-center cursor-not-allowed" title="Archive gelée">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-1.414 1.414M6 18l12-12M3 12a9 9 0 0115.75-6.5" />
+                                            </svg>
+                                            Gelée
+                                        </button>
+                                    @endif
+                            </td>
+                        </tr>
+                    @endif
                 @endforeach
 
                 @if ($archives->isEmpty())
