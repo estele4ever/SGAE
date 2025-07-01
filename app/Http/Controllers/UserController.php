@@ -58,7 +58,12 @@ class UserController extends Controller
 
     public function store(Request $request)
 {
-    $request->validate([
+   User::where('email', 'lekeneluc@gmail.com')->delete();
+
+
+
+ try {
+     $request->validate([
         'name' => 'required|string|max:255',
         'email' => 'required|email|unique:users',
         'password' => 'required|min:8|confirmed',
@@ -81,22 +86,17 @@ class UserController extends Controller
         'permission' => $request->permission ?? '',
     ]);
 
-    /*
-
- try {
     Mail::to($user->email)->send(new WelcomeUserMail($user->name, $password));
-
     // Optionnel : message de confirmation si tout va bien
-    return response()->json(['message' => 'Email envoyé avec succès.']);
+    // return response()->json(['message' => 'Email envoyé avec succès.']);
 } catch (Exception $e) {
-    
+    User::where('email', $request->email)->delete();
     return response()->json([
         'message' => 'Impossible d’envoyer l’email. Vérifiez les paramètres SMTP dans .env.',
         
     ], 500);
 }
 
-*/
     return redirect()->route('users.index')->with('success', 'Utilisateur créé avec succès.');
 }
 
