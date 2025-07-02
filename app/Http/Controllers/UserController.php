@@ -15,7 +15,7 @@ use Exception;
 
 class UserController extends Controller
 {
-   public function mvc(Request $request)
+   /*public function mvc(Request $request)
 {
     
     $services = Service::all(); //  pour récupérer les services
@@ -35,7 +35,7 @@ class UserController extends Controller
     $users = $query->get();
 
     return view('usermanage.index', compact('users', 'services', 'roles'));
-}
+}*/
 
     public function create()
     {
