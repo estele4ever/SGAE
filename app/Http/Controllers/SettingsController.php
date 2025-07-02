@@ -316,6 +316,7 @@ class SettingsController extends Controller
             'name' => 'required|string|max:255',
         ]);
 
+        
         Role::create([
             'name' => $request->name,
         ]);
