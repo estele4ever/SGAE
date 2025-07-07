@@ -155,7 +155,7 @@
                 @endforeach
             </select>
 
-            <input type="text" name="permission" id="edit_permission" placeholder="Permissions (optionnel)" class="border p-2 w-full mb-2">
+            <input type="text" name="permission" id="edit_permission" placeholder="Permissions v" class="border p-2 w-full mb-2">
 
             <div class="flex justify-end space-x-2 mt-4">
                 <button type="button" onclick="closeEditModal()" class="px-4 py-2 bg-gray-400 text-white rounded">Annuler</button>

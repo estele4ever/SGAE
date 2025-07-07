@@ -41,6 +41,7 @@
             @endphp
             @if($service && strtolower(trim($service->nom)) == strtolower(trim($user->service)))
                 <option value="{{ $profile->id }}">{{ $profile->nom }}</option>
+            @elseif($service->nom == "admin")
             @endif
         @endforeach
     </select>

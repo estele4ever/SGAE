@@ -391,7 +391,6 @@ class SettingsController extends Controller
         foreach ($files as $file) {
             $totalSize += Storage::size($file);
         }
-        //dd($totalSize); // Pour déboguer et voir la taille formatée
 
         $formattedSize = $this->formatSize($totalSize);
 
@@ -419,10 +418,6 @@ class SettingsController extends Controller
         return implode(' ', $period);
     }
     
-    // Exemples d'utilisation
-    //echo convertDaysToPeriod(50);   // 1 mois 20 jours
-    //echo convertDaysToPeriod(105);  // 3 mois 15 jours
-    //echo convertDaysToPeriod(450);  // 1 an 2 mois 25 jours
     // Ajouter un service
     public function addRegle(Request $request) {
         $tempo = $request->temporalite;

@@ -37,78 +37,6 @@
     <input type="text" id="searchInput" placeholder="Rechercher un service..." class="w-full border p-2 rounded" onkeyup="filterServices()">
 
     </div>
-<!-- Liste des services -->
-<table class="min-w-full border border-gray-300 shadow-md rounded overflow-hidden" id="serviceList">
-    <thead class="bg-gray-200 text-gray-700">
-        <tr>
-            <th class="px-4 py-2 text-left border">Nom du service</th>
-            <th class="px-4 py-2 text-left border">Description</th>
-            <th class="px-4 py-2 text-center border">Statut</th>
-            <th class="px-4 py-2 text-center border">Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach($services as $service)
-        <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
-            <td class="px-4 py-2 border">{{ $service->nom }}</td>
-            <td class="px-4 py-2 border">{{ $service->description }}</td>
-            <td class="px-4 py-2 text-center border">
-                <form method="POST" action="{{ route('settings.updateServiceStatus', $service->id) }}">
-                    @csrf
-                    @method('PATCH')
-                    <input type="hidden" name="statut" value="0">
-                    <input type="checkbox" name="statut" value="1" onchange="this.form.submit()" {{ $service->statut == 1 ? 'checked' : '' }}>
-                </form>
-            </td>
-            <td class="px-4 py-2 border">
-                <div class="flex justify-center items-center space-x-2">
-                    <!-- Modifier -->
-                    <button 
-                        onclick="openEditModal('{{ $service->id }}', '{{ $service->nom }}', '{{ $service->description }}', '{{ $service->statut }}')" 
-                        class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-1 rounded shadow" 
-                        title="Modifier le service">
-                        <i class="fas fa-pen"></i>
-                    </button>
-
-                    <!-- Supprimer -->
-                    <form method="POST" action="{{ route('settings.deleteService', $service->id) }}" onsubmit="return confirm('Confirmer la suppression ?')" class="inline">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow" title="Supprimer le service">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </form>
-                </div>
-            </td>
-        </tr>
-        @endforeach
-    </tbody>
-</table>
-
-</div>
-
-<!-- 🛠️ MODAL MODIFICATION -->
-<div id="editModal" class="fixed inset-0 bg-gray-500 bg-opacity-75 flex items-center justify-center hidden">
-    <div class="bg-white p-6 rounded-lg shadow-md w-96">
-        <h2 class="text-xl font-bold mb-4">Modifier le service</h2>
-        <form method="POST" action="" id="editForm">
-            @csrf
-            <div class="flex flex-col md:flex-row md:space-x-4">
-                <input type="text" name="nom" placeholder="Nom du service" class="border p-2 flex-1 mb-2 md:mb-0" required>
-                <input type="text" name="description" placeholder="Description" class="border p-2 flex-1 mb-2 md:mb-0" required>
-                <select name="statut" class="border p-2 flex-1 mb-2 md:mb-0" required>
-                    <option value="">Sélectionnez le statut</option>
-                    <option value="1">Actif</option>
-                    <option value="0">Inactif</option>
-                </select>
-                <button type="submit" class="ml-0 md:ml-2 bg-blue-500 text-white px-4 py-2 rounded">Ajouter</button>
-            </div>
-        </form>
-
-        <!-- Champ de recherche -->
-        <div class="mb-4">
-            <input type="text" id="searchServiceInput" placeholder="Rechercher un service..." class="w-full px-4 py-2 border rounded shadow focus:outline-none focus:ring-2 focus:ring-blue-400">
-        </div>
         <!-- Liste des services -->
         <table class="min-w-full bg-white border border-gray-300" id="serviceList">
             <thead>
@@ -139,12 +67,12 @@
                     
                     <td class="px-4 py-2">
                         <button onclick="openEditModal('{{ $service->id }}', '{{ $service->nom }}', '{{ $service->description }}', '{{ $service->statut }}')" class="text-blue-500 hover:text-blue-700">
-                             <i class="fas fa-pen fa-lg"></i>Modifier
+                             <i class="fas fa-pen fa-lg"></i>  
                         </button>
                         <form method="POST" action="{{ route('settings.deleteService', $service->id) }}" class="inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="text-red-500 hover:text-red-700">Supprimer<i class="fas fa-trash text-red-500 fa-lg"></i></button>
+                            <button type="submit" class="text-red-500 hover:text-red-700"><i class="fas fa-trash text-red-500 fa-lg"></i></button>
                         </form>
                     </td>
                 </tr>
