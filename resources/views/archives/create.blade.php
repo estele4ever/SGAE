@@ -39,9 +39,12 @@
                             ->where('id', $profile->services_id)
                             ->first(); // Ajout de first() pour obtenir le résultat
             @endphp
-            @if($service && strtolower(trim($service->nom)) == strtolower(trim($user->service)))
+            
+            @if($user->service == "admin")
                 <option value="{{ $profile->id }}">{{ $profile->nom }}</option>
-            @elseif($service->nom == "admin")
+            @elseif($service && strtolower(trim($service->nom)) == strtolower(trim($user->service)))
+                <option value="{{ $profile->id }}">{{ $profile->nom }}</option>
+            
             @endif
         @endforeach
     </select>

@@ -217,7 +217,7 @@ class ArchiveController extends Controller
         'statut' => $request->statut,
     ]);
 
-    return redirect()->route('archives.show', $id)->with('success', 'L’archive a été gelée avec succès.');
+    return redirect()->route('archives.gel.index')->with('success', 'L’archive a été gelée avec succès.');
 }
 
 }

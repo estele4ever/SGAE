@@ -46,9 +46,7 @@
             </thead>
             <tbody>
                 @foreach ($archivesObsoletes as $archive)
-                    
-                    @if($user->service == "admin")
-                        @php
+                    @php
                             $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
                             $iconClass = match(strtolower($extension)) {
                                 'pdf' => 'fa-file-pdf text-red-600',
@@ -59,7 +57,9 @@
                                 'zip' => 'fa-file-archive text-orange-600',
                                 default => 'fa-file text-gray-600',
                             };
-                        @endphp
+                    @endphp
+                    @if($user->service == "admin")
+                        
                         <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
                         
                         <td class="px-4 py-2">{{ ucwords(strtolower($archive->titre)) }}</td>
@@ -72,8 +72,6 @@
                                     <i class="fas {{ $iconClass }} fa-lg"></i>
                                 </a>
 
-                                <!-- Modifier -->
-                            
 
                                 
                             <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
@@ -85,18 +83,7 @@
                             </td>
                         </tr>
                     @elseif($user->service == $archive->service_id)
-                        @php
-                            $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
-                            $iconClass = match(strtolower($extension)) {
-                                'pdf' => 'fa-file-pdf text-red-600',
-                                'doc', 'docx' => 'fa-file-word text-blue-600',
-                                'xls', 'xlsx' => 'fa-file-excel text-green-600',
-                                'jpg', 'jpeg', 'png' => 'fa-file-image text-yellow-500',
-                                'html', 'htm' => 'fa-file-code text-purple-600',
-                                'zip' => 'fa-file-archive text-orange-600',
-                                default => 'fa-file text-gray-600',
-                            };
-                        @endphp
+                       
                         <tr class="{{ $loop->iteration % 2 === 0 ? 'bg-gray-100' : 'bg-white' }} hover:bg-blue-50">
                         
                         <td class="px-4 py-2">{{ ucwords(strtolower($archive->titre)) }}</td>
@@ -108,9 +95,6 @@
                                 <a href="{{ route('archives.show', $archive->id) }}" title="Voir l'archive">
                                     <i class="fas {{ $iconClass }} fa-lg"></i>
                                 </a>
-
-                                <!-- Modifier -->
-                            
 
                                 
                             <form action="{{ route('archives.destroy', $archive->id) }}" method="POST" class="inline-block">
@@ -154,6 +138,18 @@
                     </tr>
                 </thead>
                 @foreach($archivegeler as $archive)
+                            @php
+                            $extension = pathinfo($archive->fichier, PATHINFO_EXTENSION);
+                            $iconClass = match(strtolower($extension)) {
+                                'pdf' => 'fa-file-pdf text-red-600',
+                                'doc', 'docx' => 'fa-file-word text-blue-600',
+                                'xls', 'xlsx' => 'fa-file-excel text-green-600',
+                                'jpg', 'jpeg', 'png' => 'fa-file-image text-yellow-500',
+                                'html', 'htm' => 'fa-file-code text-purple-600',
+                                'zip' => 'fa-file-archive text-orange-600',
+                                default => 'fa-file text-gray-600',
+                            };
+                    @endphp
                     @if($user->service == "admin")
                         @php
                             $gel = $archive->gels->first();
@@ -165,6 +161,10 @@
                             <td class="p-2">{{ $gel->motif ?? '—' }}</td>
                             <td class="p-2">{{ $dateFinGel ? $dateFinGel->format('d/m/Y') : '—' }}</td> <!-- Affichage de la date -->
                             <td class="p-2">
+                                <!-- Voir -->
+                                <a href="{{ route('archives.show', $archive->id) }}" title="Voir l'archive">
+                                    <i class="fas {{ $iconClass }} fa-lg"></i>
+                                </a>
                                 <form action="{{ route('archives.degeler', $archive->id) }}" method="POST" class="inline-block">
                                     @csrf
                                     <button type="submit" 

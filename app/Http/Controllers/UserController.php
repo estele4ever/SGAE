@@ -120,7 +120,7 @@ class UserController extends Controller
             'email' => $request->email,
             'role' => $role->name,
             'service' => $service->nom,
-            'permission' => $request->permission,
+            'permission' => $request->permission ?? '',
         ]);
     
         return redirect()->route('users.index')->with('success', 'Utilisateur mis à jour avec succès.');
