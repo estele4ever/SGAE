@@ -54,8 +54,8 @@ class SettingsController extends Controller
             'description' => 'nullable|string',
             'services_id' => 'required|exists:services,id',
             'statut' => 'required|boolean',
-            'champs.nom_champ' => 'array',
-            'champs.type_champ' => 'array',
+            'champs.nom_champ' => 'required|array',
+            'champs.type_champ' => 'required|array',
             'regles_id' => 'required|string'
         ]);
         
@@ -260,7 +260,7 @@ class SettingsController extends Controller
         $request->validate([
             'nom' => 'required|string|max:255',
             'statut' => 'required|boolean',
-            'description' => 'nullable|string'
+            'description' => 'required|string'
         ]);
     
         $service = Service::findOrFail($id);
@@ -456,7 +456,7 @@ class SettingsController extends Controller
         $request->validate([
             'nom' => 'required|string|max:255',
             'duree' => 'required|integer',
-            'description' => 'nullable|string'
+            'description' => 'required|string'
         ]);
     
         $regle = Regle::findOrFail($id);

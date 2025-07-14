@@ -110,7 +110,7 @@ class UserController extends Controller
             'email' => "required|email|unique:users,email,{$user->id}",
             'role' => 'required',
             'service' => 'required',
-            'permission' => 'nullable|string',
+            'permission' => 'required|string',
         ]);
         $role = Role::findOrFail($request->role);
         $service = Service::findOrFail($request->service);

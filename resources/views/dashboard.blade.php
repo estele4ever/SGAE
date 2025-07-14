@@ -158,7 +158,7 @@
                 data: {
                     labels: [
                         @foreach($archiveTypes as $type)
-                            '{{ $type->name }}',
+                            '{{ $type->nom }}',
                         @endforeach
                     ],
                     datasets: [{
