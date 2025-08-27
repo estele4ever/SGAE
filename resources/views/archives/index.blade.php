@@ -88,7 +88,7 @@
                                     $gel = DB::table('registre_gels')
                                         ->where('archive_id', $archive->id)
                                         ->where('statut', '1')
-                                        ->whereRaw("(created_at + (duree || ' days')::interval) > NOW()")
+                                        ->where(DB::raw('DATE_ADD(created_at, INTERVAL duree DAY)'), '>', DB::raw('NOW()'))
                                         ->first();
                                 @endphp
 

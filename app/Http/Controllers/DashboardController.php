@@ -61,14 +61,24 @@ class DashboardController extends Controller
         //dd($servicesWithArchives);
     
         // Données pour le graphique par type d'archive
-       $archiveTypes = TypeArchive::select('type_archives.*')
-        ->leftJoin('archives', function($join) {
-            $join->on(DB::raw('type_archives.id::text'), '=', DB::raw('archives.type_id::text'))
-                ->where('archives.created_at', '>=', now()->subMonths(6));
-        })
-        ->groupBy('type_archives.id')
-        ->selectRaw('count(archives.id) as archives_count')
-        ->get();
+      $archiveTypes = TypeArchive::select('type_archives.*')
+    ->leftJoin('archives', function($join) {
+        $join->on(DB::raw('CAST(type_archives.id AS CHAR)'), '=', DB::raw('CAST(archives.type_id AS CHAR)'))
+            ->where('archives.created_at', '>=', now()->subMonths(6));
+    })
+    ->groupBy([
+        'type_archives.id', 
+        'type_archives.nom',
+        'type_archives.services_id',
+        'type_archives.regles_id',
+        'type_archives.statut',
+        'type_archives.description',
+        'type_archives.created_at',
+        'type_archives.updated_at',
+        // Ajoutez tous les champs de la table type_archives
+    ])
+    ->selectRaw('count(archives.id) as archives_count')
+    ->get();
 
         return view('dashboard', [
             'archiveCount' => $archiveCount,
